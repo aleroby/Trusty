@@ -6,10 +6,9 @@ class User < ApplicationRecord
 
   VALID_EMAIL_REGEX = /\A[^@\s]+@[^@\s]+\.[^@\s]+\z/
 
-  has_many :services
-  has_many :orders
+  has_many :services #Usuario vendedor @current_user.services
+  has_many :orders #Usuario comprador
   has_many :reviews
-
   has_one_attached :user_photo
 
   validates :first_name, presence: true
