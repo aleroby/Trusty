@@ -3,6 +3,7 @@ class Service < ApplicationRecord
   has_many :orders
   has_many :reviews
 
+
   CATEGORIAS_PERMITIDAS = []
   SUB_CATEGORIAS_PERMITIDAS = []
 
