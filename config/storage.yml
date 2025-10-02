@@ -7,7 +7,7 @@ local:
   root: <%= Rails.root.join("storage") %>
 
 cloudinary:
-  service: Cloudinary
+ service: Cloudinary
   CLOUDINARY_CLOUD_NAME=da0ezossd
   CLOUDINARY_API_KEY=163734917762723
   CLOUDINARY_API_SECRET=kP7iFMiDMkWtaEdbrJ2Ydb6vuP8
