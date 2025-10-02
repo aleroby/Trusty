@@ -1,2 +1,12 @@
 <h1>Orders#new</h1>
-<p>Find me in app/views/orders/new.html.erb</p>
+<p>Orders</p>
+
+<div class="container p-3 shadow mt-4">
+  <%= simple_form_for @order do |f| %>
+    <%= f.input :start_date_time %>
+    <%= f.input :end_date_time %>
+    <%= f.input :service_address %>
+    <%= f.input :status %>
+    <%= f.button :submit %>
+  <% end %>
+</div>
