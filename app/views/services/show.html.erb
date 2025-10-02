@@ -1,0 +1,97 @@
+<div class="min-h-screen">
+  <header class="sticky top-0 z-20 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
+    <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <div class="flex items-center gap-8">
+
+        <a class="flex items-center gap-3 text-gray-900 dark:text-white" href="#">
+        <span class="material-symbols-outlined text-primary text-3xl">construction</span>
+        <span class="text-2xl font-bold">Trusty</span>
+        </a>
+
+        <div class="hidden md:flex items-center gap-8">
+          <a class="text-sm font-semibold hover:text-primary" href="#">Explore</a>
+          <a class="text-sm font-semibold hover:text-primary" href="#">Become a provider</a>
+        </div>
+
+      </div>
+
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">search</span>
+<input class="bg-gray-100 dark:bg-gray-800 border-none rounded-full pl-10 pr-4 py-2 w-64 focus:ring-2 focus:ring-primary focus:outline-none" placeholder="Search" type="text"/>
+</div>
+<button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800">
+<span class="material-symbols-outlined">language</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBz67zwGVYsuAMgiJhrIKMBrZSfa_QKoX5P4YQJknad3OFpLdp-ajnphvS2JS2S8emu94oSgH7AZ-Fr9bELuc0bNfEFSOkypToLM2aLGILcAIrPnbA_TSBIxfPItQVwKTlVMEqYS0gnl497xXhXdvLl7HPvQyX3-U1gqpMMHA-Wd8-MOWrzCU66MU4Gkh00k3S1O-yLundKnbpmmTJNBhSlF2UexNyKpmgeoN0D0cx4xipaK1HLjYGU4tzgLcFMx02ny8W_d91FvXU');"></div>
+</div>
+</nav>
+</header>
+<main class="container mx-auto px-6 py-8">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+<div class="lg:col-span-2 space-y-8">
+<div>
+<div class="flex items-center text-sm font-medium text-gray-500 dark:text-gray-400">
+<span><%= Service.first.category %></span>
+<span class="mx-2">/</span>
+<span class="text-gray-800 dark:text-gray-200"><%= Service.first.sub_category %></span>
+</div>
+<h1 class="text-4xl font-bold mt-2 text-gray-900 dark:text-white"><%= Service.first.sub_category %></h1>
+<p class="mt-4 text-lg">Professional house cleaning services tailored to your needs. Our experienced cleaners use eco-friendly products to ensure a spotless and healthy home environment. Book your cleaning today and enjoy a pristine living space.</p>
+</div>
+<div class="grid grid-cols-2 grid-rows-2 gap-2 aspect-[3/2] rounded-xl overflow-hidden">
+<div class="col-span-1 row-span-2 bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD388ZQTDBs1JwxUOBDScDi-xANFt96agsASCxvPS-MXF9LrTRtPnxj5T5TGa5z1xH6tms3FvG4A4M_I6TKq2ozCWjO8IJYG3aoID6nLJTAYmobwEjW5XQEWVzcDp1N2UcY9tjt0FtbNOFCOnYMCh_6emINcCjNil7Fxvk_s3X0Rjw40ExTYF1ueP8HcPDKbl_Y3HLUHAkt_9ZyUsEBYciTTG3YyAJtUnCv9v5q_b2uKETtBOE1DRfOACY7C8s9CDtgRs2CsExixpU');"></div>
+<div class="col-span-1 row-span-1 bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDX63jJ8z9vQr3lNW2C-e9ER99qbVW2HoiDK_bAzdxzMxbg-lttcqg6ewguRWqvknIL8QjFZKvpOKY55lvi4VlR3pRI6XJen4phDZXEDCWL_GptPdFT5JtFAZSnbfPg2puBcoGy4tmZQ3u4EP7AemhkUfyx_kA5QtHEt8OxqoC2XpxROfCXPonFGkX7TI0kIytIR4AiiiZwFKxmB7bLkWk3GEjnJsfumiMoohMxT-DRks0R8BpqsjGKPIxQSeCa-NVopYPTdakJ_cc');"></div>
+<div class="col-span-1 row-span-1 bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCmVvBXWg4zEb1yHgNzfELR86tjp-RKs4_qIX6yAoON3VsmIT6d3oXJjgUJ_s5G9TBDOojNkVtN75SPdFvdzOgKnJaUU1Qu-OlYTzJDCAEA40VSwsxpUOTWwndqFW4Nava8VBXpq6tVCn7vVciKYjx5G2GQK35mBE394cDbkHrvE-g0REWIA4ggLxu64Oa4P73Mk-ROmZSznuYH_uhwjtcYegSH4xJvDAeaHFoN_ppEOx-jujuSSa1p-1d5VRVIUD8zRe2vUrwCVno');"></div>
+</div>
+<div class="border-t border-gray-200 dark:border-gray-800 pt-8">
+<h2 class="text-2xl font-bold text-gray-900 dark:text-white">Sobre el proveedor</h2>
+<div class="flex items-center gap-4 mt-4">
+<div class="w-24 h-24 rounded-full bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCAclsaQA-zUdYAK2xDKGSMuBXBrQANmdxndYfewlfmvAUgl1YgIlOt7A7PncB62VlDqYg_Au352ikma0PD4wF0n-XL9CzdSyBIOLJgvR7wmA9y2z2m4SP-xzk_L8gyZDwDJ3w9caki8ylqKUm61BL76tfSinvMFsk_4a8FzigNfDvAIKhk77SN1N8blESzpV2E_BvReUhg2o9wRKgB2uIGaj61gsYE5I95bLMHiphjcnrBLoVL_pdmF40Ofi9LRIYR3LDXfwr3mSw');"></div>
+<div>
+<p class="text-xl font-bold text-gray-900 dark:text-white"><%= Service.first.user.first_name %></p>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-primary text-lg">star</span>
+<p class="text-sm font-semibold">4.8 <span class="text-gray-500 dark:text-gray-400 font-normal">(120 reviews)</span></p>
+</div>
+</div>
+</div>
+<p class="mt-4"><%= Service.first.description %></p>
+</div>
+<div class="border-t border-gray-200 dark:border-gray-800 pt-8">
+<h2 class="text-2xl font-bold text-gray-900 dark:text-white">Reviews</h2>
+<div class="space-y-6 mt-6">
+<div class="space-y-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6JHJNnGdvktbGqiMTZpocBh8EpWQjbCHtj5LUXv7ECCSieAtL3TsjZAtBQFcwEYyyGhItKXKEF-Y98RbbcTGshMmFqDyWlCru9a-BN5QsFbvOtwRPQncDmUcV8xOKhu3cV4fD9ITN0caVVHQiN-OoWBJulBpbdKs_tJm97gfd6IWYBndaFgE36sMynd0UHiItCu-OWZ2ONBDy99KRpfWPVuLxVv5_MSu4-FkIcEDiCcviElop2r-0AUGGJ1vgv2GdMSMil9cDrNo');"></div>
+<div>
+<p class="font-semibold text-gray-900 dark:text-white">Emily Carter</p>
+<p class="text-sm text-gray-500 dark:text-gray-400">2 weeks ago</p>
+</div>
+</div>
+<div class="flex items-center gap-0.5">
+<span class="material-symbols-outlined text-primary">star</span>
+<span class="material-symbols-outlined text-primary">star</span>
+<span class="material-symbols-outlined text-primary">star</span>
+<span class="material-symbols-outlined text-primary">star</span>
+<span class="material-symbols-outlined text-primary">star</span>
+</div>
+<p>"Sarah did an amazing job cleaning my apartment. It was spotless and smelled so fresh. I highly recommend her services!"</p>
+</div>
+<div class="space-y-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAzKOLYy96TzajT3N-fGHZDmb3qukj3lZ7KhaF1eTPo9E4osnPvurFKGL8aLITRah_LhJac-ac_ZkGJb-hnr8qfaAbuo7HCvfWxqUasuWBMKwUYy41OCPxGmB2vm9WVx7UUeGQmFDlKLOyWXz6xaLkI6jvaI-s1fLP96ehGI-5MOlpYdBoqSQMRPlF9ALWFbWVxWDhFIW-PAwAGvX_FyNaC5RnJyjdwU82FkEYpbgKFSi_NwgA-1clIYFCixbYDc__1MXdBe0mkUe4');"></div>
+<div>
+<p class="font-semibold text-gray-900 dark:text-white">David Lee</p>
+<p class="text-sm text-gray-500 dark:text-gray-400">1 month ago</p>
+</div>
+</div>
+<div class="flex items-center gap-0.5">
+<span class="material-symbols-outlined text-primary">star</span>
+<span class="material-symbols-outlined text-primary">star</span>
+<span class="material-symbols-outlined text-primary">star</span>
+<span class="material-symbols-outlined text-primary">star</span>
+<span class="material-symbols-outlined text-gray-300 dark:text-gray-600">star</span>
+</div>
+<p>"Sarah was very professional and thorough. She cleaned my house from top to bottom and left it looking great. I will definitely book her again."</p>
+</div>
