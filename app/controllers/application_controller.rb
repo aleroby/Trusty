@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
-  before_action :authenticate_user!
-  before_action :configure_permitted_parameters, if: :devise_controller?
-  include Pundit::Authorization
+  # before_action :authenticate_user!
+  # before_action :configure_permitted_parameters, if: :devise_controller?
+  # include Pundit::Authorization
 
   def configure_permitted_parameters
     # For additional fields in app/views/devise/registrations/new.html.erb
@@ -12,8 +12,8 @@ class ApplicationController < ActionController::Base
   end
 
   # Pundit: allow-list approach
-  after_action :verify_authorized, except: :index, unless: :skip_pundit?
-  after_action :verify_policy_scoped, only: :index, unless: :skip_pundit?
+  # after_action :verify_authorized, except: :index, unless: :skip_pundit?
+  # after_action :verify_policy_scoped, only: :index, unless: :skip_pundit?
 
   # Uncomment when you *really understand* Pundit!
   # rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
