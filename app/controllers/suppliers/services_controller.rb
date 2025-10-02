@@ -19,6 +19,7 @@ class Suppliers::ServicesController < ApplicationController
     else
       render :new, status: :unprocessable_entity
     end
+  end
 
   def edit
   end
@@ -38,7 +39,7 @@ class Suppliers::ServicesController < ApplicationController
   end
 
   def service_params
-    params.require(:service).permit(:category, :sub_category, :description, :price, :published)
+    params.require(:service).permit(:category, :sub_category, :description, :price, :published, images: [])
   end
 
 end
