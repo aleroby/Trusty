@@ -1,5 +1,6 @@
 class OrdersController < ApplicationController
-  before_action: set_service, only: [:update, :create]
+  before_action :set_service, only: [:update, :create]
+
   def new
     @order = Order.new
   end
@@ -37,6 +38,6 @@ class OrdersController < ApplicationController
   end
 
   def order_params
-    params.require(:order).permit(:start_date_time, :end_date_time, :status )
+    params.require(:order).permit(:start_date_time, :service_address, :end_date_time, :status )
   end
 end
