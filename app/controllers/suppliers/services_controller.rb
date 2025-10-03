@@ -15,7 +15,7 @@ class Suppliers::ServicesController < ApplicationController
     @service = Service.new(service_params)
     @service.user = current_user
     if @service.save
-      redirect_to suppliers_service_path(@service), notice: "Servicio creado con éxito."
+      redirect_to suppliers_dashboard_index_path, notice: "Servicio creado con éxito."
     else
       render :new, status: :unprocessable_entity
     end
@@ -26,7 +26,7 @@ class Suppliers::ServicesController < ApplicationController
 
   def update
     if @service.update(service_params)
-      redirect_to suppliers_service_path(@service), notice: "Servicio actualizado."
+      redirect_to suppliers_dashboard_index_path, notice: "Servicio actualizado."
     else
       render :edit, status: :unprocessable_entity
     end

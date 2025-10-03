@@ -1,7 +1,6 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="form-login col-12 col-sm-6">
-      <h1 class="mb-4">Nuevo servicio</h1>
       <%= simple_form_for [:suppliers, @service] do |f| %>
         <div
           data-controller="dependent-select"
@@ -32,8 +31,8 @@
         <%= f.input :photos, label: "Imágenes", as: :file, input_html: { multiple: true } %>
 
         <div class="d-flex">
-          <%= f.submit "Crear Servicio", class: "btn btn-primary" %>
-          <%= link_to "Cancelar", root_path, class: "btn btn-warning ms-3" %>
+          <%= f.submit "Guardar", class: "btn btn-primary" %>
+          <%= link_to "Cancelar", suppliers_dashboard_index_path, class: "btn btn-warning ms-3" %>
         </div>
       <% end %>
     </div>
