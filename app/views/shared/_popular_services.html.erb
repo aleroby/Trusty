@@ -1,0 +1,27 @@
+<div class="m-5">
+  <h2 class="text-center text-primary mb-4 fw-bold">Servicios</h2>
+  <div class="row g-4 justify-content-center">
+    <% services = [
+      { title: "Hogar", image: "hogar.png" },
+      { title: "Estética", image: "estetica.png" },
+      { title: "Wellness", image: "wellness.png" },
+      { title: "Entrenamiento", image: "entrenamiento.png" },
+      { title: "Clases", image: "clases.png" },
+      { title: "Cuidado", image: "cuidados.png" }
+    ] %>
+
+    <% services.each do |service| %>
+        <div class="col-6 col-sm-4 col-md-3 col-lg-2 text-center">
+        <div class="mb-3">
+            <%= image_tag service[:image], class: "service-image img-fluid rounded-4 shadow-sm", alt: service[:title] %>
+        </div>
+
+        <div>
+            <span class="category-badge px-3 py-2 fw-semibold">
+                <%= service[:title] %>
+            </span>
+          </div>
+        </div>
+    <% end %>
+   </div>
+</div>
