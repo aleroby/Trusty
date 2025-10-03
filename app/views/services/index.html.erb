@@ -1,2 +1,197 @@
-<h1>Services#index</h1>
-<p>Find me in app/views/services/index.html.erb</p>
+<div class="services-page">
+  <div class="row g-4">
+    <!-- Sidebar filtros -->
+    <aside class="col-12 col-lg-3">
+      <div class="card filters-card shadow-sm sticky-top" style="top: 90px;">
+        <div class="card-body">
+          <h5 class="card-title text-primary mb-3">Filters</h5>
+
+          <%= form_with url: services_path, method: :get, local: true do |f| %>
+            <!-- Category -->
+            <div class="mb-3">
+              <%= f.label :category, "Categoría", class: "form-label" %>
+              <%= f.select :category,
+                    options_for_select([["All categories", ""]] + Service.category_list.map { |c| [c, c] }, params[:category]),
+                    {}, class: "form-select" %>
+            </div>
+
+            <!-- Subcategory -->
+            <div class="mb-3">
+              <%= f.label :sub_category, "Subcategoría", class: "form-label" %>
+              <%= f.select :sub_category,
+                    options_for_select([["All", ""]] + Service.subcategory_list.map { |sc| [sc, sc] }, params[:sub_category]),
+                    {}, class: "form-select" %>
+            </div>
+
+            <!-- Date -->
+            <div class="mb-3">
+              <%= f.label :date, "Fecha", class: "form-label" %>
+              <%= f.date_field :date, class: "form-control" %>
+            </div>
+
+            <!-- Hora de comienzo -->
+            <div class="mb-3">
+              <%= f.label :time, "Hora de comienzo", class: "form-label" %>
+              <%= f.time_field :time, class: "form-control" %>
+            </div>
+
+            <!-- Hora de finalización -->
+            <div class="mb-3">
+              <%= f.label :time, "Hora de finalización", class: "form-label" %>
+              <%= f.time_field :time, class: "form-control" %>
+            </div>
+
+            <!-- Price -->
+            <div class="mb-2" id="price-range-container">
+              <label for="priceRange" class="form-label d-flex justify-content-between">
+                <span>Rango de Precio</span>
+                <span id="priceRangeOutput"><%= number_to_currency(params[:price_max].presence || 1000, unit: "$") %></span>
+              </label>
+              <input
+                type="range"
+                class="form-range"
+                min="0"
+                max="100000"
+                step="5"
+                id="priceRange"
+                name="price_max"
+                value="<%= params[:price_max].presence || 1000 %>">
+              <div class="d-flex justify-content-between small text-muted">
+                <span>$0</span><span>$100.000</span>
+              </div>
+            </div>
+
+            <!-- Location -->
+            <div class="mb-3">
+              <%= f.label :location, "Dirección", class: "form-label" %>
+              <%= f.search_field :location, placeholder: "Ingrese la dirección", class: "form-control" %>
+            </div>
+
+            <div class="d-grid gap-2">
+              <%= f.submit "Apply filters", class: "btn btn-primary" %>
+              <%= link_to "Clear", services_path, class: "btn btn-outline-secondary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Grid + header -->
+    <div class="col-12 col-lg-9">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h2 class="h3 mb-0 text-primary fw-semibold">Services<%== params[:location].present? ? " in #{ERB::Util.html_escape(params[:location])}" : "" %></h2>
+        <div class="text-primary small">
+          <%= pluralize(@services.try(:total_count) || @services.size, "result") %>
+        </div>
+      </div>
+
+      <!-- Grid responsive -->
+      <div class="services-grid">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+          <% @services.each do |service| %>
+            <div class="col">
+              <div class="card service-card h-100 shadow-sm border-0">
+                <div>
+                  <%= link_to service_path(service), class: "text-decoration-none" do %>
+                    <% if service.images.attached? %>
+                      <%= cl_image_tag service.images.first.key,
+                            width: 800, height: 450, crop: :fill, gravity: :auto,
+                            class: "service-img", alt: service.sub_category %>
+                    <% else %>
+                      <%= image_tag "https://picsum.photos/800/450?random=#{service.id}",
+                            class: "service-img", alt: service.sub_category %>
+                    <% end %>
+
+                    <% if service.price.present? %>
+                      <span class="price-badge">
+                        <%= service.respond_to?(:price_unit) && service.price_unit == "hour" ?
+                              "#{number_to_currency(service.price, unit: '$')}/hr" :
+                              number_to_currency(service.price, unit: '$') %>
+                      </span>
+                    <% end %>
+                  <% end %>
+                </div>
+
+                <div class="card-body d-flex flex-column">
+                  <%= link_to service_path(service), class: "stretched-link text-decoration-none text-reset" do %>
+                    <h3 class="h6 mb-1 fw-semibold"><%= service.sub_category %></h3>
+                  <% end %>
+                  <p class="card-text text-muted small mb-3">
+                    <%= truncate(service.description, length: 90) %>
+                  </p>
+
+                  <!-- Provider + rating del SERVICIO -->
+                  <div class="provider-row d-flex align-items-center gap-2 mt-auto">
+                    <% if service.user.respond_to?(:avatar) && service.user.avatar.attached? %>
+                      <%= cl_image_tag service.user.avatar.key,
+                            width: 64, height: 64, crop: :thumb, gravity: :face,
+                            class: "avatar rounded-circle flex-shrink-0", alt: service.user.name %>
+                    <% else %>
+                      <%= cl_image_tag service.user.user_photo.key,
+                            class: "avatar rounded-circle flex-shrink-0", width: 32, height: 32,
+                            alt: service.user.try(:name) || service.user.first_name %>
+                    <% end %>
+
+                    <% avg = service.reviews.average(:rating) %>
+                    <% avg_display = avg ? number_with_precision(avg, precision: 1) : "—" %>
+                    <% cnt = service.reviews.count %>
+
+                    <div class="small">
+                      <div class="fw-medium"><%= service.user.try(:name) || service.user.first_name %></div>
+                      <div class="text-muted d-inline-flex align-items-center gap-1">
+                        <svg width="14" height="14" viewBox="0 0 24 24" class="star-fill" aria-hidden="true">
+                          <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.46 4.73L5.82 21z"/>
+                        </svg>
+                        <%= avg_display %> (<%= cnt %>)
+                      </div>
+                    </div>
+
+                    <div class="ms-auto">
+                      <%= link_to "Book",
+                            defined?(new_service_booking_path) ? new_service_booking_path(service) : service_path(service),
+                            class: "btn btn-sm btn-primary px-3" %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Paginación -->
+      <div class="d-flex justify-content-center mt-4">
+        <% if defined?(pagy_bootstrap_nav) && @pagy %>
+          <%= pagy_bootstrap_nav(@pagy).html_safe %>
+        <% elsif defined?(paginate) %>
+          <%= paginate @services %>
+        <% else %>
+          <nav aria-label="Pagination">
+            <ul class="pagination">
+              <% prev_page = (params[:page].to_i > 1 ? params[:page].to_i - 1 : nil) %>
+              <li class="page-item <%= 'disabled' unless prev_page %>">
+                <%= link_to "Previous", url_for(params.permit!.to_h.merge(page: prev_page || 1)), class: "page-link" %>
+              </li>
+              <li class="page-item">
+                <%= link_to "Next", url_for(params.permit!.to_h.merge(page: params[:page].to_i + 1)), class: "page-link" %>
+              </li>
+            </ul>
+          </nav>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Mini helper para el slider (sin Stimulus)
+  document.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('priceRange');
+    const output = document.getElementById('priceRangeOutput');
+    if (!input || !output) return;
+    const fmt = (v) => `$${Number(v).toLocaleString()}`;
+    const update = () => { output.textContent = fmt(input.value); };
+    input.addEventListener('input', update);
+    update();
+  });
+</script>

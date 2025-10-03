@@ -1,0 +1,74 @@
+/* Fondo suave para el bloque de la página (opcional) */
+.services-page {
+  background: #f5f7fb;
+  padding: 1rem;
+  border-radius: .75rem;
+}
+
+/* Sidebar (filtros) */
+.filters-card {
+  border: 1px solid rgba(16, 24, 40, 0.06);
+  border-radius: 16px;
+  background: #fff !important;
+}
+.filters-card .form-label { font-weight: 600; color: #344054; }
+
+/* Cards */
+.service-card {
+  background: #fff !important; /* asegura fondo blanco aun en dark mode */
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(16, 24, 40, 0.06);
+  transition: box-shadow .2s ease, transform .2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 .75rem 2rem rgba(16,24,40,.12);
+  }
+}
+
+.service-media { background: #f0f2f5; }
+
+.service-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  transition: transform .35s ease;
+}
+.service-card:hover .service-img { transform: scale(1.02); }
+
+/* Badge precio estilo “pill” */
+.price-badge {
+  position: absolute;
+  top: .75rem; right: .75rem;
+  background: #e6f3ff;
+  color: #0b6efd;
+  font-weight: 700;
+  padding: .35rem .6rem;
+  font-size: .9rem;
+  line-height: 1;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(13,110,253,.15);
+}
+
+/* Texto de la card */
+.card-body { padding: 1rem 1rem 1.1rem; }
+.service-card h6, .service-card .h6 { color: #101828; }
+.card-text { color: #667085 !important; }
+
+/* Fila proveedor + rating */
+.provider-row .avatar { width: 32px; height: 32px; }
+.provider-row .fw-medium { color: #1d2939; }
+.star-fill { fill: #f4b400; vertical-align: -2px; }
+
+/* Range input */
+#price-range-container .form-range::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px rgba(13,110,253,.15);
+}
+
+/* Ajustes responsivos sutiles */
+@media (min-width: 1200px) {
+  .services-page { padding: 1.25rem; }
+}
