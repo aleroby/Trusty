@@ -1,0 +1,44 @@
+/* Dashboard Supplier */
+.supplier-dashboard {
+  .sidebar-card {
+    border-radius: 1rem;
+  }
+
+  .avatar-sm {
+    width: 48px;
+    height: 48px;
+    font-size: 0.95rem;
+  }
+
+  .nav-pills .nav-link {
+    border-radius: 0.75rem;
+    padding: 0.6rem 0.9rem;
+    color: var(--bs-body-color);
+
+    &.active {
+      background: rgba(var(--bs-primary-rgb), 0.12);
+      color: var(--bs-primary);
+      font-weight: 600;
+    }
+
+    &:hover {
+      background: var(--bs-light);
+    }
+  }
+
+  .service-row td {
+    vertical-align: middle;
+  }
+
+  /* Opcional: suaviza el look de la tabla como “cards planas” */
+  .table > :not(caption) > * > * {
+    padding-top: 0.95rem;
+    padding-bottom: 0.95rem;
+  }
+}
+
+/* Ayuda rápida para usar el $primary en texto (si usas Sass con variables de Bootstrap) */
+.text-primary-fw {
+  color: $primary !important;
+  font-weight: 600;
+}
