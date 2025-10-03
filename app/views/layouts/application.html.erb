@@ -14,10 +14,10 @@
     <%= render "shared/navbar" %>
     <%= render "shared/flashes" %>
     <% if controller.controller_name == 'pages' && controller.action_name == 'home' %>
-    <%= render 'shared/banner' %>
-    <%= render 'shared/popular_services' %>
+      <%= render 'shared/banner' %>
+      <%= render 'shared/popular_services' %>
     <% end %>
-    <div class="container mt-4 main">
+    <div class="main">
       <%= yield %>
     </div>
     <%= render "shared/footer" %>

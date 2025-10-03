@@ -16,6 +16,7 @@ Rails.application.routes.draw do
 
   namespace :suppliers do
     resources :services
+    resources :dashboard, only: %i[index]
   end
 
   resources :orders, only: %i[new create edit update] do

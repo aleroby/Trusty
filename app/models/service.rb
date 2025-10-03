@@ -3,6 +3,10 @@ class Service < ApplicationRecord
   has_many :orders
   has_many :reviews
 
+  # Multisearch PG Search
+  include PgSearch::Model
+  multisearchable against: [:category, :description, :sub_category]
+
   has_many_attached :images
 
   CATEGORIES = {
