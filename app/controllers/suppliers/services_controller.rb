@@ -1,5 +1,5 @@
 class Suppliers::ServicesController < ApplicationController
-  before_action :set_service, only: %i[show edit update]
+  before_action :set_service, only: %i[show edit update destroy]
   def index
     @services = current_user.services
   end
@@ -15,7 +15,7 @@ class Suppliers::ServicesController < ApplicationController
     @service = Service.new(service_params)
     @service.user = current_user
     if @service.save
-      redirect_to users_service_path(@service)
+      redirect_to suppliers_service_path(@service), notice: "Servicio creado con éxito."
     else
       render :new, status: :unprocessable_entity
     end
@@ -26,10 +26,15 @@ class Suppliers::ServicesController < ApplicationController
 
   def update
     if @service.update(service_params)
-      redirect_to users_service_path(@service)
+      redirect_to suppliers_service_path(@service), notice: "Servicio actualizado."
     else
       render :edit, status: :unprocessable_entity
     end
+  end
+
+  def destroy
+    @service.destroy
+    redirect_to suppliers_services_path, notice: "Servicio eliminado."
   end
 
   private

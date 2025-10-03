@@ -1,0 +1,13 @@
+.service-show {
+  .service-gallery-img { aspect-ratio: 3 / 2; }
+  .booking-card { top: 90px; } // offset para sticky bajo tu navbar
+  .avatar-placeholder {
+    background: rgba(var(--bs-primary-rgb), .1);
+    color: var(--bs-primary);
+  }
+  .reviews .text-warning { letter-spacing: .5px; }
+}
+
+/* Dark mode opcional si usás clase .dark en <body> */
+.dark .service-show .card { background-color: #1f2937; border-color: #263041; }
+.dark .service-show .text-muted { color: #cbd5e1 !important; }

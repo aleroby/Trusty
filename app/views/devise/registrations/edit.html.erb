@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="form-login col-12 col-sm-5">
-      <h2>Edit <%= resource_name.to_s.humanize %></h2>
+      <h3 class="fw-bold text-primary text-center">Edita tus datos</h3>
 
       <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
         <%= f.error_notification %>

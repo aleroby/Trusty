@@ -1,71 +1,41 @@
-<%= form_with model: service, local: true do |f| %>
-  <% if service.errors.any? %>
-    <div class="alert alert-danger">
-      <h5 class="mb-1"><%= pluralize(service.errors.count, "error") %> impidieron guardar el servicio:</h5>
-      <ul class="mb-0">
-        <% service.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-      </ul>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="form-login col-12 col-sm-6">
+      <h1 class="mb-4">Nuevo servicio</h1>
+      <%= simple_form_for [:suppliers, @service] do |f| %>
+        <div
+          data-controller="dependent-select"
+          data-dependent-select-map-value="<%= Service.map_for_js.to_json %>">
+
+          <%= f.input :category, label: "Categoría de servicio",
+                      collection: Service.category_list,
+                      prompt: "Selecciona una categoría",
+                      input_html: {
+                        class: "form-select",
+                        data: {
+                          dependent_select_target: "category",
+                          action: "change->dependent-select#update"
+                        }
+                      } %>
+
+          <%= f.input :sub_category, label: "Subcategoría de servicio",
+                      collection: Service.subcategory_list(f.object.category),
+                      prompt: "Selecciona una subcategoría",
+                      input_html: {
+                        class: "form-select",
+                        data: { dependent_select_target: "subCategory" }
+                      } %>
+        </div>
+
+        <%= f.input :description, label: "Descripción", as: :text, input_html: { rows: 6, class: "form-control" } %>
+        <%= f.input :price, label: "Precio unitario", as: :decimal, input_html: { step: 0.01, min: 0, class: "form-control" } %>
+        <%= f.input :photos, label: "Imágenes", as: :file, input_html: { multiple: true } %>
+
+        <div class="d-flex">
+          <%= f.submit "Crear Servicio", class: "btn btn-primary" %>
+          <%= link_to "Cancelar", root_path, class: "btn btn-warning ms-3" %>
+        </div>
+      <% end %>
     </div>
-  <% end %>
-
-
-  <div class="mb-3">
-    <%= f.label :category, "Categoría", class: "form-label" %>
-    <%= f.select :category,
-                 Service::CATEGORIAS_PERMITIDAS,
-                 { prompt: "Selecciona una categoría" },
-                 { class: "form-select #{'is-invalid' if service.errors[:category].any?}" } %>
-    <% if service.errors[:category].any? %>
-      <div class="invalid-feedback d-block">
-        <%= service.errors.full_messages_for(:category).join(", ") %>
-      </div>
-    <% end %>
   </div>
-
-  
-  <div class="mb-3">
-    <%= f.label :sub_category, "Subcategoría", class: "form-label" %>
-    <%= f.select :sub_category,
-                 Service::SUB_CATEGORIAS_PERMITIDAS,
-                 { prompt: "Selecciona una subcategoría" },
-                 { class: "form-select #{'is-invalid' if service.errors[:sub_category].any?}" } %>
-    <% if service.errors[:sub_category].any? %>
-      <div class="invalid-feedback d-block">
-        <%= service.errors.full_messages_for(:sub_category).join(", ") %>
-      </div>
-    <% end %>
-  </div>
-
-
-  <div class="mb-3">
-    <%= f.label :description, "Descripción", class: "form-label" %>
-    <%= f.text_area :description, rows: 6, class: "form-control #{'is-invalid' if service.errors[:description].any?}" %>
-    <% if service.errors[:description].any? %>
-      <div class="invalid-feedback d-block">
-        <%= service.errors.full_messages_for(:description).join(", ") %>
-      </div>
-    <% end %>
-  </div>
-
-
-  <div class="mb-3">
-    <%= f.label :price, "Precio", class: "form-label" %>
-    <div class="input-group">
-      <span class="input-group-text">$</span>
-      <%= f.number_field :price, step: 0.01, min: 0, class: "form-control #{'is-invalid' if service.errors[:price].any?}" %>
-    </div>
-    <% if service.errors[:price].any? %>
-      <div class="invalid-feedback d-block">
-        <%= service.errors.full_messages_for(:price).join(", ") %>
-      </div>
-    <% end %>
-  </div>
-
-
-  <div class="d-flex align-items-center">
-    <%= f.submit "Guardar", class: "btn btn-primary" %>
-    <%= link_to "Cancelar", services_path, class: "btn btn-secondary ms-2" %>
-  </div>
-<% end %>
+</div>

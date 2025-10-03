@@ -10,3 +10,7 @@
 .navbar-lewagon .navbar-brand img {
   width: 40px;
 }
+
+.navbar .dropdown-menu {
+  z-index: 2000; /* > 1020 (sticky) */
+}
