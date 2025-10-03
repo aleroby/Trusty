@@ -19,7 +19,7 @@ Rails.application.routes.draw do
     resources :dashboard, only: %i[index]
   end
 
-  resources :orders, only: %i[new create edit update] do
+  resources :orders, only: %i[new create edit update, show] do
     resources :reviews, only: %i[new create]
   end
 
