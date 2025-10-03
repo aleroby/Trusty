@@ -1,0 +1,22 @@
+.service-image {
+  object-fit: cover;
+  height: 180px;
+  max-width: 100%;
+  border-radius: 20px;
+  display: block;
+  
+}
+
+.category-badge {
+  display: inline-block;
+  background-color: #A7E399;
+  color: white;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.category-badge:hover {
+  background-color: #A7E399;
+  transform: translateY(-2px);
+}
