@@ -93,7 +93,7 @@
     <div class="col-lg-4">
       <%# valores seguros por si no tenés fee/currency aún %>
       <% fee_value = defined?(@service.service_fee) && @service.service_fee.present? ? @service.service_fee : 0 %>
-      <% currency_value = defined?(@service.currency) && @service.currency.present? ? @service.currency : "USD" %>
+      <% currency_value = defined?(@service.currency) && @service.currency.present? ? @service.currency : "$" %>
 
       <div class="card booking-card shadow-sm sticky-lg-top"
            data-controller="booking"
@@ -101,7 +101,7 @@
            data-booking-fee-value="<%= fee_value.to_f %>"
            data-booking-currency-value="<%= currency_value %>">
         <div class="card-body">
-          <h2 class="h6 mb-3 fw-bold">Reserva tu Servicio de <%= @service.sub_category %></h2>
+          <h6 class="fw-bold text-primary" mb-3 fw-bold">Reserva tu Servicio de <%= @service.sub_category %></h6>
           <hr>
           <%= form_with model: [@service, Order.new],
                         url: orders_path(@service),

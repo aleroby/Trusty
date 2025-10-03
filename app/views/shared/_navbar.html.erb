@@ -14,11 +14,16 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto">
         <% if user_signed_in? %>
+          <% if current_user.role == "client" %>
+            <li class="nav-item">
+              <%= link_to "Ofrecer Servicios", edit_user_registration_path(role: "supplier"), class: "nav-link" %>
+            </li>
+          <% end %>
           <li class="nav-item">
-            <%= link_to "Ofrecer Servicios", edit_user_registration_path(role: "supplier"), class: "nav-link" %>
+            <%= link_to "Servicios", services_path, class: "fw-bold nav-link text-success" %>
           </li>
           <li class="nav-item active">
-            <%= link_to "Home", root_path, class: "nav-link" %>
+            <%= link_to "Home", root_path, class: "nav-link fw-bold" %>
           </li>
           <li class="nav-item dropdown">
           <a href="#" class="avatar" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -39,6 +44,9 @@
             </div>
           </li>
         <% else %>
+          <li class="nav-item">
+            <%= link_to "Servicios", services_path, class: "fw-bold nav-link text-success" %>
+          </li>
           <li class="nav-item">
             <%= link_to "Login", new_user_session_path, class: "nav-link mx-2" %>
           </li>
