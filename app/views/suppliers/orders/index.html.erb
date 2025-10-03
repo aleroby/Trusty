@@ -20,8 +20,8 @@
 
           <nav class="nav flex-column nav-pills gap-1">
             <%= link_to "Mis Servicios", suppliers_dashboard_index_path, class: "nav-link d-flex align-items-center #{'active' if current_page?(suppliers_dashboard_index_path)}" %>
-            <%= link_to "Ordenes Pendientes", suppliers_orders_path, class: "nav-link d-flex align-items-center #{'active' if controller_name == 'requests'}" %>
-            <%= link_to "Historial de Órdenes", orders_path, class: "nav-link d-flex align-items-center #{'active' if controller_name == 'orders'}" %>
+            <%= link_to "Ordenes Pendientes", suppliers_orders_path(status: "Pendiente"), class: "nav-link d-flex align-items-center #{'active' if controller_name == 'requests'}" %>
+            <%= link_to "Historial de Órdenes", suppliers_orders_path(status: "Aprobado"), class: "nav-link d-flex align-items-center #{'active' if controller_name == 'orders'}" %>
             <%= link_to "Mis Calificaciones", "reviews_path", class: "nav-link d-flex align-items-center #{'active' if controller_name == 'reviews'}" %>
           </nav>
         </div>
@@ -60,7 +60,8 @@
             </thead>
             <tbody>
               <% current_user.services.each do |service| %>
-                <% service.orders.each do |order| %>
+                <% selected_orders = service.orders.select { |order| order.status == params[:status] } %>
+                <% selected_orders.each do |order| %>
                   <tr class="service-row">
                     <td class="text-muted"><%= order.start_date_time %></td>
                     <td class="fw-semibold">
