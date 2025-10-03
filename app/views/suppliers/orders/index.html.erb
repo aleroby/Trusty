@@ -19,8 +19,7 @@
           </div>
 
           <nav class="nav flex-column nav-pills gap-1">
-            <%= link_to "Inicio", suppliers_dashboard_index_path, class: "nav-link d-flex align-items-center #{'active' if current_page?(suppliers_dashboard_index_path)}" %>
-            <%= link_to "Mis Servicios", services_path, class: "nav-link d-flex align-items-center #{'active' if controller_name == 'services'}" %>
+            <%= link_to "Mis Servicios", suppliers_dashboard_index_path, class: "nav-link d-flex align-items-center #{'active' if current_page?(suppliers_dashboard_index_path)}" %>
             <%= link_to "Ordenes Pendientes", suppliers_orders_path, class: "nav-link d-flex align-items-center #{'active' if controller_name == 'requests'}" %>
             <%= link_to "Historial de Órdenes", orders_path, class: "nav-link d-flex align-items-center #{'active' if controller_name == 'orders'}" %>
             <%= link_to "Mis Calificaciones", "reviews_path", class: "nav-link d-flex align-items-center #{'active' if controller_name == 'reviews'}" %>
@@ -43,14 +42,15 @@
     <!-- Main -->
     <main class="col-12 col-lg-9">
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h2 text-primary mb-0">Ordenes Pendientes</h1>
+        <h1 class="h2 text-primary mb-0">Ordenes</h1>
       </div>
 
-      <div class="card shadow-sm">
+      <div class="card shadow-sm p-2">
         <div class="table-responsive">
           <table class="table align-middle mb-0">
             <thead class="table-light">
               <tr>
+                <th>Fecha</th>
                 <th>Servicio</th>
                 <th>Cliente</th>
                 <th>Precio Total</th>
@@ -59,31 +59,27 @@
               </tr>
             </thead>
             <tbody>
-              <% current_user.services.orders.each do |order| %>
-                <tr class="service-row">
-                  <td class="fw-semibold">
-                    <%= order.service.sub_category class: "text-muted" %>
-                  </td>
-                  <td class="text-muted"><%= order.user.first_name %></td>
-                  <td><%= number_to_currency(order.total_price, unit: "$", precision: 0) %></td>
-                  <td>
-                    <% if order.status == "Pendiente" %>
-                      <span class="badge rounded-pill bg-success-subtle text-success-emphasis px-3">Pendiente</span>
-                    <% else %>
-                      <span class="badge rounded-pill bg-danger-subtle text-danger-emphasis px-3">Completada</span>
-                    <% end %>
-                  </td>
-                  <td class="text-end">
-                    <%= link_to "Editar", edit_order_path(order), class: "link-primary fw-semibold" %>
-                  </td>
-                </tr>
-              <% end %>
-              <% if current_user.services.orders.blank? %>
-                <tr>
-                  <td colspan="5" class="text-center py-5 text-muted">
-                    Aún no tienes servicios. <%= link_to "Crea el primero aquí", new_suppliers_service_path %>.
-                  </td>
-                </tr>
+              <% current_user.services.each do |service| %>
+                <% service.orders.each do |order| %>
+                  <tr class="service-row">
+                    <td class="text-muted"><%= order.start_date_time %></td>
+                    <td class="fw-semibold">
+                      <%= order.service.sub_category %>
+                    </td>
+                    <td class="text-muted"><%= order.user.first_name %></td>
+                    <td><%= number_to_currency(order.total_price, unit: "$", precision: 0) %></td>
+                    <td>
+                      <% if order.status == "Pendiente" %>
+                        <span class="badge rounded-pill bg-success-subtle text-success-emphasis px-3">Pendiente</span>
+                      <% else %>
+                        <span class="badge rounded-pill bg-danger-subtle text-danger-emphasis px-3">Completada</span>
+                      <% end %>
+                    </td>
+                    <td class="text-end">
+                      <%= link_to "Editar", edit_order_path(order), class: "link-primary fw-semibold" %>
+                    </td>
+                  </tr>
+                <% end %>
               <% end %>
             </tbody>
           </table>

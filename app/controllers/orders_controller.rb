@@ -14,7 +14,7 @@ class OrdersController < ApplicationController
     @order.total_price = params[:order][:total_cents].to_i
     @order.start_date_time = Time.new(date[0], date[1], date[2], params[:order][:start_time].to_i)
     @order.end_date_time = Time.new(date[0], date[1], date[2], params[:order][:end_time].to_i)
-    @order.status = "Aprobado"
+    @order.status = "Pendiente"
     if @order.save
       redirect_to dashboard_index_path
     else

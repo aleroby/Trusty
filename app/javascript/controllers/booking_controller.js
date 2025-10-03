@@ -30,7 +30,7 @@ export default class extends Controller {
   money(n) {
     return (isFinite(n) ? n : 0).toLocaleString(undefined, {
       style: "currency",
-      currency: this.currencyValue || "$"
+      currency: this.currencyValue || "ARS"
     })
   }
 
@@ -65,10 +65,10 @@ export default class extends Controller {
 
   updateTotals() {
     const rate = Number(this.rateValue || 0)
-    const fee = Number(this.feeValue || 0)
     const hours = parseFloat(this.hasHoursTarget ? this.hoursTarget.value : "0") || 0
 
     const subtotal = Math.max(0, hours * rate)
+    const fee = (Number(this.feeValue || 0) * subtotal) / 100
     const total = subtotal + fee
 
     if (this.hasSubtotalTarget) this.subtotalTarget.textContent = this.money(subtotal)

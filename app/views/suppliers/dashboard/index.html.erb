@@ -19,8 +19,7 @@
           </div>
 
           <nav class="nav flex-column nav-pills gap-1">
-            <%= link_to "Inicio", suppliers_dashboard_index_path, class: "nav-link d-flex align-items-center #{'active' if current_page?(suppliers_dashboard_index_path)}" %>
-            <%= link_to "Mis Servicios", services_path, class: "nav-link d-flex align-items-center #{'active' if controller_name == 'services'}" %>
+            <%= link_to "Mis Servicios", suppliers_dashboard_index_path, class: "nav-link d-flex align-items-center #{'active' if current_page?(suppliers_dashboard_index_path)}" %>
             <%= link_to "Ordenes Pendientes", suppliers_orders_path, class: "nav-link d-flex align-items-center #{'active' if controller_name == 'requests'}" %>
             <%= link_to "Historial de Órdenes", orders_path, class: "nav-link d-flex align-items-center #{'active' if controller_name == 'orders'}" %>
             <%= link_to "Mis Calificaciones", "reviews_path", class: "nav-link d-flex align-items-center #{'active' if controller_name == 'reviews'}" %>
