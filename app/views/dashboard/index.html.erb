@@ -1,0 +1,97 @@
+<div class="container-fluid py-4 dashboard">
+  <div class="row g-3">
+    <!-- Sidebar -->
+    <aside class="col-12 col-lg-3">
+      <div class="card shadow-sm sidebar-card sticky-lg-top">
+        <div class="card-body">
+          <div class="d-flex align-items-center mb-3">
+            <% if current_user&.user_photo&.attached? %>
+              <%= image_tag current_user.user_photo, class: "rounded-circle avatar-sm flex-shrink-0", alt: "#{current_user.first_name}" %>
+            <% else %>
+              <div class="rounded-circle bg-secondary-subtle text-secondary-emphasis d-inline-flex align-items-center justify-content-center avatar-sm flex-shrink-0">
+                <span class="fw-semibold"><%= current_user.first_name.first %></span>
+              </div>
+            <% end %>
+            <div class="ms-2">
+              <h6 class="mb-0"><%= current_user.first_name %></h6>
+              <small class="text-muted">Cliente</small>
+            </div>
+          </div>
+
+          <nav class="nav flex-column nav-pills gap-1">
+            <%= link_to "Inicio", dashboard_index_path, class: "nav-link d-flex align-items-center #{'active' if current_page?(dashboard_index_path)}" %>
+            <%= link_to "Mis Ordenes pendientes", services_path, class: "nav-link d-flex align-items-center #{'active' if controller_name == 'services'}" %>
+            <%= link_to "Historial de Órdenes", orders_path, class: "nav-link d-flex align-items-center #{'active' if controller_name == 'orders'}" %>
+            <%= link_to "Mis Calificaciones", "", class: "nav-link d-flex align-items-center #{'active' if controller_name == 'reviews'}" %>
+          </nav>
+
+
+        </div>
+
+        <div class="card-footer bg-white">
+          <ul class="list-unstyled small mb-0">
+            <li class="mb-2">
+              <%= link_to "Ayuda", "", class: "text-decoration-none d-inline-flex align-items-center gap-2" %>
+            </li>
+            <li>
+              <%= link_to "Cuenta", edit_user_registration_path, class: "text-decoration-none d-inline-flex align-items-center gap-2" %>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="col-12 col-lg-9">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">Mis Ordenes</h1>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="table-responsive">
+          <table class="table align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Ordenes</th>
+                <th>Nombre de proveedor</th>
+                <th>Tipo de servicio</th>
+                <th>Precio Total</th>
+                <th>Estado</th>
+                <th class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% current_user.orders.each do |order| %>
+                <tr class="service-row">
+                  <td class="fw-semibold">
+                    <%= link_to order.id, order_path(order), class: "text-decoration-none" %>
+                  </td>
+                  <td class="text-muted"><%= order.service.user.first_name %></td>
+                  <td class="text-muted"><%= order.service.sub_category %></td>
+                  <td><%= number_to_currency(order.total_price, unit: "$", precision: 0) %></td>
+                  <td>
+                    <% if order.status? %>
+                      <span class="badge rounded-pill bg-success-subtle text-success-emphasis px-3">Pendiente</span>
+                    <% else %>
+                      <span class="badge rounded-pill bg-danger-subtle text-danger-emphasis px-3">Cancelada</span>
+                    <% end %>
+                  </td>
+                  <td class="text-end">
+                    <%= link_to "Editar", edit_order_path(order), class: "link-primary fw-semibold" %>
+                  </td>
+                </tr>
+              <% end %>
+              <% if @orders.blank? %>
+                <tr>
+                  <td colspan="5" class="text-center py-5 text-muted">
+                    Aún no tienes ordenes. <%= link_to "Crea el primero aquí", new_order_path %>.
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

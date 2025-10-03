@@ -1,6 +1,10 @@
 class OrdersController < ApplicationController
   before_action :set_service, only: [:update, :create]
 
+  def show
+    @order = Order.find(params[:id])
+  end
+
   def new
     @order = Order.new
   end
