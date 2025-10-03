@@ -15,7 +15,7 @@
       <div class="mb-3">
         <%= f.label :category, "Categoría", class: "form-label" %>
         <%= f.select :category,
-              options_for_select([["All categories", ""]] + Service.category_list.map { |c| [c, c] }, params[:category]),
+              options_for_select([["Todas las Categorías", ""]] + Service.category_list.map { |c| [c, c] }, params[:category]),
               {},
               class: "form-select",
               data: { filters_target: "categorySelect", action: "change->filters#onCategoryChange" } %>
@@ -25,7 +25,7 @@
       <div class="mb-3">
         <%= f.label :sub_category, "Subcategoría", class: "form-label" %>
         <%= f.select :sub_category,
-              options_for_select([["All", ""]] + Service.subcategory_list.map { |sc| [sc, sc] }, params[:sub_category]),
+              options_for_select([["Todas las Subcategorías", ""]] + Service.subcategory_list.map { |sc| [sc, sc] }, params[:sub_category]),
               {},
               class: "form-select",
               data: { filters_target: "subcategorySelect" } %>

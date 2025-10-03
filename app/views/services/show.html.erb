@@ -1,109 +1,174 @@
-<div class="min-h-screen">
-  <header class="sticky top-0 z-20 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
-    <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-      <div class="flex items-center gap-8">
+<div class="container my-4 service-show">
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb" class="mb-3">
+    <div class="d-flex justify-content-between">
+      <ol class="breadcrumb small">
+        <li class="breadcrumb-item"><%= link_to @service.category.presence || "Cleaning", services_path(category: @service.category) %></li>
+        <li class="breadcrumb-item active" aria-current="page"><%= @service.sub_category.presence || "House Cleaning" %></li>
+      </ol>
+        <ol class="breadcrumb small">
+        <li class="breadcrumb-item"><%= link_to "Volver a Servicios" || "Lista de Servicios", services_path(category: @service.category) %></li>
+      </ol>
+    </div>
+  </nav>
 
-        <a class="flex items-center gap-3 text-gray-900 dark:text-white" href="#">
-        <span class="material-symbols-outlined text-primary text-3xl">construction</span>
-        <span class="text-2xl font-bold">Trusty</span>
-        </a>
+  <div class="row g-4">
+    <!-- LEFT -->
+    <div class="col-lg-8">
+      <h1 class="h2 mb-2"><%= @service.sub_category.presence || "Servicio" %> - <%= @service.user.first_name %></h1>
+      <p class="text-muted">
+        <%= @service.description.presence || "Professional house cleaning services tailored to your needs. Eco-friendly products and experienced cleaners for a spotless home." %>
+      </p>
 
-        <div class="hidden md:flex items-center gap-8">
-          <a class="text-sm font-semibold hover:text-primary" href="#">Explore</a>
-          <a class="text-sm font-semibold hover:text-primary" href="#">Become a provider</a>
+      <!-- Gallery -->
+      <div class="service-gallery mb-4">
+        <div class="row g-3 row-cols-1 row-cols-sm-2">
+          <% if @service.respond_to?(:images) && @service.images.attached? %>
+            <% @service.images.limit(4).each do |img| %>
+              <div class="col">
+                <%= image_tag img.variant(resize_to_fill: [900, 600]), class: "img-fluid rounded-3 service-gallery-img w-100 h-100 object-fit-cover" %>
+              </div>
+            <% end %>
+          <% else %>
+            <% 4.times do %>
+              <div class="col">
+                <img class="img-fluid rounded-3 service-gallery-img" src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1600&auto=format&fit=crop" alt="Service photo">
+              </div>
+            <% end %>
+          <% end %>
         </div>
-
       </div>
 
-<div class="flex items-center gap-4">
-<div class="relative hidden sm:block">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">search</span>
-<input class="bg-gray-100 dark:bg-gray-800 border-none rounded-full pl-10 pr-4 py-2 w-64 focus:ring-2 focus:ring-primary focus:outline-none" placeholder="Search" type="text"/>
-</div>
-<button class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800">
-<span class="material-symbols-outlined">language</span>
-</button>
-<div class="w-10 h-10 rounded-full bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBz67zwGVYsuAMgiJhrIKMBrZSfa_QKoX5P4YQJknad3OFpLdp-ajnphvS2JS2S8emu94oSgH7AZ-Fr9bELuc0bNfEFSOkypToLM2aLGILcAIrPnbA_TSBIxfPItQVwKTlVMEqYS0gnl497xXhXdvLl7HPvQyX3-U1gqpMMHA-Wd8-MOWrzCU66MU4Gkh00k3S1O-yLundKnbpmmTJNBhSlF2UexNyKpmgeoN0D0cx4xipaK1HLjYGU4tzgLcFMx02ny8W_d91FvXU');"></div>
-</div>
-</nav>
-</header>
-<main class="container mx-auto px-6 py-8">
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
-<div class="lg:col-span-2 space-y-8">
-<div>
-<div class="flex items-center text-sm font-medium text-gray-500 dark:text-gray-400">
-<span><%= Service.first.category %></span>
-<span class="mx-2">/</span>
-<span class="text-gray-800 dark:text-gray-200"><%= Service.first.sub_category %></span>
-</div>
-<h1 class="text-4xl font-bold mt-2 text-gray-900 dark:text-white"><%= Service.first.sub_category %></h1>
-<p class="mt-4 text-lg">Professional house cleaning services tailored to your needs. Our experienced cleaners use eco-friendly products to ensure a spotless and healthy home environment. Book your cleaning today and enjoy a pristine living space.</p>
-</div>
-<div class="grid grid-cols-2 grid-rows-2 gap-2 aspect-[3/2] rounded-xl overflow-hidden">
-<div class="col-span-1 row-span-2 bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD388ZQTDBs1JwxUOBDScDi-xANFt96agsASCxvPS-MXF9LrTRtPnxj5T5TGa5z1xH6tms3FvG4A4M_I6TKq2ozCWjO8IJYG3aoID6nLJTAYmobwEjW5XQEWVzcDp1N2UcY9tjt0FtbNOFCOnYMCh_6emINcCjNil7Fxvk_s3X0Rjw40ExTYF1ueP8HcPDKbl_Y3HLUHAkt_9ZyUsEBYciTTG3YyAJtUnCv9v5q_b2uKETtBOE1DRfOACY7C8s9CDtgRs2CsExixpU');"></div>
-<div class="col-span-1 row-span-1 bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDX63jJ8z9vQr3lNW2C-e9ER99qbVW2HoiDK_bAzdxzMxbg-lttcqg6ewguRWqvknIL8QjFZKvpOKY55lvi4VlR3pRI6XJen4phDZXEDCWL_GptPdFT5JtFAZSnbfPg2puBcoGy4tmZQ3u4EP7AemhkUfyx_kA5QtHEt8OxqoC2XpxROfCXPonFGkX7TI0kIytIR4AiiiZwFKxmB7bLkWk3GEjnJsfumiMoohMxT-DRks0R8BpqsjGKPIxQSeCa-NVopYPTdakJ_cc');"></div>
-<div class="col-span-1 row-span-1 bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCmVvBXWg4zEb1yHgNzfELR86tjp-RKs4_qIX6yAoON3VsmIT6d3oXJjgUJ_s5G9TBDOojNkVtN75SPdFvdzOgKnJaUU1Qu-OlYTzJDCAEA40VSwsxpUOTWwndqFW4Nava8VBXpq6tVCn7vVciKYjx5G2GQK35mBE394cDbkHrvE-g0REWIA4ggLxu64Oa4P73Mk-ROmZSznuYH_uhwjtcYegSH4xJvDAeaHFoN_ppEOx-jujuSSa1p-1d5VRVIUD8zRe2vUrwCVno');"></div>
-</div>
-<div class="border-t border-gray-200 dark:border-gray-800 pt-8">
-<h2 class="text-2xl font-bold text-gray-900 dark:text-white">Sobre el proveedor</h2>
-<div class="flex items-center gap-4 mt-4">
-<div class="w-24 h-24 rounded-full bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCAclsaQA-zUdYAK2xDKGSMuBXBrQANmdxndYfewlfmvAUgl1YgIlOt7A7PncB62VlDqYg_Au352ikma0PD4wF0n-XL9CzdSyBIOLJgvR7wmA9y2z2m4SP-xzk_L8gyZDwDJ3w9caki8ylqKUm61BL76tfSinvMFsk_4a8FzigNfDvAIKhk77SN1N8blESzpV2E_BvReUhg2o9wRKgB2uIGaj61gsYE5I95bLMHiphjcnrBLoVL_pdmF40Ofi9LRIYR3LDXfwr3mSw');"></div>
-<div>
-<p class="text-xl font-bold text-gray-900 dark:text-white"><%= Service.first.user.first_name %></p>
-<div class="flex items-center gap-1 mt-1">
-<span class="material-symbols-outlined text-primary text-lg">star</span>
-<p class="text-sm font-semibold">4.8 <span class="text-gray-500 dark:text-gray-400 font-normal">(120 reviews)</span></p>
-</div>
-</div>
-</div>
-<p class="mt-4"><%= Service.first.description %></p>
-</div>
-<div class="border-t border-gray-200 dark:border-gray-800 pt-8">
-<h2 class="text-2xl font-bold text-gray-900 dark:text-white">Reviews</h2>
-<div class="space-y-6 mt-6">
-<div class="space-y-3">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-full bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD6JHJNnGdvktbGqiMTZpocBh8EpWQjbCHtj5LUXv7ECCSieAtL3TsjZAtBQFcwEYyyGhItKXKEF-Y98RbbcTGshMmFqDyWlCru9a-BN5QsFbvOtwRPQncDmUcV8xOKhu3cV4fD9ITN0caVVHQiN-OoWBJulBpbdKs_tJm97gfd6IWYBndaFgE36sMynd0UHiItCu-OWZ2ONBDy99KRpfWPVuLxVv5_MSu4-FkIcEDiCcviElop2r-0AUGGJ1vgv2GdMSMil9cDrNo');"></div>
-<div>
-<p class="font-semibold text-gray-900 dark:text-white">Emily Carter</p>
-<p class="text-sm text-gray-500 dark:text-gray-400">2 weeks ago</p>
-</div>
-</div>
-<div class="flex items-center gap-0.5">
-<span class="material-symbols-outlined text-primary">star</span>
-<span class="material-symbols-outlined text-primary">star</span>
-<span class="material-symbols-outlined text-primary">star</span>
-<span class="material-symbols-outlined text-primary">star</span>
-<span class="material-symbols-outlined text-primary">star</span>
-</div>
-<p>"Sarah did an amazing job cleaning my apartment. It was spotless and smelled so fresh. I highly recommend her services!"</p>
-</div>
-<div class="space-y-3">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-full bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAzKOLYy96TzajT3N-fGHZDmb3qukj3lZ7KhaF1eTPo9E4osnPvurFKGL8aLITRah_LhJac-ac_ZkGJb-hnr8qfaAbuo7HCvfWxqUasuWBMKwUYy41OCPxGmB2vm9WVx7UUeGQmFDlKLOyWXz6xaLkI6jvaI-s1fLP96ehGI-5MOlpYdBoqSQMRPlF9ALWFbWVxWDhFIW-PAwAGvX_FyNaC5RnJyjdwU82FkEYpbgKFSi_NwgA-1clIYFCixbYDc__1MXdBe0mkUe4');"></div>
-<div>
-<p class="font-semibold text-gray-900 dark:text-white">David Lee</p>
-<p class="text-sm text-gray-500 dark:text-gray-400">1 month ago</p>
-</div>
-</div>
-<div class="flex items-center gap-0.5">
-<span class="material-symbols-outlined text-primary">star</span>
-<span class="material-symbols-outlined text-primary">star</span>
-<span class="material-symbols-outlined text-primary">star</span>
-<span class="material-symbols-outlined text-primary">star</span>
-<span class="material-symbols-outlined text-gray-300 dark:text-gray-600">star</span>
-</div>
-<p>"Sarah was very professional and thorough. She cleaned my house from top to bottom and left it looking great. I will definitely book her again."</p>
-</div>
+      <!-- Provider card -->
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+          <h2 class="h5 mb-3">Sobre este Proveedor</h2>
+          <div class="d-flex align-items-center gap-3">
+            <div class="flex-shrink-0">
+            <% if @service.user.user_photo.attached? %>
+              <%= cl_image_tag @service.user.user_photo.key,
+                    width: 64, height: 64, crop: "fill", gravity: "auto",
+                    class: "rounded-circle object-fit-cover", alt: @service.user.first_name %>
+            <% end %>
+            </div>
+            <div>
+              <% avg = (@service.reviews.average(:rating)&.to_f || 0).round(1) rescue 0 %>
+              <% count = @service.reviews.count rescue 0 %>
+              <div class="small text-muted">
+                <span class="text-warning me-1"><%= "★" * avg.round %><span class="text-secondary"><%= "☆" * (5-avg.round) %></span></span>
+                <%= avg %> (<%= count %> <%= "review".pluralize(count) %>)
+              </div>
+            </div>
+          </div>
 
-<h1>Orders#new</h1>
-<p>Orders</p>
+          <p class="mt-3 mb-0 text-muted">
+            <%= @service.try(:provider_bio).presence || "Experienced, detail-oriented and committed to customer satisfaction." %>
+          </p>
+        </div>
+      </div>
 
-<div class="container p-3 shadow mt-4">
-  <%= simple_form_for Order.new do |f| %>
-    <%= f.input :start_date_time %>
-    <%= f.input :end_date_time %>
-    <%= f.input :status %>
-    <%= f.button :submit, "Crear Orden", class:"btn btn-primary" %>
-  <% end %>
+      <!-- Reviews -->
+      <div class="reviews">
+        <h2 class="h5 mb-3">Reviews</h2>
+        <% if @service.reviews.any? %>
+          <% @service.reviews.order(created_at: :desc).each do |review| %>
+            <div class="border-bottom pb-3 mb-3">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="fw-semibold"><%= review.user&.full_name || "Anonymous" %></div>
+                <div class="small text-muted"><%= time_ago_in_words(review.created_at) %> ago</div>
+              </div>
+              <div class="text-warning small mb-2">
+                <%= ("★" * review.rating.to_i).html_safe %><span class="text-secondary"><%= ("☆" * (5 - review.rating.to_i)).html_safe %></span>
+              </div>
+              <p class="mb-0"><%= review.content %></p>
+            </div>
+          <% end %>
+        <% else %>
+          <p class="text-muted">No hay reviews todavía.</p>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- RIGHT (Booking) -->
+    <div class="col-lg-4">
+      <%# valores seguros por si no tenés fee/currency aún %>
+      <% fee_value = defined?(@service.service_fee) && @service.service_fee.present? ? @service.service_fee : 0 %>
+      <% currency_value = defined?(@service.currency) && @service.currency.present? ? @service.currency : "USD" %>
+
+      <div class="card booking-card shadow-sm sticky-lg-top"
+           data-controller="booking"
+           data-booking-rate-value="<%= @service.price.to_f %>"
+           data-booking-fee-value="<%= fee_value.to_f %>"
+           data-booking-currency-value="<%= currency_value %>">
+        <div class="card-body">
+          <h2 class="h6 mb-3 fw-bold">Reserva tu Servicio de <%= @service.sub_category %></h2>
+          <hr>
+          <%= form_with model: [@service, Order.new],
+                        url: orders_path(@service),
+                        method: :post,
+                        local: true,
+                        html: { id: "booking-form" } do |f| %>
+
+            <div class="mb-3">
+              <label class="form-label">Fecha</label>
+              <%= f.date_field :date, class: "form-control", required: true, value: Date.current %>
+            </div>
+
+            <div class="row g-2">
+              <div class="col-6">
+                <label class="form-label">Hora de inicio</label>
+                <%= f.time_field :start_time, class: "form-control",
+                                 step: 900, value: "09:00",
+                                 data: { booking_target: "start" } %>
+              </div>
+              <div class="col-6">
+                <label class="form-label">Hora de finalización</label>
+                <%= f.time_field :end_time, class: "form-control",
+                                 step: 900, value: "12:00",
+                                 data: { booking_target: "end" } %>
+              </div>
+            </div>
+
+            <div class="row g-2 mt-2">
+              <div class="col-6">
+                <label class="form-label">Horas</label>
+                <%= f.number_field :hours, class: "form-control",
+                                   step: 0.5, min: 1, value: 3,
+                                   data: { booking_target: "hours" } %>
+              </div>
+              <div class="col-6">
+                <label class="form-label">Unit price</label>
+                <input class="form-control" value="<%= @service.price.to_f %>" readonly data-booking-target="unitPrice">
+              </div>
+            </div>
+
+            <hr>
+
+            <ul class="list-unstyled small">
+              <li class="d-flex justify-content-between align-items-center mb-1">
+                <span>Subtotal</span>
+                <strong data-booking-target="subtotal">$0.00</strong>
+              </li>
+              <li class="d-flex justify-content-between align-items-center mb-1">
+                <span>Fee de servicio</span>
+                <strong data-booking-target="fee">$0.00</strong>
+              </li>
+              <li class="d-flex justify-content-between align-items-center border-top pt-2 mt-2">
+                <span class="fw-semibold">Total</span>
+                <strong class="fs-5" data-booking-target="total">$0.00</strong>
+              </li>
+            </ul>
+
+            <!-- Hidden cents for server validation -->
+            <%= f.hidden_field :unit_price_cents, value: (@service.price.to_f * 100).to_i %>
+            <%= f.hidden_field :service_fee_cents, data: { booking_target: "feeCents" } %>
+            <%= f.hidden_field :subtotal_cents,    data: { booking_target: "subtotalCents" } %>
+            <%= f.hidden_field :total_cents,       data: { booking_target: "totalCents" } %>
+
+            <%= f.submit "Book Now", class: "btn btn-primary w-100 mt-2" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
