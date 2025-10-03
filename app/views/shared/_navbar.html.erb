@@ -35,7 +35,7 @@
 
           </a>
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-              <%= link_to "Ordenes de Servicio", "#", class: "dropdown-item" %>
+              <%= link_to "Dashboard Cliente", dashboard_index_path, class: "dropdown-item" %>
               <% if current_user.role == "supplier" %>
                 <%= link_to "Dashboard Proveedor", suppliers_dashboard_index_path, class: "dropdown-item" %>
               <% end %>
