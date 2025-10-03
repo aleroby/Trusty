@@ -14,7 +14,7 @@
     <%= render "shared/navbar" %>
     <%= render "shared/flashes" %>
     <% if controller.controller_name == 'pages' && controller.action_name == 'home' %>
-    <%= render 'shared/banner' %>
+      <%= render 'shared/banner' %>
     <% end %>
     <div class="main">
       <%= yield %>

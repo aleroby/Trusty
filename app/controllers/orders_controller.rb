@@ -10,7 +10,11 @@ class OrdersController < ApplicationController
     @order.user = current_user
     @order.service_id = @service.id
     @order.service_address = current_user.address
-    @order.total_price = @service.price * (@order.end_date_time - @order.start_date_time).to_i
+    date = params[:order][:date].split("-")
+    @order.total_price = params[:order][:total_cents].to_i
+    @order.start_date_time = Time.new(date[0], date[1], date[2], params[:order][:start_time].to_i)
+    @order.end_date_time = Time.new(date[0], date[1], date[2], params[:order][:end_time].to_i)
+    @order.status = "Aprobado"
     if @order.save
       redirect_to dashboard_index_path
     else
@@ -40,6 +44,6 @@ class OrdersController < ApplicationController
   end
 
   def order_params
-    params.require(:order).permit(:start_date_time, :end_date_time, :status )
+    params.require(:order).permit(:start_date_time, :end_date_time )
   end
 end

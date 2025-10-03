@@ -2,14 +2,11 @@ class ReviewsController < ApplicationController
   before_action :set_order, only: [:new, :review_for_client]
   def new
     if params[:order_id]
-      @order = Order.find(params[:order_id])
       @review = Review.new
     else
       @service = Service.find(params[:service_id])
       @review = Review.new
     end
-
-    @order =
   end
 
   def create
