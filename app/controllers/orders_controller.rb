@@ -7,11 +7,12 @@ class OrdersController < ApplicationController
 
   def create
     @order = Order.new(order_params)
-    @order.user = @current_user
-    @order.service = @service
-    @order.total_price = @service.price * (end_date_time - start_date_time).to_i
+    @order.user = current_user
+    @order.service_id = @service.id
+    @order.service_address = current_user.address
+    @order.total_price = @service.price * (@order.end_date_time - @order.start_date_time).to_i
     if @order.save
-      redirect_to new_order_path(@order)
+      redirect_to dashboard_index_path
     else
       render :new, status: :unprocessable_entity
     end
@@ -34,10 +35,11 @@ class OrdersController < ApplicationController
 
   private
   def set_service
-     @service = Service.find(params[:service_id])
+    @service = Service.first
+    # @service = Service.find(params[:service_id])
   end
 
   def order_params
-    params.require(:order).permit(:start_date_time, :service_address, :end_date_time, :status )
+    params.require(:order).permit(:start_date_time, :end_date_time, :status )
   end
 end

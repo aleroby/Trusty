@@ -95,3 +95,15 @@
 </div>
 <p>"Sarah was very professional and thorough. She cleaned my house from top to bottom and left it looking great. I will definitely book her again."</p>
 </div>
+
+<h1>Orders#new</h1>
+<p>Orders</p>
+
+<div class="container p-3 shadow mt-4">
+  <%= simple_form_for Order.new do |f| %>
+    <%= f.input :start_date_time %>
+    <%= f.input :end_date_time %>
+    <%= f.input :status %>
+    <%= f.button :submit, "Crear Orden", class:"btn btn-primary" %>
+  <% end %>
+</div>

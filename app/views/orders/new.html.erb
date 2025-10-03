@@ -3,10 +3,11 @@
 
 <div class="container p-3 shadow mt-4">
   <%= simple_form_for @order do |f| %>
-    <%= f.input :start_date_time %>
-    <%= f.input :end_date_time %>
-    <%= f.input :service_address %>
+    <%= f.input :start_date_time, html5: true %>
+    <%= f.input :end_date_time, html5: true %>
     <%= f.input :status %>
     <%= f.button :submit %>
   <% end %>
 </div>
+
+<% console %>
