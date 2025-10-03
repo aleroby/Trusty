@@ -30,7 +30,7 @@ export default class extends Controller {
   money(n) {
     return (isFinite(n) ? n : 0).toLocaleString(undefined, {
       style: "currency",
-      currency: this.currencyValue || "USD"
+      currency: this.currencyValue || "$"
     })
   }
 
