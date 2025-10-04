@@ -23,10 +23,10 @@
       <!-- Gallery -->
       <div class="service-gallery mb-4">
         <div class="row g-3 row-cols-1 row-cols-sm-2">
-          <% if @service.respond_to?(:images) && @service.images.attached? %>
+          <% if @service.images.attached? %>
             <% @service.images.limit(4).each do |img| %>
               <div class="col">
-                <%= image_tag img.variant(resize_to_fill: [900, 600]), class: "img-fluid rounded-3 service-gallery-img w-100 h-100 object-fit-cover" %>
+                <%= cl_image_tag img.key, class: "img-fluid rounded-3 service-gallery-img w-100 h-100 object-fit-cover" %>
               </div>
             <% end %>
           <% else %>

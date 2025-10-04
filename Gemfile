@@ -81,3 +81,5 @@ gem "ruby_llm", "~> 1.6.4"
 gem "pundit"
 
 gem "pg_search"
+
+gem 'image_processing', '~> 1.2'

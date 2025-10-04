@@ -7,6 +7,7 @@ class ServicesController < ApplicationController
       @services = multisearch_results
                        .where(searchable_type: "Service")
                        .map(&:searchable)
+
     else
       @services = Service.all
     end
