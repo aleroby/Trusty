@@ -13,6 +13,7 @@ class ServicesController < ApplicationController
   end
 
   def show
+    @order = Order.new
     @service = Service.find(params[:id])
   end
 

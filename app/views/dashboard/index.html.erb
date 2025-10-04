@@ -68,7 +68,7 @@
                   </td>
                   <td class="text-muted"><%= order.service.user.first_name %></td>
                   <td class="text-muted"><%= order.service.sub_category %></td>
-                  <td><%= number_to_currency(order.total_price, unit: "$", precision: 0) %></td>
+                  <td><%= number_to_currency(order.total_price, unit: "$", precision: 0, separator: ",", delimiter: "." ) %></td>
                   <td>
                     <% if order.status? %>
                       <span class="badge rounded-pill bg-success-subtle text-success-emphasis px-3">Pendiente</span>
@@ -81,13 +81,6 @@
                   </td>
                 </tr>
               <% end %>
-              <% if @orders.blank? %>
-                <tr>
-                  <td colspan="5" class="text-center py-5 text-muted">
-                    Aún no tienes ordenes. <%= link_to "Crea el primero aquí", new_order_path %>.
-                  </td>
-                </tr>
-              <% end %>
             </tbody>
           </table>
         </div>
@@ -95,3 +88,5 @@
     </main>
   </div>
 </div>
+
+<% console %>
