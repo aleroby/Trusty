@@ -92,8 +92,8 @@
     <!-- RIGHT (Booking) -->
     <div class="col-lg-4">
       <%# valores seguros por si no tenés fee/currency aún %>
-      <% fee_value = defined?(@service.service_fee) && @service.service_fee.present? ? @service.service_fee : 0 %>
-      <% currency_value = defined?(@service.currency) && @service.currency.present? ? @service.currency : "$" %>
+      <% fee_value = defined?(@service.service_fee) && @service.service_fee.present? ? @service.service_fee : 10 %>
+      <% currency_value = defined?(@service.currency) && @service.currency.present? ? @service.currency : "ARS" %>
 
       <div class="card booking-card shadow-sm sticky-lg-top"
            data-controller="booking"
@@ -172,3 +172,5 @@
     </div>
   </div>
 </div>
+
+<% console %>

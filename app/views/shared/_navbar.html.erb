@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-sm navbar-light navbar-lewagon">
   <div class="container-fluid">
-    <a class="navbar-brand fs-4" href="#">
+    <a class="navbar-brand fs-4" href="/">
       <%= image_tag "trusty_logo.png", class: "avatar", alt: "dropdown menu" %>
     </a>
 <!--     <%= link_to "#", class: "navbar-brand" do %>
@@ -35,7 +35,7 @@
 
           </a>
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-              <%= link_to "Ordenes de Servicio", "#", class: "dropdown-item" %>
+              <%= link_to "Dashboard Cliente", dashboard_index_path, class: "dropdown-item" %>
               <% if current_user.role == "supplier" %>
                 <%= link_to "Dashboard Proveedor", suppliers_dashboard_index_path, class: "dropdown-item" %>
               <% end %>
