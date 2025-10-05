@@ -1,6 +1,6 @@
 .service-show {
   .service-gallery-img { aspect-ratio: 3 / 2; }
-  .booking-card { top: 90px; } // offset para sticky bajo tu navbar
+  .booking-card { top: 0px; } // offset para sticky bajo tu navbar
   .avatar-placeholder {
     background: rgba(var(--bs-primary-rgb), .1);
     color: var(--bs-primary);
