@@ -35,7 +35,7 @@ class ReviewsController < ApplicationController
   def review_for_client
     @review = Review.new(review_params)
     @review.service = @order.service
-    @review.supplier = current_user
+    @review.supplier = @order.service.user
     @review.client = @order.user
 
     if @review.save

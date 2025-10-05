@@ -6,9 +6,11 @@ class User < ApplicationRecord
 
   VALID_EMAIL_REGEX = /\A[^@\s]+@[^@\s]+\.[^@\s]+\z/
 
+  has_many :pepes, class_name: "Service", foreign_key: "user_id"
   has_many :services #Usuario vendedor @current_user.services
   has_many :orders #Usuario comprador
-  has_many :reviews
+  has_many :supplier_reviews, class_name: "Review", foreign_key: "supplier_id"
+  has_many :client_reviews, class_name: "Review", foreign_key: "client_id"
   has_one_attached :user_photo
 
   validates :first_name, presence: true
