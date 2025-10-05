@@ -1,2 +1,21 @@
-<h1>Reviews#new</h1>
-<p>Find me in app/views/reviews/new.html.erb</p>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="form-login col-12 col-sm-6">
+      <% if @order.user == current_user %>
+        <h3 class="mt-4">Reseña para <%= @order.service.user.first_name %> </h3>
+      <% else %>
+        <h3 class="mt-4">Reseña para <%= @order.user.first_name %> </h3>
+      <% end %>
+      <hr>
+      <%= simple_form_for [@order, @review] do |f| %>
+        <%= f.input :rating, label: "Calificación", as: :integer, input_html: { step: 1, min: 1, max: 5, class: "form-control" } %>
+        <%= f.input :content, label: "Comentarios", as: :text, input_html: { rows: 6, class: "form-control" } %>
+
+        <div class="d-flex">
+          <%= f.submit "Enviar", class: "btn btn-primary" %>
+          <%= link_to "Cancelar", suppliers_dashboard_index_path, class: "btn btn-warning ms-3" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

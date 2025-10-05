@@ -52,8 +52,8 @@
             <% end %>
             </div>
             <div>
-              <% avg = (@service.reviews.average(:rating)&.to_f || 0).round(1) rescue 0 %>
-              <% count = @service.reviews.count rescue 0 %>
+              <% avg = (@service.reviews.where(client_id == user_id).average(:rating)&.to_f || 0).round(1) rescue 0 %>
+              <% count = @service.reviews.where(client_id == user_id).count rescue 0 %>
               <div class="small text-muted">
                 <span class="text-warning me-1"><%= "★" * avg.round %><span class="text-secondary"><%= "☆" * (5-avg.round) %></span></span>
                 <%= avg %> (<%= count %> <%= "review".pluralize(count) %>)
