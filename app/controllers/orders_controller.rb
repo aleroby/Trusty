@@ -11,7 +11,6 @@ class OrdersController < ApplicationController
 
   def create
     @order = Order.new(order_params)
-    raise
     @order.user = current_user
     @order.service_id = params[:order][:service_id]
     @order.service_address = current_user.address
