@@ -1,0 +1,15 @@
+#star-rating {
+  cursor: pointer;
+
+  .star {
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .star:hover {
+    transform: scale(1.2);
+  }
+
+  .star.filled {
+    color: #ffc107; // amarillo Bootstrap
+  }
+}

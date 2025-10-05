@@ -125,15 +125,7 @@
 
                   <!-- Provider + rating del SERVICIO -->
                   <div class="provider-row d-flex align-items-center gap-2 mt-auto">
-                    <% if service.user.respond_to?(:avatar) && service.user.avatar.attached? %>
-                      <%= cl_image_tag service.user.avatar.key,
-                            width: 64, height: 64, crop: :thumb, gravity: :face,
-                            class: "avatar rounded-circle flex-shrink-0", alt: service.user.name %>
-                    <% else %>
-                      <%= cl_image_tag service.user.user_photo.key,
-                            class: "avatar rounded-circle flex-shrink-0", width: 32, height: 32,
-                            alt: service.user.try(:name) || service.user.first_name %>
-                    <% end %>
+                    <%= cl_image_tag service.user.user_photo.key, class:"rounded-circle", size:"50x50" if service.user.user_photo.attached? %>
 
                     <% avg = service.reviews.average(:rating) %>
                     <% avg_display = avg ? number_with_precision(avg, precision: 1) : "—" %>
