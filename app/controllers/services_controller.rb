@@ -7,12 +7,14 @@ class ServicesController < ApplicationController
       @services = multisearch_results
                        .where(searchable_type: "Service")
                        .map(&:searchable)
+
     else
       @services = Service.all
     end
   end
 
   def show
+    @order = Order.new
     @service = Service.find(params[:id])
   end
 

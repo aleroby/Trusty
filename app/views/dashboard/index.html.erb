@@ -1,4 +1,4 @@
-<div class="container-fluid py-4 supplier-dashboard">
+<div class="container-fluid py-4 dashboard">
   <div class="row g-3">
     <!-- Sidebar -->
     <aside class="col-12 col-lg-3">
@@ -14,32 +14,24 @@
             <% end %>
             <div class="ms-2">
               <h6 class="mb-0"><%= current_user.first_name %></h6>
-              <small class="text-muted">Proveedor</small>
+              <small class="text-muted">Cliente</small>
             </div>
           </div>
 
           <nav class="nav flex-column nav-pills gap-1">
-            <%= link_to "Inicio", supplier_dashboard_path, class: "nav-link d-flex align-items-center #{'active' if current_page?(supplier_dashboard_path)}" %>
-            <%= link_to "Mis Servicios", services_path, class: "nav-link d-flex align-items-center #{'active' if controller_name == 'services'}" %>
-            <%= link_to "Solicitudes Pendientes", requests_path, class: "nav-link d-flex align-items-center #{'active' if controller_name == 'requests'}" %>
-            <%= link_to "Historial de Órdenes", orders_path, class: "nav-link d-flex align-items-center #{'active' if controller_name == 'orders'}" %>
-            <%= link_to "Mis Calificaciones", reviews_path, class: "nav-link d-flex align-items-center #{'active' if controller_name == 'reviews'}" %>
+            <%= link_to "Inicio", dashboard_index_path, class: "nav-link d-flex align-items-center #{'active' if current_page?(dashboard_index_path)}" %>
+            <%= link_to "Mis Ordenes pendientes", services_path, class: "nav-link d-flex align-items-center" %>
+            <%= link_to "Historial de Órdenes", orders_path, class: "nav-link d-flex align-items-center" %>
+            <%= link_to "Mis Calificaciones", "", class: "nav-link d-flex align-items-center #{'active' if controller_name == 'reviews'}" %>
           </nav>
 
-          <div class="card mt-4 border-0 bg-light-subtle">
-            <div class="card-body p-3">
-              <p class="small mb-2 text-muted">¿Necesitas inspiración?</p>
-              <%= link_to "Usa el Asistente de IA para crear servicios",
-                          new_service_path(ai: true),
-                          class: "stretched-link link-primary fw-semibold text-decoration-none" %>
-            </div>
-          </div>
+
         </div>
 
         <div class="card-footer bg-white">
           <ul class="list-unstyled small mb-0">
             <li class="mb-2">
-              <%= link_to "Ayuda", help_path, class: "text-decoration-none d-inline-flex align-items-center gap-2" %>
+              <%= link_to "Ayuda", "", class: "text-decoration-none d-inline-flex align-items-center gap-2" %>
             </li>
             <li>
               <%= link_to "Cuenta", edit_user_registration_path, class: "text-decoration-none d-inline-flex align-items-center gap-2" %>
@@ -52,8 +44,7 @@
     <!-- Main -->
     <main class="col-12 col-lg-9">
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3 mb-0">Mis Servicios</h1>
-        <%= link_to "+ Añadir nuevo", new_service_path, class: "btn btn-primary" %>
+        <h1 class="h3 mb-0">Mis Ordenes</h1>
       </div>
 
       <div class="card shadow-sm">
@@ -61,37 +52,33 @@
           <table class="table align-middle mb-0">
             <thead class="table-light">
               <tr>
-                <th>Servicio</th>
-                <th>Categoría</th>
-                <th>Precio</th>
+                <th>Ordenes</th>
+                <th>Nombre de proveedor</th>
+                <th>Tipo de servicio</th>
+                <th>Precio Total</th>
                 <th>Estado</th>
                 <th class="text-end">Acciones</th>
               </tr>
             </thead>
             <tbody>
-              <% @services.each do |service| %>
+              <% current_user.orders.each do |order| %>
                 <tr class="service-row">
                   <td class="fw-semibold">
-                    <%= link_to service.title, service_path(service), class: "text-decoration-none" %>
+                    <%= link_to order.id, order_path(order), class: "text-decoration-none" %>
                   </td>
-                  <td class="text-muted"><%= service.category %></td>
-                  <td><%= number_to_currency(service.price, unit: "$", precision: 0) %></td>
+                  <td class="text-muted"><%= order.service.user.first_name %></td>
+                  <td class="text-muted"><%= order.service.sub_category %></td>
+                  <td><%= number_to_currency(order.total_price, unit: "$", precision: 0, separator: ",", delimiter: "." ) %></td>
                   <td>
-                    <% if service.active? %>
-                      <span class="badge rounded-pill bg-success-subtle text-success-emphasis px-3">Activo</span>
+                    <% if order.status? %>
+                      <span class="badge rounded-pill bg-success-subtle text-success-emphasis px-3">Pendiente</span>
                     <% else %>
-                      <span class="badge rounded-pill bg-danger-subtle text-danger-emphasis px-3">Inactivo</span>
+                      <span class="badge rounded-pill bg-danger-subtle text-danger-emphasis px-3">Cancelada</span>
                     <% end %>
                   </td>
                   <td class="text-end">
-                    <%= link_to "Editar", edit_service_path(service), class: "link-primary fw-semibold" %>
-                  </td>
-                </tr>
-              <% end %>
-              <% if @services.blank? %>
-                <tr>
-                  <td colspan="5" class="text-center py-5 text-muted">
-                    Aún no tienes servicios. <%= link_to "Crea el primero aquí", new_service_path %>.
+                    <%= link_to "Reseña", new_order_review_path(order), class: "link-success fw-semibold mx-2" %>
+                    <%= link_to "Editar", edit_order_path(order), class: "link-primary fw-semibold" %>
                   </td>
                 </tr>
               <% end %>
@@ -102,3 +89,5 @@
     </main>
   </div>
 </div>
+
+<% console %>

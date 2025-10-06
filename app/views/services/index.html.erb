@@ -8,12 +8,12 @@
        data-filters-map-value="<%= Service.map_for_js.to_json %>"
        data-filters-selected-subcategory-value="<%= params[:sub_category].to_s %>">
 
-    <h5 class="card-title mb-3">Filtros</h5>
+    <h5 class="card-title text-primary mb-3">Filtros</h5>
 
     <%= form_with url: services_path, method: :get, local: true do |f| %>
       <!-- Category -->
       <div class="mb-3">
-        <%= f.label :category, "Categoría", class: "form-label" %>
+        <%= f.label :category, "Categoría", class: "form-label text-primary" %>
         <%= f.select :category,
               options_for_select([["Todas las Categorías", ""]] + Service.category_list.map { |c| [c, c] }, params[:category]),
               {},
@@ -23,7 +23,7 @@
 
       <!-- Subcategory (se rellena dinámicamente) -->
       <div class="mb-3">
-        <%= f.label :sub_category, "Subcategoría", class: "form-label" %>
+        <%= f.label :sub_category, "Subcategoría", class: "form-label text-primary" %>
         <%= f.select :sub_category,
               options_for_select([["Todas las Subcategorías", ""]] + Service.subcategory_list.map { |sc| [sc, sc] }, params[:sub_category]),
               {},
@@ -33,25 +33,25 @@
 
       <!-- Date -->
       <div class="mb-3">
-        <%= f.label :date, "Fecha", class: "form-label" %>
+        <%= f.label :date, "Fecha", class: "form-label text-primary" %>
         <%= f.date_field :date, class: "form-control" %>
       </div>
 
       <!-- Hora de inicio -->
       <div class="mb-3">
-        <%= f.label :time, "Hora de inicio", class: "form-label" %>
+        <%= f.label :time, "Hora de inicio", class: "form-label text-primary" %>
         <%= f.time_field :time, class: "form-control" %>
       </div>
 
       <!-- Hora de finalización -->
       <div class="mb-3">
-        <%= f.label :time, "Hora de finalización", class: "form-label" %>
+        <%= f.label :time, "Hora de finalización", class: "form-label text-primary" %>
         <%= f.time_field :time, class: "form-control" %>
       </div>
 
       <!-- Price -->
       <div class="mb-2" id="price-range-container" data-controller="price-range">
-        <label for="priceRange" class="form-label d-flex justify-content-between">
+        <label for="priceRange" class="form-label d-flex justify-content-between text-primary">
           <span>Rango de Precios</span>
           <span id="priceRangeOutput"><%= number_to_currency(params[:price_max].presence || 1000, unit: "$") %></span>
         </label>
@@ -65,7 +65,7 @@
 
       <!-- Location -->
       <div class="mb-3">
-        <%= f.label :location, "Dirección", class: "form-label" %>
+        <%= f.label :location, "Dirección", class: "form-label text-primary" %>
         <%= f.search_field :location, placeholder: "Ingresa tu dirección", class: "form-control" %>
       </div>
 
@@ -125,15 +125,7 @@
 
                   <!-- Provider + rating del SERVICIO -->
                   <div class="provider-row d-flex align-items-center gap-2 mt-auto">
-                    <% if service.user.respond_to?(:avatar) && service.user.avatar.attached? %>
-                      <%= cl_image_tag service.user.avatar.key,
-                            width: 64, height: 64, crop: :thumb, gravity: :face,
-                            class: "avatar rounded-circle flex-shrink-0", alt: service.user.name %>
-                    <% else %>
-                      <%= cl_image_tag service.user.user_photo.key,
-                            class: "avatar rounded-circle flex-shrink-0", width: 32, height: 32,
-                            alt: service.user.try(:name) || service.user.first_name %>
-                    <% end %>
+                    <%= cl_image_tag service.user.user_photo.key, class:"rounded-circle", size:"50x50" if service.user.user_photo.attached? %>
 
                     <% avg = service.reviews.average(:rating) %>
                     <% avg_display = avg ? number_with_precision(avg, precision: 1) : "—" %>

@@ -1,44 +1,53 @@
-/* Dashboard Supplier */
 .supplier-dashboard {
-  .sidebar-card {
-    border-radius: 1rem;
-  }
+  .sidebar-card { border-radius: 1rem; }
 
   .avatar-sm {
-    width: 48px;
-    height: 48px;
-    font-size: 0.95rem;
+    width: 48px; height: 48px; font-size: 0.95rem;
   }
 
+  /* --- Sidebar pills --- */
   .nav-pills .nav-link {
     border-radius: 0.75rem;
     padding: 0.6rem 0.9rem;
     color: var(--bs-body-color);
+    transition: background-color .15s ease, color .15s ease;
 
-    &.active {
-      background: rgba(var(--bs-primary-rgb), 0.12);
-      color: var(--bs-primary);
-      font-weight: 600;
-    }
-
-    &:hover {
-      background: var(--bs-light);
+    /* hover SOLO cuando NO está activo */
+    &:not(.active):hover {
+      background-color: var(--bs-light);
+      color: var(--bs-body-color);
     }
   }
 
-  .service-row td {
-    vertical-align: middle;
+  /* estado activo (y el caso .show > .nav-link) */
+  .nav-pills .nav-link.active,
+  .nav-pills .show > .nav-link {
+    background-color: rgba(var(--bs-primary-rgb), 0.12);
+    color: var(--bs-primary);
+    font-weight: 600;
+    box-shadow: inset 0 0 0 1px rgba(var(--bs-primary-rgb), 0.25);
   }
 
-  /* Opcional: suaviza el look de la tabla como “cards planas” */
+  /* mantener colores al hover cuando ya está activo */
+  .nav-pills .nav-link.active:hover,
+  .nav-pills .show > .nav-link:hover {
+    background-color: rgba(var(--bs-primary-rgb), 0.16);
+    color: var(--bs-primary);
+  }
+
+  /* accesibilidad: foco visible */
+  .nav-pills .nav-link:focus-visible {
+    outline: 0;
+    box-shadow: 0 0 0 .2rem rgba(var(--bs-primary-rgb), .25);
+  }
+
+  .service-row td { vertical-align: middle; }
+
   .table > :not(caption) > * > * {
     padding-top: 0.95rem;
     padding-bottom: 0.95rem;
   }
 }
 
-/* Ayuda rápida para usar el $primary en texto (si usas Sass con variables de Bootstrap) */
-.text-primary-fw {
-  color: $primary !important;
-  font-weight: 600;
-}
+/* Si usás variables de Sass de Bootstrap */
+.text-primary-fw { color: $primary !important; font-weight: 600; }

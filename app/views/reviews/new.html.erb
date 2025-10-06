@@ -1,2 +1,21 @@
-<h1>Reviews#new</h1>
-<p>Find me in app/views/reviews/new.html.erb</p>
+<div class="card p-4 shadow-sm">
+  <div class="text-center mb-3">
+    <div id="star-rating" class="mb-3">
+      <% 5.times do |i| %>
+        <i class="bi bi-star fs-3 text-warning star" data-value="<%= i + 1 %>"></i>
+      <% end %>
+    </div>
+  </div>
+
+  <%= form_with(model: [ @order, @review ], local: true) do |f| %>
+    <%= f.hidden_field :rating, id: "review_rating" %>
+
+    <div class="mb-3">
+      <%= f.text_area :content, placeholder: "Cuéntanos tu experiencia...", class: "form-control", rows: 3 %>
+    </div>
+
+    <div class="d-grid">
+      <%= f.submit "Enviar Reseña", class: "btn btn-primary btn-lg" %>
+    </div>
+  <% end %>
+</div>

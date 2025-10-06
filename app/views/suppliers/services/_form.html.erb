@@ -28,7 +28,14 @@
 
         <%= f.input :description, label: "Descripción", as: :text, input_html: { rows: 6, class: "form-control" } %>
         <%= f.input :price, label: "Precio unitario", as: :decimal, input_html: { step: 0.01, min: 0, class: "form-control" } %>
-        <%= f.input :photos, label: "Imágenes", as: :file, input_html: { multiple: true } %>
+        <%= f.input :images, label: "Imágenes", as: :file, input_html: { multiple: true } %>
+
+        <%= f.input :published,
+            as: :boolean,
+            label: "Publicado",
+            wrapper_html: { class: "form-check form-switch mb-3" },
+            input_html:  { class: "form-check-input", role: "switch" },
+            label_html:  { class: "form-check-label" } %>
 
         <div class="d-flex">
           <%= f.submit "Guardar", class: "btn btn-primary" %>

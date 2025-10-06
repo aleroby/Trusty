@@ -7,9 +7,14 @@ eagerLoadControllersFrom("controllers", application)
 import { Application } from "@hotwired/stimulus"
 import DependentSelectController from "./dependent_select_controller"
 import FiltersController from "./filters_controller";
-import PriceRangeController from "./price_range_controller"; // si ya lo tenés
+import PriceRangeController from "./price_range_controller";
+import BookingController from "./booking_controller";
 
 window.Stimulus = Application.start()
 Stimulus.register("dependent-select", DependentSelectController)
 Stimulus.register("filters", FiltersController);
 Stimulus.register("price-range", PriceRangeController); // opcional
+
+import ReviewStarsController from "./review_stars_controller"
+application.register("review-stars", ReviewStarsController)
+

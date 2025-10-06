@@ -1,15 +1,12 @@
-
-
-
-<div class="bg-dark text-white position-relative" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)), url('https://lh3.googleusercontent.com/aida-public/AB6AXuARJ-JZt3KXw9nhFzB_0-bMMBY1c1wAEXiRgbeyYTDzjOIfVtYwx46LocKQ-PXQUUP-cWVDs5-MLfi3gjAX5rDPD_DzEPBs9lfBKtBtx9iVe3kUxatblsx9rAXh-3xlr7XFdbtp9fVEf74wBWuX5c1t9rgPeFGuILssYfE4gZeziR3dvuhp-4SHm_ul7_c42O6fXMpj8DzKR9mmOO7rzFrCSUkapGM-7OFHqrzLvHuCLQNiKKlXxBgTDZGBAZBF-kAN5mic0WUD0uBq') center/cover no-repeat;">
+<div class="bg-dark position-relative" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.4)), url('https://lh3.googleusercontent.com/aida-public/AB6AXuARJ-JZt3KXw9nhFzB_0-bMMBY1c1wAEXiRgbeyYTDzjOIfVtYwx46LocKQ-PXQUUP-cWVDs5-MLfi3gjAX5rDPD_DzEPBs9lfBKtBtx9iVe3kUxatblsx9rAXh-3xlr7XFdbtp9fVEf74wBWuX5c1t9rgPeFGuILssYfE4gZeziR3dvuhp-4SHm_ul7_c42O6fXMpj8DzKR9mmOO7rzFrCSUkapGM-7OFHqrzLvHuCLQNiKKlXxBgTDZGBAZBF-kAN5mic0WUD0uBq') center/cover no-repeat;">
   <div class="container text-center py-5 py-lg-7">
-    <h1 class="display-4 fw-bold">Encuentra profesionales para cualquier proyecto</h1>
-    <p class="lead text-white-50 mx-auto mt-3 mb-4" style="max-width: 700px;">
-      Conecta con expertos en carpintería, plomería, electricidad y más. Haz realidad tus ideas con CraftConnect.
+    <h1 class="text-white display-7 pt-4">Tu App de Servicios de Confianza</h1>
+    <p class="lead text-white mx-auto mt-3 mb-4" style="max-width: 700px;">
+      Trusty es una plataforma que conecta usuarios con prestadores de servicios locales a través de geolocalización, ofreciendo una experiencia intuitiva y segura para ambas partes.
     </p>
     <div class="row justify-content-center">
-      <div class="t">
-        <%= form_with url: services_path, method: :get, class: "d-flex" do %>
+      <div class="w-50 justify-content-center ">
+        <%= form_with url: services_path, method: :get, class: "d-flex pb-5" do %>
           <%= text_field_tag :query,
                 params[:query],
                 class: "form-control w-100",
