@@ -21,6 +21,9 @@ class User < ApplicationRecord
 
   before_create :set_default_role
 
+  geocoded_by :address
+  after_validation :geocode, if: :will_save_change_to_address?
+
   private
   def set_default_role
     self.role ||= "client"
