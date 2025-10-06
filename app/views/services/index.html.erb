@@ -51,14 +51,15 @@
       </div>
 
       <!-- Price -->
+      <% default_price = params[:price_max].presence || 100_000 %>
       <div class="mb-2" id="price-range-container" data-controller="price-range">
         <label for="priceRange" class="form-label d-flex justify-content-between text-primary">
           <span>Rango de Precios</span>
-          <span id="priceRangeOutput"><%= number_to_currency(params[:price_max].presence || 1000, unit: "$") %></span>
+          <span id="priceRangeOutput"><%= number_to_currency(default_price, unit: "$") %></span>
         </label>
         <input type="range" class="form-range" min="0" max="100000" step="5"
                id="priceRange" name="price_max"
-               value="<%= params[:price_max].presence || 1000 %>">
+               value="<%= default_price %>">
         <div class="d-flex justify-content-between small text-muted">
           <span>$0</span><span>$100.000</span>
         </div>

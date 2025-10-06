@@ -1,77 +1,76 @@
-    <div class="col-lg-4">
-      <%# valores seguros por si no tenés fee/currency aún %>
-      <% fee_value = defined?(@service.service_fee) && @service.service_fee.present? ? @service.service_fee : 10 %>
-      <% currency_value = defined?(@service.currency) && @service.currency.present? ? @service.currency : "ARS" %>
+<h1>Orders#edit</h1>
+<p>Find me in app/views/orders/edit.html.erb</p>
 
-      <div class="card booking-card shadow rounded-4"
-           data-controller="booking"
-           data-booking-rate-value="<%= @service.price.to_f %>"
-           data-booking-fee-value="<%= fee_value.to_f %>"
-           data-booking-currency-value="<%= currency_value %>">
-        <div class="card-body">
-          <h6 class="fw-bold bg-success text-white p-3 rounded-1">Reserva tu Servicio de <%= @service.sub_category %></h6>
-          <hr>
-          <%= form_with model: @order, url: orders_path, html: { id: "booking-form" } do |f| %>
 
-            <div class="mb-3">
-              <label class="form-label">Fecha</label>
-              <%= f.date_field :date, class: "form-control", required: true %>
-            </div>
+<div class="container mt-5">
+  <div class="d-flex justify-content-end"><%= link_to "Regresar a lista de ordenes", dashboard_index_path(@order), class: "m-5 btn btn-success rounded-5 shadow" %></div>
+  <div class="row justify-content-center">
+    <div class="col-md-8">
 
-            <div class="row g-2">
-              <div class="col-6">
-                <label class="form-label">Hora de inicio</label>
-                <%= f.time_field :start_time, class: "form-control",
-                                 step: 1800,
-                                 data: { booking_target: "start" } %>
-              </div>
-              <div class="col-6">
-                <label class="form-label">Hora de finalización</label>
-                <%= f.time_field :end_time, class: "form-control",
-                                 step: 1800,
-                                 data: { booking_target: "end" } %>
-              </div>
-            </div>
-
-            <div class="row g-2 mt-2">
-              <div class="col-6">
-                <label class="form-label">Horas</label>
-                <%= f.number_field :hours, class: "form-control",
-                                   step: 0.5, min: 1,
-                                   data: { booking_target: "hours" } %>
-              </div>
-              <div class="col-6">
-                <label class="form-label">Precio Unitario</label>
-                <input class="form-control" value="<%= @service.price.to_f %>" readonly data-booking-target="unitPrice">
-              </div>
-            </div>
-
-            <hr>
-
-            <ul class="list-unstyled small">
-              <li class="d-flex justify-content-between align-items-center mb-1 fw-bold">
-                <span>Subtotal</span>
-                <strong data-booking-target="subtotal">$0.00</strong>
-              </li>
-              <li class="d-flex justify-content-between align-items-center mb-1 fw-bold">
-                <span>Tarifa de servicio</span>
-                <strong data-booking-target="fee">$0.00</strong>
-              </li>
-              <li class="d-flex justify-content-between align-items-center border-top pt-2 mt-2">
-                <span class="fw-bold">TOTAL</span>
-                <strong class="fs-5" data-booking-target="total">$0.00</strong>
-              </li>
-            </ul>
-
-            <!-- Hidden cents for server validation -->
-            <%= f.hidden_field :unit_price_cents, value: (@service.price.to_f * 100).to_i %>
-            <%= f.hidden_field :service_fee_cents, data: { booking_target: "feeCents" } %>
-            <%= f.hidden_field :subtotal_cents,    data: { booking_target: "subtotalCents" } %>
-            <%= f.hidden_field :total_price,       data: { booking_target: "totalCents" } %>
-            <%= f.hidden_field :service_id, value: (@service.id) %>
-
-            <%= f.submit "Reserva", class: "btn btn-primary fw-bold rounded-4 w-100 mt-2" %>
-          <% end %>
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white text-center">
+          <h3 class="mb-0">Orden de Compra Nº <%= @order.id %></h3>
         </div>
+
+        <div class="card-body px-5 py-4">
+          <div class="row mb-3">
+            <div class="col-6 text-end fw-bold">Número de orden:</div>
+            <div class="col-6"><%= @order.id %></div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-6 text-end fw-bold">Nombre del proveedor:</div>
+            <div class="col-6"><%= @order.service.user.first_name %></div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-6 text-end fw-bold">Nombre del cliente:</div>
+            <div class="col-6"><%= @order.user.first_name %></div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-6 text-end fw-bold">Domicilio del servicio:</div>
+            <div class="col-6"><%= @order.service_address %></div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-6 text-end fw-bold">Fecha de servicio:</div>
+            <div class="col-6">
+                <%= l(@order.date, format: :long) %>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-6 text-end fw-bold">hora de inicio:</div>
+            <div class="col-6">
+              <% if @order.start_time.present? %>
+                <%= l(@order.start_time, format: :hour_only) %>
+              <% else %>
+                <em>No definido</em>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-6 text-end fw-bold">hora de cierre:</div>
+            <div class="col-6">
+              <% if @order.end_time.present? %>
+                <%= l(@order.end_time, format: :hour_only) %>
+              <% else %>
+                <em>No definido</em>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-6 text-end fw-bold">Precio total:</div>
+            <div class="col-6 text-success fw-semibold">
+              $<%= number_to_currency(@order.total_price, unit: "", delimiter: ".", separator: ",") %>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
+  </div>
+</div>
