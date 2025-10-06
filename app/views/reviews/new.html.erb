@@ -1,21 +1,26 @@
-<div class="card p-4 shadow-sm">
-  <div class="text-center mb-3">
-    <div id="star-rating" class="mb-3">
-      <% 5.times do |i| %>
-        <i class="bi bi-star fs-3 text-warning star" data-value="<%= i + 1 %>"></i>
-      <% end %>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12 col-sm-8">
+      <div class="card border rounded-4 m-3 p-4 shadow-sm">
+        <div class="text-center mb-3">
+          <h4>¿Cómo calificás el servicio de <%= @order.service.sub_category %> de <%= @order.service.user.first_name %>?</h4>
+        </div>
+
+        <%= simple_form_for [@order, @review] do |f| %>
+          <%= f.input :rating, collection: (1..5).to_a, label: "Rate your experience",
+          input_html: {data: {controller: "star-rating"}} %>
+          <div class="mb-3">
+            <%= f.input :content, as: :text,
+                  placeholder: "Contanos tu experiencia...",
+                  class: "form-control bg-white rounded-4",
+                  rows: 3 %>
+          </div>
+          <div class="d-grid">
+            <%= f.submit "Enviar Reseña", class: "btn btn-primary rounded-4" %>
+          </div>
+        <% end %>
+
+      </div>
     </div>
   </div>
-
-  <%= form_with(model: [ @order, @review ], local: true) do |f| %>
-    <%= f.hidden_field :rating, id: "review_rating" %>
-
-    <div class="mb-3">
-      <%= f.text_area :content, placeholder: "Cuéntanos tu experiencia...", class: "form-control", rows: 3 %>
-    </div>
-
-    <div class="d-grid">
-      <%= f.submit "Enviar Reseña", class: "btn btn-primary btn-lg" %>
-    </div>
-  <% end %>
 </div>
