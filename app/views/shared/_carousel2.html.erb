@@ -1,0 +1,37 @@
+<div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active c-item" data-bs-interval="4500">
+    
+      <%= image_tag "imagen1.jpg", class:"d-block w-100"%>
+      <div class="carousel-caption d-none d-md-flex  flex-column top-0 justify-content-center align-items-center ">
+         <h5 class="display-1 fw-bold">Transparencia en precios</h5>
+         <p class="fs-3">Ofrecemos servicios claros con precios transparentes, eliminando sorpresas y asegurando que los usuarios sepan exactamente lo que están pagando.</p>
+      </div>
+    </div>
+    <div class="carousel-item c-item" data-bs-interval="4500">
+      <%# <img src="..." class="d-block w-100" alt="..."> %>
+      <%= image_tag "imagen2.jpg", class:"d-block w-100"%>
+      <div class="carousel-caption d-none d-md-flex  flex-column top-0 justify-content-center align-items-center ">
+         <h5 class="display-1 fw-bold">Reseñas verificadas</h5>
+         <p class="fs-3">Nuestra app cuenta con reseñas verificadas y confiables, sin publicidad, lo que garantiza que los usuarios puedan tomar decisiones informadas.</p>
+      </div>
+    </div>
+    <div class="carousel-item c-item" data-bs-interval="3000">
+      <%# <img src="..." class="d-block w-100" alt="..."> %>
+      <%= image_tag "imagen3.jpg", class:"d-block w-100"%>
+      <div class="carousel-caption d-none d-md-flex  flex-column top-0 justify-content-center align-items-center ">
+         <h5 class="display-1 fw-bold">Experiencia segura</h5>
+         <p class="fs-3">Trusty garantiza transacciones seguras y experiencias replicables en cualquier ciudad, proporcionando una capa de confianza en cada interacción.</p>
+      </div>
+    </div>
+
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
