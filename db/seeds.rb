@@ -328,7 +328,7 @@ puts "📅 Creando órdenes de ejemplo..."
     service: service,
     service_address: client.address,
     total_price: service.price,
-    status: ["pendiente", "confirmada", "completada"].sample,
+    status: ["pendiente", "confirmada", "completada", "cancelada"].sample,
     date: Date.today + rand(-15..15).days,
     start_time: Time.now.change(hour: rand(8..18), min: [0, 30].sample),
     end_time: Time.now.change(hour: rand(19..22), min: [0, 30].sample)
