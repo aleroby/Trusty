@@ -24,7 +24,7 @@ export default class extends Controller {
 
     // Limpiar y reconstruir options
     this.subcategorySelectTarget.innerHTML = "";
-    this.subcategorySelectTarget.append(this.option("All", ""));
+    this.subcategorySelectTarget.append(this.option("Todas las subcategorías", ""));
 
     subcats.forEach(sc => {
       const opt = this.option(sc, sc);

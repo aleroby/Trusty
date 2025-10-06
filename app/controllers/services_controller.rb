@@ -7,7 +7,8 @@ class ServicesController < ApplicationController
       @services = multisearch_results
                        .where(searchable_type: "Service")
                        .map(&:searchable)
-
+    elsif params[:mode] == "filtros"
+      @services = Service.filter(params)
     else
       @services = Service.all
     end
