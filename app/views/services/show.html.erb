@@ -3,8 +3,8 @@
   <nav aria-label="breadcrumb" class="mb-3">
     <div class="d-flex justify-content-between">
       <ol class="breadcrumb small">
-        <li class="breadcrumb-item"><%= link_to @service.category.presence || "Cleaning", services_path(category: @service.category) %></li>
-        <li class="breadcrumb-item active" aria-current="page"><%= @service.sub_category.presence || "House Cleaning" %></li>
+        <li class="breadcrumb-item"><%= link_to @service.category.presence || "Servicio", services_path(category: @service.category) %></li>
+        <li class="breadcrumb-item active" aria-current="page"><%= @service.sub_category.presence || "Servicio" %></li>
       </ol>
         <ol class="breadcrumb small">
         <li class="breadcrumb-item"><%= link_to "Volver a Servicios" || "Lista de Servicios", services_path(category: @service.category) %></li>
@@ -15,10 +15,7 @@
   <div class="row g-4">
     <!-- LEFT -->
     <div class="col-lg-8">
-      <h1 class="h2 mb-2"><%= @service.sub_category.presence || "Servicio" %> - <%= @service.user.first_name %></h1>
-      <p class="text-muted">
-        <%= @service.description.presence || "Professional house cleaning services tailored to your needs. Eco-friendly products and experienced cleaners for a spotless home." %>
-      </p>
+      <h3 class="border rounded-4 bg-primary text-white p-2 px-3 mb-3">Servicio de <%= @service.sub_category.presence || "Servicio" %> - <%= @service.user.first_name %></h3>
 
       <!-- Gallery -->
       <div class="service-gallery mb-4">
@@ -26,7 +23,7 @@
           <% if @service.images.attached? %>
             <% @service.images.limit(4).each do |img| %>
               <div class="col">
-                <%= cl_image_tag img.key, class: "img-fluid rounded-3 service-gallery-img w-100 h-100 object-fit-cover" %>
+                <%= cl_image_tag img.key, class: "img-fluid rounded-3 service-gallery-img w-100 h-100 object-fit-cover shadow-sm rounded-4" %>
               </div>
             <% end %>
           <% else %>
@@ -37,10 +34,14 @@
             <% end %>
           <% end %>
         </div>
+          <div class="border d-flex justify-content-start shadow rounded 4 mt-3 p-3">
+            <h5 class="text-muted">Descripción del Servicio:</h5>
+            <%= @service.description.presence || "El Proveedor no agregó aún una descripción para este servicio" %>
+          </div>
       </div>
 
       <!-- Provider card -->
-      <div class="card border-0 shadow-sm mb-4">
+      <div class="card border shadow-sm mb-4 rounded-4">
         <div class="card-body">
           <h2 class="h5 mb-3">Sobre este Proveedor</h2>
           <div class="d-flex align-items-center gap-3">
@@ -49,11 +50,13 @@
               <%= cl_image_tag @service.user.user_photo.key,
                     width: 64, height: 64, crop: "fill", gravity: "auto",
                     class: "rounded-circle object-fit-cover", alt: @service.user.first_name %>
+            <% else %>
+              <%= image_tag "avatar.webp", class: "avatar", alt: "supplier  " %>
             <% end %>
             </div>
             <div>
-              <% avg = (@service.reviews.where(client_id == user_id).average(:rating)&.to_f || 0).round(1) rescue 0 %>
-              <% count = @service.reviews.where(client_id == user_id).count rescue 0 %>
+              <% avg = (@service.reviews.average(:rating)&.to_f || 0).round(1) rescue 0 %>
+              <% count = @service.reviews.count rescue 0 %>
               <div class="small text-muted">
                 <span class="text-warning me-1"><%= "★" * avg.round %><span class="text-secondary"><%= "☆" * (5-avg.round) %></span></span>
                 <%= avg %> (<%= count %> <%= "review".pluralize(count) %>)
@@ -69,18 +72,20 @@
 
       <!-- Reviews -->
       <div class="reviews">
-        <h2 class="h5 mb-3">Reviews</h2>
+        <h3 class=" bg-success text-white mb-3 p-2 shadow-sm rounded-4">Reviews</h3>
         <% if @service.reviews.any? %>
-          <% @service.reviews.order(created_at: :desc).each do |review| %>
-            <div class="border-bottom pb-3 mb-3">
+          <% @service.reviews.each do |review| %>
+            <div class="border shadow-sm rounded-4 p-3 mb-3">
               <div class="d-flex align-items-center justify-content-between">
-                <div class="fw-semibold"><%= review.user&.full_name || "Anonymous" %></div>
+                <div class="d-flex flex-column">
+                  <div class="fw-semibold"><%= review.client.first_name || "Anonymous" %></div>
+                  <div class="text-warning small">
+                    <%= ("★" * review.rating.to_i).html_safe %><span class="text-secondary"><%= ("☆" * (5 - review.rating.to_i)).html_safe %></span>
+                  </div>
+                </div>
+                <p><%= review.content %></p>
                 <div class="small text-muted"><%= time_ago_in_words(review.created_at) %> ago</div>
               </div>
-              <div class="text-warning small mb-2">
-                <%= ("★" * review.rating.to_i).html_safe %><span class="text-secondary"><%= ("☆" * (5 - review.rating.to_i)).html_safe %></span>
-              </div>
-              <p class="mb-0"><%= review.content %></p>
             </div>
           <% end %>
         <% else %>
@@ -95,30 +100,30 @@
       <% fee_value = defined?(@service.service_fee) && @service.service_fee.present? ? @service.service_fee : 10 %>
       <% currency_value = defined?(@service.currency) && @service.currency.present? ? @service.currency : "ARS" %>
 
-      <div class="card booking-card shadow-sm sticky-lg-top"
+      <div class="card booking-card shadow rounded-4"
            data-controller="booking"
            data-booking-rate-value="<%= @service.price.to_f %>"
            data-booking-fee-value="<%= fee_value.to_f %>"
            data-booking-currency-value="<%= currency_value %>">
         <div class="card-body">
-          <h6 class="fw-bold text-primary" mb-3 fw-bold">Reserva tu Servicio de <%= @service.sub_category %></h6>
+          <h6 class="fw-bold bg-success text-white p-3 rounded-1">Reserva tu Servicio de <%= @service.sub_category %></h6>
           <hr>
           <%= form_with model: @order, url: orders_path, html: { id: "booking-form" } do |f| %>
 
             <div class="mb-3">
-              <label class="form-label">Fecha</label>
+              <label class="form-label fw-bold">Fecha</label>
               <%= f.date_field :date, class: "form-control", required: true %>
             </div>
 
             <div class="row g-2">
               <div class="col-6">
-                <label class="form-label">Hora de inicio</label>
+                <label class="form-label fw-bold">Hora de inicio</label>
                 <%= f.time_field :start_time, class: "form-control",
                                  step: 1800,
                                  data: { booking_target: "start" } %>
               </div>
               <div class="col-6">
-                <label class="form-label">Hora de finalización</label>
+                <label class="form-label fw-bold">Hora de finalización</label>
                 <%= f.time_field :end_time, class: "form-control",
                                  step: 1800,
                                  data: { booking_target: "end" } %>
@@ -127,13 +132,13 @@
 
             <div class="row g-2 mt-2">
               <div class="col-6">
-                <label class="form-label">Horas</label>
+                <label class="form-label fw-bold">Horas</label>
                 <%= f.number_field :hours, class: "form-control",
                                    step: 0.5, min: 1,
                                    data: { booking_target: "hours" } %>
               </div>
               <div class="col-6">
-                <label class="form-label">Precio Unitario</label>
+                <label class="form-label fw-bold">Precio Unitario</label>
                 <input class="form-control" value="<%= @service.price.to_f %>" readonly data-booking-target="unitPrice">
               </div>
             </div>
@@ -141,16 +146,16 @@
             <hr>
 
             <ul class="list-unstyled small">
-              <li class="d-flex justify-content-between align-items-center mb-1">
+              <li class="d-flex justify-content-between align-items-center mb-1 fw-bold">
                 <span>Subtotal</span>
                 <strong data-booking-target="subtotal">$0.00</strong>
               </li>
-              <li class="d-flex justify-content-between align-items-center mb-1">
+              <li class="d-flex justify-content-between align-items-center mb-1 fw-bold">
                 <span>Tarifa de servicio</span>
                 <strong data-booking-target="fee">$0.00</strong>
               </li>
               <li class="d-flex justify-content-between align-items-center border-top pt-2 mt-2">
-                <span class="fw-semibold">Total</span>
+                <span class="fw-bold">TOTAL</span>
                 <strong class="fs-5" data-booking-target="total">$0.00</strong>
               </li>
             </ul>
@@ -162,7 +167,7 @@
             <%= f.hidden_field :total_price,       data: { booking_target: "totalCents" } %>
             <%= f.hidden_field :service_id, value: (@service.id) %>
 
-            <%= f.submit "Reserva", class: "btn btn-primary w-100 mt-2" %>
+            <%= f.submit "Reserva", class: "btn btn-primary fw-bold rounded-4 w-100 mt-2" %>
           <% end %>
         </div>
       </div>
