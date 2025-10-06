@@ -102,12 +102,14 @@ class Service < ApplicationRecord
   #   distinct.pluck(:sub_category).compact.sort
   # end
 
-  def self.map_for_js
-    grouped = Service.group(:category, :sub_category).count
-    grouped.each_with_object({}) do |((cat, sub), _), hash|
-      hash[cat] ||= []
-      hash[cat] << sub unless hash[cat].include?(sub)
-    end
-  end
+  # def self.map_filter_for_js
+
+  #     grouped = Service.group(:category, :sub_category).count
+  #     grouped.each_with_object({}) do |((cat, sub), _), hash|
+  #       hash[cat] ||= []
+  #       hash[cat] << sub unless hash[cat].include?(sub)
+  #     end
+
+  # end
 
 end

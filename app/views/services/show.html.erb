@@ -111,19 +111,19 @@
           <%= form_with model: @order, url: orders_path, html: { id: "booking-form" } do |f| %>
 
             <div class="mb-3">
-              <label class="form-label fw-bold">Fecha</label>
+              <label class="form-label">Fecha</label>
               <%= f.date_field :date, class: "form-control", required: true %>
             </div>
 
             <div class="row g-2">
               <div class="col-6">
-                <label class="form-label fw-bold">Hora de inicio</label>
+                <label class="form-label">Hora de inicio</label>
                 <%= f.time_field :start_time, class: "form-control",
                                  step: 1800,
                                  data: { booking_target: "start" } %>
               </div>
               <div class="col-6">
-                <label class="form-label fw-bold">Hora de finalización</label>
+                <label class="form-label">Hora de finalización</label>
                 <%= f.time_field :end_time, class: "form-control",
                                  step: 1800,
                                  data: { booking_target: "end" } %>
@@ -132,13 +132,13 @@
 
             <div class="row g-2 mt-2">
               <div class="col-6">
-                <label class="form-label fw-bold">Horas</label>
+                <label class="form-label">Horas</label>
                 <%= f.number_field :hours, class: "form-control",
                                    step: 0.5, min: 1,
                                    data: { booking_target: "hours" } %>
               </div>
               <div class="col-6">
-                <label class="form-label fw-bold">Precio Unitario</label>
+                <label class="form-label">Precio Unitario</label>
                 <input class="form-control" value="<%= @service.price.to_f %>" readonly data-booking-target="unitPrice">
               </div>
             </div>
