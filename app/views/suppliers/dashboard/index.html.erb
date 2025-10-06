@@ -18,12 +18,23 @@
             </div>
           </div>
 
-          <nav class="nav flex-column nav-pills gap-1">
-            <%= link_to "Mis Servicios", suppliers_dashboard_index_path, class: "nav-link d-flex align-items-center #{'active' if current_page?(suppliers_dashboard_index_path)}" %>
-            <%= link_to "Ordenes Pendientes", suppliers_orders_path, class: "nav-link d-flex align-items-center #{'active' if controller_name == 'orders'}" %>
-            <%= link_to "Historial de Órdenes", orders_path, class: "nav-link d-flex align-items-center #{'active' if controller_name == 'orders'}" %>
-            <%= link_to "Mis Calificaciones", "reviews_path", class: "nav-link d-flex align-items-center #{'active' if controller_name == 'reviews'}" %>
-          </nav>
+            <nav class="nav flex-column nav-pills gap-1">
+              <%= link_to "Mis Servicios",
+                          suppliers_dashboard_index_path,
+                          class: "nav-link d-flex align-items-center" %>
+
+              <%= link_to "Ordenes Pendientes",
+                          suppliers_orders_path,
+                          class: "nav-link d-flex align-items-center" %>
+
+              <%= link_to "Historial de Órdenes",
+                          orders_path,
+                          class: "nav-link d-flex align-items-center" %>
+
+              <%= link_to "Mis Calificaciones",
+                          suppliers_dashboard_index_path,
+                          class: "nav-link d-flex align-items-center" %>
+            </nav>
 
           <div class="card mt-4 border-0 bg-light-subtle">
             <div class="card-body p-3">
