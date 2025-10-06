@@ -31,13 +31,32 @@
           </div>
 
           <div class="row mb-3">
-            <div class="col-6 text-end fw-bold">Fecha y hora de comienzo:</div>
-            <div class="col-6"><%= l(@order.start_date_time, format: :long) %></div>
+            <div class="col-6 text-end fw-bold">Fecha de servicio:</div>
+            <div class="col-6">
+                <%= l(@order.date, format: :long) %>
+            </div>
           </div>
 
           <div class="row mb-3">
-            <div class="col-6 text-end fw-bold">Fecha y hora de cierre:</div>
-            <div class="col-6"><%= l(@order.end_date_time, format: :long) %></div>
+            <div class="col-6 text-end fw-bold">hora de inicio:</div>
+            <div class="col-6">
+              <% if @order.start_time.present? %>
+                <%= l(@order.start_time, format: :hour_only) %>
+              <% else %>
+                <em>No definido</em>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-6 text-end fw-bold">hora de cierre:</div>
+            <div class="col-6">
+              <% if @order.end_time.present? %>
+                <%= l(@order.end_time, format: :hour_only) %>
+              <% else %>
+                <em>No definido</em>
+              <% end %>
+            </div>
           </div>
 
           <div class="row mb-3">

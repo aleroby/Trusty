@@ -29,3 +29,8 @@
 
 en:
   hello: "Hello world"
+
+en:
+  time:
+    formats:
+      hour_only: "%H:%M"
