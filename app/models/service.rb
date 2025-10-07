@@ -82,34 +82,31 @@ class Service < ApplicationRecord
 
   # === Método principal de filtrado ===
   def self.filter(params)
-    Service.all
-      .by_category(params[:category])
-      .by_sub_category(params[:sub_category])
-      .by_date(params[:date])
-      .by_start_time(params[:start_time])
-      .by_end_time(params[:end_time])
-      .by_price_max(params[:price_max])
-      .by_location(params[:location])
+  services = Service.all
+    .by_category(params[:category])
+    .by_sub_category(params[:sub_category])
+    .by_date(params[:date])
+    .by_start_time(params[:start_time])
+    .by_end_time(params[:end_time])
+    .by_price_max(params[:price_max])
+    # .by_location(params[:location])
+
+  # Si hay dirección, filtra por radio de proveedores
+  if params[:location].present?
+    geo = Geocoder.search(params[:location]).first
+    if geo
+      client_coords = [geo.latitude, geo.longitude]
+      supplier_ids = User.where(role: "supplier").where.not(radius: nil).geocoded.select do |supplier|
+        distance = Geocoder::Calculations.distance_between(
+          [supplier.latitude, supplier.longitude],
+          client_coords
+        )
+        distance <= supplier.radius
+      end.map(&:id)
+      services = services.where(user_id: supplier_ids)
+    end
   end
 
-  # === Métodos para JS/HTML dinámico ===
-
-  # def self.category_list
-  #   distinct.pluck(:category).compact.sort
-  # end
-
-  # def self.subcategory_list
-  #   distinct.pluck(:sub_category).compact.sort
-  # end
-
-  # def self.map_filter_for_js
-
-  #     grouped = Service.group(:category, :sub_category).count
-  #     grouped.each_with_object({}) do |((cat, sub), _), hash|
-  #       hash[cat] ||= []
-  #       hash[cat] << sub unless hash[cat].include?(sub)
-  #     end
-
-  # end
-
+  services
+  end
 end

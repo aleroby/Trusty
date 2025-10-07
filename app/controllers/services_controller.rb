@@ -18,5 +18,4 @@ class ServicesController < ApplicationController
     @order = Order.new
     @service = Service.find(params[:id])
   end
-
 end

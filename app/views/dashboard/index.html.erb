@@ -52,10 +52,11 @@
           <table class="table align-middle mb-0">
             <thead class="table-light">
               <tr>
-                <th>Ordenes</th>
-                <th>Nombre de proveedor</th>
-                <th>Tipo de servicio</th>
-                <th>Precio Total</th>
+                <th>Servicio</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Proveedor</th>
+                <th>Precio</th>
                 <th>Estado</th>
                 <th class="text-end">Acciones</th>
               </tr>
@@ -63,18 +64,13 @@
             <tbody>
               <% current_user.orders.each do |order| %>
                 <tr class="service-row">
-                  <td class="fw-semibold">
-                    <%= link_to order.id, order_path(order), class: "text-decoration-none" %>
-                  </td>
-                  <td class="text-muted"><%= order.service.user.first_name %></td>
                   <td class="text-muted"><%= order.service.sub_category %></td>
+                  <td class="text-muted"><%= order.date %></td>
+                  <td class="text-muted"><%= order.start_time %></td>
+                  <td class="text-muted"><%= order.service.user.first_name %></td>
                   <td><%= number_to_currency(order.total_price, unit: "$", precision: 0, separator: ",", delimiter: "." ) %></td>
                   <td>
-                    <% if order.status? %>
-                      <span class="badge rounded-pill bg-success-subtle text-success-emphasis px-3">Pendiente</span>
-                    <% else %>
-                      <span class="badge rounded-pill bg-danger-subtle text-danger-emphasis px-3">Cancelada</span>
-                    <% end %>
+                    <%= order.status %>
                   </td>
                   <td class="text-end">
                     <%= link_to "Reseña", new_order_review_path(order), class: "link-success fw-semibold mx-2" %>
