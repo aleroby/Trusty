@@ -18,7 +18,7 @@ class OrdersController < ApplicationController
     @order.start_time = params[:order][:start_time]
     @order.end_time = params[:order][:end_time]
     @order.total_price = params[:order][:total_price].to_i / 100
-    @order.status = "Pendiente"
+    @order.status = "confirmada"
     if @order.save
       redirect_to dashboard_index_path
     else

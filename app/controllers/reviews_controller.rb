@@ -26,7 +26,7 @@ class ReviewsController < ApplicationController
     @review.supplier = @order.service.user
 
     if @review.save
-      redirect_to dashboard_path(@review)
+      redirect_to dashboard_index_path
     else
       render :new, status: :unprocessable_entity
     end
