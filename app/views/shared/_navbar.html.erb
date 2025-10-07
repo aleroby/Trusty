@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-sm navbar-light navbar-lewagon">
   <div class="container-fluid">
-    <a class="navbar-brand fs-4" href="/">
-      <%= image_tag "trusty_logo_azul_vector.png", alt: "dropdown menu" %>
+    <a href="/">
+      <%= image_tag "trusty_logo_azul_vector.png", alt: "dropdown menu", class: "navbar-logo" %>
     </a>
 <!--     <%= link_to "#", class: "navbar-brand" do %>
       <%= image_tag "https://raw.githubusercontent.com/lewagon/fullstack-images/master/uikit/logo.png" %>
@@ -20,7 +20,7 @@
             </li>
           <% end %>
           <li class="nav-item">
-            <%= link_to "Servicios", services_path, class: "fw-bold nav-link text-success" %>
+            <%= link_to "Servicios", services_path, class: "fw-bold nav-link text-danger" %>
           </li>
           <li class="nav-item active">
             <%= link_to "Home", root_path, class: "nav-link fw-bold" %>

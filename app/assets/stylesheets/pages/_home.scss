@@ -7,6 +7,12 @@ h1 {
     color: $trusty-blue;
 }
 
+h2 {
+  color: $trusty-blue
+
+}
+
+
 p {
     font-size: 15px;
     font-weight: normal;
@@ -20,4 +26,21 @@ p {
   img {
     filter: brightness(60%);
   }
+}
+
+.navbar-logo {
+  margin-left: 10px;
+  width: 120px;
+  // height: auto;
+}
+
+.offerservice-img {
+  max-width: 500px;
+  height: auto;
+  display: block;
+}
+
+.flex-container {
+  display: flex;
+  justify-content: space-around;
 }
