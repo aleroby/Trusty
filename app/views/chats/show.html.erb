@@ -1,0 +1,33 @@
+<div class="container bg-warning-subtle m-5 p-3 shadow overflow-hidden mx-auto my-4 shadow p-3 w-75">
+  <div class="d-flex justify-content-center mb-3">
+    <h3><%= @chat.title if @chat.title != "Nuevo Chat" %></h3>
+  </div>
+
+    <div class="container bg-whats m-5 p-3 shadow overflow-hidden mx-auto my-4 w-100">
+    <% @chat.messages.each do |message| %>
+      <% if message.role == "user" %>
+        <div class="d-flex justify-content-end">
+          <div class="bg-chat border px-3 pt-2 m-2 rounded-pill">
+            <p><%= message.content %></p>
+          </div>
+        </div>
+      <% elsif message.role == "assistant" %>
+        <div class="d-flex justify-content-start">
+          <div class="bg-white border px-3 pt-2 m-2 rounded-5">
+            <%= raw(render_markdown(message.content)) %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<div class="container sticky-bottom bg-warning-subtle p-3 shadow overflow-hidden mx-auto my-4 shadow p-3 w-75 rounded-4">
+  <%= simple_form_for [@chat, @message], html: { class:"sticky-bottom" } do |f| %>
+    <div class="d-flex justify-content-between">
+      <%= f.input :content, label:"Ask a question", placeholder: "Type a question...", input_html: {class: "input-chat"} %>
+      <%= f.submit "", class: "button-arrow" %>
+    </div>
+      <%= link_to "Back to Chats", chats_path, class:"btn btn-secondary rounded-4" %>
+  <% end %>
+</div>

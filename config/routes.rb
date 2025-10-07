@@ -35,4 +35,10 @@ Rails.application.routes.draw do
     get :available_slots, on: :member
   end
 
+  resources :chats, only: [:index, :create]
+
+  resources :chats, only: [:show] do
+    resources :messages, only: [:create]
+  end
+
 end
