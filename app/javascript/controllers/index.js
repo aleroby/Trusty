@@ -18,3 +18,5 @@ Stimulus.register("price-range", PriceRangeController); // opcional
 import ReviewStarsController from "./review_stars_controller"
 application.register("review-stars", ReviewStarsController)
 
+import SlotsController from "./slots_controller"
+application.register("slots", SlotsController)

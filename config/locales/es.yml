@@ -1,0 +1,8 @@
+# config/locales/es.yml
+es:
+  orders:
+    status:
+      pending:   "Pendiente"
+      confirmed: "Confirmada"
+      completed: "Completada"
+      canceled:  "Cancelada"

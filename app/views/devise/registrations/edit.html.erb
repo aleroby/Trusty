@@ -14,7 +14,7 @@
           <%= f.input :address, required: true %>
           <%= f.input :user_photo, as: :file %>
           <% if params[:role] == "supplier" %>
-            <%= f.input :role, input_html: { value: "supplier" }, disabled: true %>
+            <%= f.input :role, input_html: { value: "supplier" } %>
           <% end %>
 
           <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>

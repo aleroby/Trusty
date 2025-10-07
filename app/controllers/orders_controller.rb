@@ -18,11 +18,11 @@ class OrdersController < ApplicationController
     @order.start_time = params[:order][:start_time]
     @order.end_time = params[:order][:end_time]
     @order.total_price = params[:order][:total_price].to_i / 100
-    @order.status = "Pendiente"
+    @order.status = "confirmed"
     if @order.save
       redirect_to dashboard_index_path
     else
-      render services/show, status: :unprocessable_entity
+      render dashboard_index_path, status: :unprocessable_entity
     end
   end
 

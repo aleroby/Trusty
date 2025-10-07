@@ -3,6 +3,9 @@ class Service < ApplicationRecord
   has_many :orders
   has_many :reviews
 
+  # AGREGADO PARA AGENDA PROVEEDOR
+  SLOT_STEP_MINUTES = 30
+
   # Multisearch PG Search
   include PgSearch::Model
   multisearchable against: [:category, :description, :sub_category]
@@ -43,7 +46,88 @@ class Service < ApplicationRecord
     CATEGORIES
   end
 
+  # --------------- INICIO BLOQUE PARA AGENDA PROVEEDOR--------------------------
+
+  # Devuelve un array de Time (horas de inicio disponibles) para una fecha dada
+  def available_slots(date)
+    supplier = user
+    return [] if supplier.availabilities.empty?
+
+    wday = date.wday
+    windows = supplier.availabilities.where(wday: wday)
+    return [] if windows.blank?
+
+    # 1) slots brutos dentro de la grilla del día
+    slots = windows.flat_map do |win|
+      slots_in_window(date, win.start_time, win.end_time, duration_minutes, SLOT_STEP_MINUTES)
+    end
+
+    # 2) restar bloqueos puntuales del proveedor
+    slots = subtract_blackouts(slots, supplier.blackouts, date, duration_minutes)
+
+    # 3) restar órdenes confirmadas del proveedor (en cualquiera de sus servicios)
+    slots = subtract_orders(slots, supplier, date, duration_minutes)
+
+    # 4) (Opcional) si querés no ofrecer slots “en el pasado” para hoy
+    if date == Date.current
+      slots = slots.select { |t| t > Time.current }
+    end
+
+    slots
+  end
+
   private
+
+  def slots_in_window(date, start_t, end_t, duration_min, step_min)
+    day = date
+    # construir tiempos absolutos para ese día
+    from = Time.zone.local(day.year, day.month, day.day, start_t.hour, start_t.min, 0)
+    to   = Time.zone.local(day.year, day.month, day.day, end_t.hour,   end_t.min,   0)
+
+    res = []
+    cursor = from
+    while (cursor + duration_min.minutes) <= to
+      res << cursor
+      cursor += step_min.minutes
+    end
+    res
+  end
+
+  def subtract_blackouts(slots, blackouts, date, duration_min)
+    return slots if blackouts.blank?
+
+    day_range = date.beginning_of_day..date.end_of_day
+    relevant = blackouts.where("(starts_at, ends_at) OVERLAPS (?, ?)", day_range.begin, day_range.end)
+
+    slots.reject do |start_at|
+      end_at = start_at + duration_min.minutes
+      relevant.any? do |b|
+        (start_at < b.ends_at) && (end_at > b.starts_at)
+      end
+    end
+  end
+
+  def subtract_orders(slots, supplier, date, duration_min)
+    # Órdenes confirmadas del proveedor, en cualquiera de sus servicios, ese día
+    confirmed_statuses = %w[confirmed] # ajusta a tus estados
+    supplier_service_ids = supplier.services.select(:id)
+
+    same_day_orders = Order
+      .where(service_id: supplier_service_ids)
+      .where(date: date)
+      .where(status: confirmed_statuses)
+
+    slots.reject do |start_at|
+      end_at = start_at + duration_min.minutes
+      same_day_orders.any? do |o|
+        o_start = Time.zone.local(date.year, date.month, date.day, o.start_time.hour, o.start_time.min, 0)
+        o_end   = Time.zone.local(date.year, date.month, date.day, o.end_time.hour,   o.end_time.min,   0)
+        (start_at < o_end) && (end_at > o_start)
+      end
+    end
+  end
+
+  # ------------------FIN BLOQUE AGENDA PROVEEDOR--------------------------
 
   def sub_category_must_belong_to_category
     return if category.blank? || sub_category.blank?
