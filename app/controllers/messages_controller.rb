@@ -10,12 +10,13 @@ class MessagesController < ApplicationController
     @chat = Chat.find(params[:chat_id])
     embedding = RubyLLM.embed(params[:message][:content])
     # Repetir esta linea para los distintos modelos
-    services = Service.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(2)
-    reviews = Review.nearest...
-    models = services + reviews..
+    services = Service.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
+    reviews = Review.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
+    users = User.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
+    vectors = services + reviews + users
     instructions = system_prompt
 
-    instructions += services.map { |service| service_prompt(service) }.join("\n\n")
+    instructions += vectors.map { |vector| models_prompt(vector) }.join("\n\n")
 
     @message = Message.new(message_params)
     @message.role = "user"
@@ -69,9 +70,19 @@ class MessagesController < ApplicationController
       con la lista de los servicios que cumplen con lo solicitado."
   end
 
-  def service_prompt(service)
-    "SERVICE id: #{service.id}, category: #{service.category}, sub_category: #{service.sub_category},
-    description: #{service.description}, price: #{service.price}, url: #{service_url(service)}"
+  def models_prompt(vector)
+    case vector
+    when Service
+      "SERVICE id: #{vector.id}, category: #{vector.category}, sub_category: #{vector.sub_category},
+      description: #{vector.description}, price: #{vector.price}, url: #{service_url(vector)}"
+    when Review
+      "REVIEW id: #{vector.id}, rating: #{vector.rating}, comment: #{vector.content}"
+    when User
+      "USER id: #{vector.id}, address: #{vector.address}, latitude: #{vector.latitude}, longitude: #{vector.longitude},
+      radius: #{vector.radius}"
+    else
+      ""
+    end
   end
 
 end

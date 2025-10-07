@@ -28,8 +28,17 @@ class User < ApplicationRecord
   geocoded_by :address
   after_validation :geocode, if: :will_save_change_to_address?
 
+  has_neighbors :embedding
+  after_create :set_embedding
+
   private
   def set_default_role
     self.role ||= "client"
+  end
+
+  def set_embedding
+    embedding = RubyLLM.embed("Address: #{address}. Latitude: #{latitude}.
+    Longitude: #{longitude}. Radius: #{radius}")
+    update(embedding: embedding.vectors)
   end
 end

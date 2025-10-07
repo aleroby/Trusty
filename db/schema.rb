@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_10_07_181425) do
+ActiveRecord::Schema[7.1].define(version: 2025_10_07_200020) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -114,6 +114,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_07_181425) do
     t.bigint "supplier_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.vector "embedding", limit: 1536
     t.index ["client_id"], name: "index_reviews_on_client_id"
     t.index ["service_id"], name: "index_reviews_on_service_id"
     t.index ["supplier_id"], name: "index_reviews_on_supplier_id"
@@ -149,6 +150,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_07_181425) do
     t.float "latitude"
     t.float "longitude"
     t.integer "radius"
+    t.vector "embedding", limit: 1536
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
