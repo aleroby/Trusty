@@ -1,19 +1,18 @@
+# db/seeds.rb
+require "date"
+
 puts "🧹 Limpiando base de datos..."
 Review.destroy_all
 Order.destroy_all
+Availability.destroy_all
+Blackout.destroy_all
 Service.destroy_all
 User.destroy_all
-
-
 
 puts "👥 Creando usuarios..."
 
 # ==== SUPPLIERS ====
-# Ubicación de referencia del cliente: Palermo, Buenos Aires (cerca de Plaza Serrano)
-# Coordenadas aproximadas: -34.5895, -58.4322
-
 puts "Creando suppliers..."
-
 
 supplier1 = User.create!(
   first_name: "Carlos",
@@ -23,11 +22,10 @@ supplier1 = User.create!(
   phone: "11-4567-8901",
   address: "Av. Santa Fe 3300, Buenos Aires",  # Palermo
   role: "supplier",
-  radius: 5,  # 5km de radio
+  radius: 5,
   latitude: -34.5945,
   longitude: -58.3974
 )
-
 
 supplier2 = User.create!(
   first_name: "Andrea",
@@ -37,11 +35,10 @@ supplier2 = User.create!(
   phone: "11-5678-9012",
   address: "Av. Córdoba 5500, Buenos Aires",  # Palermo Hollywood
   role: "supplier",
-  radius: 2,  # Solo 2km de radio - NO llegará al cliente
+  radius: 2,
   latitude: -34.5889,
   longitude: -58.4242
 )
-
 
 supplier3 = User.create!(
   first_name: "José",
@@ -51,11 +48,10 @@ supplier3 = User.create!(
   phone: "11-6789-0123",
   address: "Av. Cabildo 2000, Buenos Aires",  # Belgrano
   role: "supplier",
-  radius: 6,  # 6km de radio
+  radius: 6,
   latitude: -34.5614,
   longitude: -58.4569
 )
-
 
 supplier4 = User.create!(
   first_name: "María",
@@ -65,11 +61,10 @@ supplier4 = User.create!(
   phone: "11-7890-1234",
   address: "Av. Rivadavia 8000, Buenos Aires",  # Flores
   role: "supplier",
-  radius: 10,  # 10km pero está muy lejos - NO llegará
+  radius: 10,
   latitude: -34.6286,
   longitude: -58.4689
 )
-
 
 supplier5 = User.create!(
   first_name: "Luis",
@@ -79,18 +74,16 @@ supplier5 = User.create!(
   phone: "11-8901-2345",
   address: "Av. Libertador 7500, Buenos Aires",  # Núñez
   role: "supplier",
-  radius: 15,  # 15km de radio - AMPLIO alcance
+  radius: 15,
   latitude: -34.5442,
   longitude: -58.4644
 )
 
 suppliers = [supplier1, supplier2, supplier3, supplier4, supplier5]
-
 puts "✅ Suppliers creados con direcciones y radius configurados"
 
 # ==== CLIENTS ====
 puts "Creando clientes..."
-
 
 client_reference = User.create!(
   first_name: "Valentina",
@@ -103,7 +96,6 @@ client_reference = User.create!(
   latitude: -34.5895,
   longitude: -58.4322
 )
-
 
 clients = [client_reference]
 
@@ -150,6 +142,7 @@ clients << User.create!(
   password: "123456",
   phone: "11-6789-0124",
   address: "Defensa 900, Buenos Aires",
+  role: "client",
   latitude: -34.6214,
   longitude: -58.3731
 )
@@ -173,6 +166,7 @@ clients << User.create!(
   password: "123456",
   phone: "11-8901-2346",
   address: "Av. Scalabrini Ortiz 1800, Buenos Aires",
+  role: "client",
   latitude: -34.5892,
   longitude: -58.4245
 )
@@ -213,10 +207,9 @@ clients << User.create!(
   longitude: -58.4378
 )
 
-puts " #{clients.count} clientes creados"
+puts "✅ #{clients.count} clientes creados"
 
 puts "🧰 Creando servicios para cada supplier..."
-
 
 supplier1.services.create!([
   {
@@ -224,17 +217,18 @@ supplier1.services.create!([
     sub_category: "Plomeria",
     description: "Servicio profesional de plomería para el hogar. Reparaciones, instalaciones y mantenimiento. Más de 10 años de experiencia en la zona de Palermo y alrededores.",
     price: 3500,
-    published: true
+    published: true,
+    duration_minutes: 90
   },
   {
     category: "Hogar",
     sub_category: "Electricidad",
     description: "Instalaciones eléctricas, reparaciones y mantenimiento. Trabajo garantizado y con materiales de primera calidad. Atención rápida en emergencias.",
     price: 4000,
-    published: true
+    published: true,
+    duration_minutes: 60
   }
 ])
-
 
 supplier2.services.create!([
   {
@@ -242,17 +236,18 @@ supplier2.services.create!([
     sub_category: "Peluquería",
     description: "Cortes de pelo modernos, coloración y tratamientos capilares. Especializada en tendencias actuales. Atención personalizada en Palermo Hollywood.",
     price: 2500,
-    published: true
+    published: true,
+    duration_minutes: 60
   },
   {
     category: "Estética",
     sub_category: "Maquillaje",
     description: "Maquillaje profesional para eventos, bodas y sesiones fotográficas. Productos de alta gama. Experiencia en todo tipo de pieles.",
     price: 3000,
-    published: true
+    published: true,
+    duration_minutes: 60
   }
 ])
-
 
 supplier3.services.create!([
   {
@@ -260,17 +255,18 @@ supplier3.services.create!([
     sub_category: "Cuidado de niños",
     description: "Niñera con amplia experiencia en el cuidado de niños de todas las edades. Referencias verificables. Disponibilidad para jornadas completas o por horas.",
     price: 1500,
-    published: true
+    published: true,
+    duration_minutes: 180
   },
   {
     category: "Hogar",
     sub_category: "Limpieza",
     description: "Servicio de limpieza profunda para hogares y oficinas. Productos ecológicos disponibles. Equipo profesional y confiable.",
     price: 2800,
-    published: true
+    published: true,
+    duration_minutes: 120
   }
 ])
-
 
 supplier4.services.create!([
   {
@@ -278,17 +274,18 @@ supplier4.services.create!([
     sub_category: "Masajes",
     description: "Masajes terapéuticos, descontracturantes y relajantes. Certificada en diferentes técnicas. Atención a domicilio en zona oeste de Buenos Aires.",
     price: 4500,
-    published: true
+    published: true,
+    duration_minutes: 60
   },
   {
     category: "Wellness",
     sub_category: "Clases de Yoga",
     description: "Clases particulares de yoga en tu domicilio. Todos los niveles. Incluye mat y elementos necesarios. Horarios flexibles.",
     price: 3200,
-    published: true
+    published: true,
+    duration_minutes: 60
   }
 ])
-
 
 supplier5.services.create!([
   {
@@ -296,55 +293,126 @@ supplier5.services.create!([
     sub_category: "Personal Trainer",
     description: "Entrenamiento personalizado a domicilio. Planes adaptados a tus objetivos. Experiencia con clientes de todos los niveles. Zona norte y centro de Buenos Aires.",
     price: 5000,
-    published: true
+    published: true,
+    duration_minutes: 60
   },
   {
     category: "Entrenamiento",
     sub_category: "Funcional",
     description: "Entrenamiento funcional grupal o individual. Rutinas dinámicas y efectivas. Incluye seguimiento nutricional básico.",
     price: 3800,
-    published: true
+    published: true,
+    duration_minutes: 90
   },
   {
     category: "Clases",
     sub_category: "Idiomas",
     description: "Clases particulares de inglés para todos los niveles. Preparación para exámenes internacionales. Metodología conversacional y práctica.",
     price: 2000,
-    published: true
+    published: true,
+    duration_minutes: 60
   }
 ])
 
 services = Service.all
-puts " #{services.count} servicios creados"
+puts "✅ #{services.count} servicios creados"
+
+# ==== Agenda: disponibilidades y bloqueos ====
+
+# Disponibilidad semanal (Lun–Vie 09–13 y 14–18) para todos los suppliers
+(1..5).each do |wday| # 1=Lun ... 5=Vie
+  suppliers.each do |sup|
+    sup.availabilities.create!(wday: wday, start_time: "09:00", end_time: "13:00")
+    sup.availabilities.create!(wday: wday, start_time: "14:00", end_time: "18:00")
+  end
+end
+puts "✅ Disponibilidades semanales creadas para todos los suppliers"
+
+# Próximo día hábil (para probar bloqueo a nivel proveedor sobre supplier1)
+def next_weekday(from_date = Date.current)
+  d = from_date
+  d += 1.day while [0, 6].include?(d.wday) # saltear domingo(0) y sábado(6)
+  d
+end
+test_date = next_weekday
+
+# Blackout 12:00–13:00 para supplier1 ese día
+supplier1.blackouts.create!(
+  starts_at: Time.zone.local(test_date.year, test_date.month, test_date.day, 12, 0, 0),
+  ends_at:   Time.zone.local(test_date.year, test_date.month, test_date.day, 13, 0, 0),
+  reason: "Almuerzo (demo)"
+)
+puts "✅ Blackout 12:00–13:00 creado para supplier1 en #{test_date}"
+
+# ==== Órdenes de ejemplo ====
 
 puts "📅 Creando órdenes de ejemplo..."
 
+# 1) Dos órdenes "confirmed" el mismo día (test_date) para supplier1
+service_elec = supplier1.services.find_by(sub_category: "Electricidad")
+service_plom = supplier1.services.find_by(sub_category: "Plomeria")
+
+Order.create!(
+  user: clients.sample,
+  service: service_elec,
+  service_address: "Dirección del cliente",
+  total_price: service_elec.price,
+  status: "confirmed",                            # <- estado que bloquea
+  date: test_date,
+  start_time: "10:00",
+  end_time:   "11:00"
+)
+
+Order.create!(
+  user: clients.sample,
+  service: service_plom,
+  service_address: "Dirección del cliente",
+  total_price: service_plom.price,
+  status: "confirmed",                            # <- bloquea a NIVEL PROVEEDOR
+  date: test_date,
+  start_time: "15:00",
+  end_time:   "16:30"
+)
+
+# 2) Otras 12 órdenes aleatorias (como tenías)
 12.times do
-  client = clients.sample
+  client  = clients.sample
   service = services.sample
+  # estados variados (los que bloquean deben ser "confirmed")
+  status_pool = %w[pending confirmed completed canceled]
+  status = status_pool.sample
+
+  # Fecha aleatoria en ±15 días
+  day  = Date.current + rand(-15..15).days
+  # Horarios razonables
+  st_h = rand(8..18)
+  st_m = [0, 30].sample
+  dur  = service.duration_minutes
+  en_time = (Time.zone.local(2000,1,1, st_h, st_m) + dur.minutes)
+  end_h = en_time.hour
+  end_m = en_time.min
 
   Order.create!(
     user: client,
     service: service,
     service_address: client.address,
     total_price: service.price,
-    status: ["pendiente", "confirmada", "completada", "cancelada"].sample,
-    date: Date.today + rand(-15..15).days,
-    start_time: Time.now.change(hour: rand(8..18), min: [0, 30].sample),
-    end_time: Time.now.change(hour: rand(19..22), min: [0, 30].sample)
+    status: status,
+    date: day,
+    start_time: format("%02d:%02d", st_h, st_m),
+    end_time:   format("%02d:%02d", end_h, end_m)
   )
 end
 
 orders = Order.all
 puts "✅ #{orders.count} órdenes creadas"
 
+# ==== Reseñas (sólo órdenes completadas) ====
 puts "⭐ Creando reseñas..."
 
-
-completed_orders = orders.select { |o| o.status == "completada" }
+completed_orders = orders.select { |o| %w[completada].include?(o.status.to_s) }
 
 completed_orders.each do |order|
-
   Review.create!(
     rating: rand(3.5..5.0).round(1),
     content: [
@@ -358,7 +426,6 @@ completed_orders.each do |order|
     client: order.user,
     supplier: order.service.user
   )
-
 
   Review.create!(
     rating: rand(4.0..5.0).round(1),
@@ -376,3 +443,11 @@ completed_orders.each do |order|
 end
 
 puts "✅ #{Review.count} reseñas creadas"
+
+puts "—"
+puts "🧪 Día de prueba (supplier1): #{test_date} (#{%w[Dom Lun Mar Mié Jue Vie Sáb][test_date.wday]})"
+puts "    Blackout    : 12:00–13:00"
+puts "    Reserva 1   : Electricidad 10:00–11:00 (confirmed)"
+puts "    Reserva 2   : Plomeria     15:00–16:30 (confirmed)"
+puts "—"
+puts "== Seed OK =="

@@ -15,7 +15,7 @@
   <div class="row g-4">
     <!-- LEFT -->
     <div class="col-lg-8">
-      <h3 class="border rounded-4 bg-primary text-white p-2 px-3 mb-3">Servicio de <%= @service.sub_category.presence || "Servicio" %> - <%= @service.user.first_name %></h3>
+      <h3 class="border rounded-4 bg-primary text-white p-2 px-3 mb-3"><%= @service.sub_category.presence || "Servicio" %> con <%= @service.user.first_name %></h3>
 
       <!-- Gallery -->
       <div class="service-gallery mb-4">
@@ -101,41 +101,66 @@
       <% currency_value = defined?(@service.currency) && @service.currency.present? ? @service.currency : "ARS" %>
 
       <div class="card booking-card shadow rounded-4"
-           data-controller="booking"
-           data-booking-rate-value="<%= @service.price.to_f %>"
-           data-booking-fee-value="<%= fee_value.to_f %>"
-           data-booking-currency-value="<%= currency_value %>">
+          data-controller="booking slots"
+          data-booking-rate-value="<%= @service.price.to_f %>"
+          data-booking-fee-value="<%= fee_value.to_f %>"
+          data-booking-currency-value="<%= currency_value %>"
+          data-slots-service-id-value="<%= @service.id %>"
+          data-slots-duration-minutes-value="<%= @service.duration_minutes %>"
+          data-slots-step-minutes-value="30">
         <div class="card-body">
-          <h6 class="fw-bold bg-success text-white p-3 rounded-1">Reserva tu Servicio de <%= @service.sub_category %></h6>
+          <h6 class="fw-bold bg-success text-white p-3 rounded-1">Reserva de <%= @service.sub_category %></h6>
           <hr>
+
           <%= form_with model: @order, url: orders_path, html: { id: "booking-form" } do |f| %>
 
             <div class="mb-3">
               <label class="form-label">Fecha</label>
-              <%= f.date_field :date, class: "form-control", required: true %>
+              <%= f.date_field :date,
+                  class: "form-control",
+                  required: true,
+                  data: { action: "change->slots#fetch" } %>
+            </div>
+
+            <!-- Picker de horarios disponibles (nuevo) -->
+            <div class="mb-3">
+              <label class="form-label">Horarios disponibles</label>
+              <select class="form-select"
+                      data-slots-target="select"
+                      data-action="change->slots#selectSlot"
+                      disabled>
+                <option value="">Elegí un horario</option>
+              </select>
+              <small class="text-muted d-block mt-1" data-slots-target="notice"></small>
             </div>
 
             <div class="row g-2">
               <div class="col-6">
                 <label class="form-label">Hora de inicio</label>
-                <%= f.time_field :start_time, class: "form-control",
-                                 step: 1800,
-                                 data: { booking_target: "start" } %>
+                <%= f.time_field :start_time,
+                    class: "form-control",
+                    step: 1800,
+                    data: { booking_target: "start", slots_target: "startInput" },
+                    readonly: true %>
               </div>
               <div class="col-6">
                 <label class="form-label">Hora de finalización</label>
-                <%= f.time_field :end_time, class: "form-control",
-                                 step: 1800,
-                                 data: { booking_target: "end" } %>
+                <%= f.time_field :end_time,
+                    class: "form-control",
+                    step: 1800,
+                    data: { booking_target: "end", slots_target: "endInput" },
+                    readonly: true %>
               </div>
             </div>
 
             <div class="row g-2 mt-2">
               <div class="col-6">
                 <label class="form-label">Horas</label>
-                <%= f.number_field :hours, class: "form-control",
-                                   step: 0.5, min: 1,
-                                   data: { booking_target: "hours" } %>
+                <%= f.number_field :hours,
+                    class: "form-control",
+                    step: 0.5, min: 1,
+                    data: { booking_target: "hours", slots_target: "hours" },
+                    readonly: true %>
               </div>
               <div class="col-6">
                 <label class="form-label">Precio Unitario</label>
@@ -172,5 +197,6 @@
         </div>
       </div>
     </div>
+
   </div>
 </div>

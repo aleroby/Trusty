@@ -1,0 +1,44 @@
+<!-- app/views/suppliers/blackouts/index.html.erb -->
+<div class="container my-4">
+  <h4>Bloqueos puntuales</h4>
+  <p class="text-muted">Usa esto para feriados, trámites, eventos, etc.</p>
+
+  <%= form_with model: @blackout, url: suppliers_blackouts_path, class: "row g-2 mb-4" do |f| %>
+    <div class="col-12 col-md-4">
+      <%= f.label :starts_at, "Desde", class: "form-label" %>
+      <%= f.datetime_local_field :starts_at, class: "form-control" %>
+    </div>
+    <div class="col-12 col-md-4">
+      <%= f.label :ends_at, "Hasta", class: "form-label" %>
+      <%= f.datetime_local_field :ends_at, class: "form-control" %>
+    </div>
+    <div class="col-12 col-md-3">
+      <%= f.label :reason, "Motivo (opcional)", class: "form-label" %>
+      <%= f.text_field :reason, class: "form-control" %>
+    </div>
+    <div class="col-12 col-md-1 align-self-end">
+      <%= f.submit "Agregar", class: "btn btn-outline-primary w-100 rounded-4" %>
+    </div>
+  <% end %>
+
+  <div class="list-group">
+    <% @blackouts.each do |b| %>
+      <div class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+          <strong><%= l b.starts_at, format: :short %></strong>
+          &nbsp;–&nbsp;
+          <strong><%= l b.ends_at,   format: :short %></strong>
+          <% if b.reason.present? %>
+            <span class="text-muted">· <%= b.reason %></span>
+          <% end %>
+        </div>
+        <%= link_to "Eliminar", suppliers_blackouts_path(id: b.id),
+              data: { turbo_method: :delete, turbo_confirm: "¿Eliminar bloqueo?" },
+              class: "btn btn-sm btn-outline-danger rounded-4" %>
+      </div>
+    <% end %>
+    <% if @blackouts.empty? %>
+      <div class="list-group-item text-muted">No tienes bloqueos.</div>
+    <% end %>
+  </div>
+</div>

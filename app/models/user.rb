@@ -13,6 +13,10 @@ class User < ApplicationRecord
   has_many :client_reviews, class_name: "Review", foreign_key: "client_id"
   has_one_attached :user_photo
 
+  # AGREGADOS PARA AGENDA PROVEEDOR
+  has_many :availabilities, dependent: :destroy
+  has_many :blackouts, dependent: :destroy
+
   validates :first_name, presence: true
   validates :last_name, presence: true
   validates :email, format: { with: VALID_EMAIL_REGEX, message: "formato inválido" }

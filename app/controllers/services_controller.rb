@@ -18,4 +18,21 @@ class ServicesController < ApplicationController
     @order = Order.new
     @service = Service.find(params[:id])
   end
+
+  #------------------------BLOQUE PARA AGENDA PROVEEDOR------------------------
+
+  def available_slots
+    @service = Service.find(params[:id])
+    date = Date.parse(params[:date])
+    slots = @service.available_slots(date)
+
+    render json: {
+      date: date,
+      duration_minutes: @service.duration_minutes,
+      slots: slots.map { |t| t.strftime("%H:%M") } # ej: ["09:00", "09:30", ...]
+    }
+  rescue ArgumentError
+    render json: { error: "Fecha inválida" }, status: :unprocessable_entity
+  end
+
 end

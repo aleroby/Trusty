@@ -18,6 +18,10 @@ Rails.application.routes.draw do
     resources :services
     resources :dashboard, only: %i[index]
     resources :orders, only: %i[index]
+
+    # BLOQUE PARA AGENDA PROVEEDOR
+    resources :availabilities, only: [:index, :create, :destroy]
+    resources :blackouts,      only: [:index, :create, :destroy]
   end
 
   resources :orders, only: %i[new create edit update, show] do
@@ -25,4 +29,10 @@ Rails.application.routes.draw do
   end
 
   resources :dashboard, only: %i[index]
+
+  # BLOQUE AGENDA PROVEEDOR
+  resources :services, only: [:show] do
+    get :available_slots, on: :member
+  end
+
 end
