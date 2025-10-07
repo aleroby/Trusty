@@ -3,6 +3,9 @@ class Service < ApplicationRecord
   has_many :orders
   has_many :reviews
 
+  has_neighbors :embedding
+  after_create :set_embedding
+
   # AGREGADO PARA AGENDA PROVEEDOR
   SLOT_STEP_MINUTES = 30
 
@@ -128,6 +131,17 @@ class Service < ApplicationRecord
   end
 
   # ------------------FIN BLOQUE AGENDA PROVEEDOR--------------------------
+
+  def set_embedding
+    text = <<~TEXT
+      Category: #{category}
+      Sub-category: #{sub_category}
+      Description: #{description}
+      Price: $#{price}
+    TEXT
+    embedding = RubyLLM.embed(text)
+    update(embedding: embedding.vectors)
+  end
 
   def sub_category_must_belong_to_category
     return if category.blank? || sub_category.blank?

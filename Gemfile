@@ -85,3 +85,9 @@ gem "pg_search"
 gem 'image_processing', '~> 1.2'
 
 gem 'geocoder'
+
+gem "neighbor"
+
+gem "kramdown"
+gem "rouge"
+gem "kramdown-parser-gfm"

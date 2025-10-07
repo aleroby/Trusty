@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_10_06_235000) do
+ActiveRecord::Schema[7.1].define(version: 2025_10_07_181425) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "vector"
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -64,6 +65,23 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_06_235000) do
     t.index ["user_id"], name: "index_blackouts_on_user_id"
   end
 
+  create_table "chats", force: :cascade do |t|
+    t.string "title"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_chats_on_user_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.string "role"
+    t.text "content"
+    t.bigint "chat_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chat_id"], name: "index_messages_on_chat_id"
+  end
+
   create_table "orders", force: :cascade do |t|
     t.float "total_price"
     t.string "service_address"
@@ -111,6 +129,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_06_235000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "duration_minutes", default: 60, null: false
+    t.vector "embedding", limit: 1536
     t.index ["user_id"], name: "index_services_on_user_id"
   end
 
@@ -138,6 +157,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_06_235000) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "availabilities", "users"
   add_foreign_key "blackouts", "users"
+  add_foreign_key "chats", "users"
+  add_foreign_key "messages", "chats"
   add_foreign_key "orders", "services"
   add_foreign_key "orders", "users"
   add_foreign_key "reviews", "services"
