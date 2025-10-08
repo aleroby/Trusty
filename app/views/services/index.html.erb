@@ -129,9 +129,9 @@
                   <div class="provider-row d-flex align-items-center gap-2 mt-auto">
                     <%= cl_image_tag service.user.user_photo.key, class:"rounded-circle", size:"50x50" if service.user.user_photo.attached? %>
 
-                    <% avg = service.reviews.average(:rating) %>
+                    <% avg = service.supplier_reviews.average(:rating) %>
                     <% avg_display = avg ? number_with_precision(avg, precision: 1) : "—" %>
-                    <% cnt = service.reviews.count %>
+                    <% cnt = service.supplier_reviews.count %>
 
                     <div class="small">
                       <div class="fw-medium"><%= service.user.try(:name) || service.user.first_name %></div>
@@ -146,7 +146,7 @@
                     <div class="ms-auto ">
                       <%= link_to "Book",
                             defined?(new_service_booking_path) ? new_service_booking_path(service) : service_path(service),
-                            class: "btn btn-sm btn-primary px-3" unless service.user_id == current_user.id %>
+                            class: "btn btn-sm btn-primary px-3" unless (user_signed_in? && service.user_id == current_user.id) %>
                     </div>
                   </div>
                 </div>

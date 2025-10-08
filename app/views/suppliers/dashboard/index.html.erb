@@ -74,8 +74,9 @@
                 <th>Servicio</th>
                 <th>Categoría</th>
                 <th>Precio</th>
+                <th>Rating</th>
                 <th>Estado</th>
-                <th class="text-end">Acciones</th>
+                <th class="text-center">Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -86,6 +87,7 @@
                   </td>
                   <td class="text-muted"><%= service.category %></td>
                   <td><%= number_to_currency(service.price, unit: "$", precision: 0) %></td>
+                  <td class="text-muted"><%=  %></td>
                   <td>
                     <% if service.published? %>
                       <span class="badge rounded-pill bg-success-subtle text-success-emphasis px-3">Publicado</span>
@@ -93,8 +95,9 @@
                       <span class="badge rounded-pill bg-danger-subtle text-danger-emphasis px-3">Oculto</span>
                     <% end %>
                   </td>
-                  <td class="text-end">
-                    <%= link_to "Editar",  edit_suppliers_service_path(service), class: "link-primary fw-semibold" %>
+                  <td class="text-center">
+                    <%= link_to "Editar", edit_suppliers_service_path(service), class: "text-decoration-none link-success fw-semibold" %>
+                    <%= link_to "Eliminar", suppliers_service_path(service), class: "text-decoration-none fw-semibold" %>
                   </td>
                 </tr>
               <% end %>

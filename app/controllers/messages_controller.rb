@@ -1,10 +1,10 @@
 class MessagesController < ApplicationController
 
-  if Rails.env.development?
-    host = "http://localhost:3000"
-  else
-    host = "https://trustyservices.me"
-  end
+  # if Rails.env.development?
+  #   host = "http://localhost:3000"
+  # else
+  #   host = "https://trustyservices.me"
+  # end
 
   def create
     @chat = Chat.find(params[:chat_id])
@@ -61,7 +61,8 @@ class MessagesController < ApplicationController
       Tu tarea es responder a las consultas que te hagan los potenciales clientes de la aplicación,
       buscando los servicios que te pidan, recomendando las opciones que tengan mejores
       calificaciones (rating), en promedio y cantidad, y devolviendo como resultado sólo aquellos
-      proveedores (suppliers) que ofrezcan sus servicios en la dirección del cliente o de la consulta. \
+      proveedores (suppliers) que ofrezcan sus servicios en la dirección del cliente o de la consulta.
+      Por favor considera siempre la dirección del user que hace la consulta a la hora de mostrar tu respuesta. \
       Si no hay proveedores/servicios disponibles para la consulta, puedes responder
       \"No hay servicios disponibles para esta consulta\". \
       Tu respuesta debe ser en formato markdown. Cuando respondas, no solo te pedimos las url

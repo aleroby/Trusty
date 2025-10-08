@@ -55,10 +55,12 @@
             <% end %>
             </div>
             <div>
-              <% avg = (@service.reviews.average(:rating)&.to_f || 0).round(1) rescue 0 %>
-              <% count = @service.reviews.count rescue 0 %>
+              <% avg = @supplier_avg %>
+              <% count = @supplier_count %>
               <div class="small text-muted">
-                <span class="text-warning me-1"><%= "★" * avg.round %><span class="text-secondary"><%= "☆" * (5-avg.round) %></span></span>
+                <span class="text-warning me-1">
+                  <%= "★" * avg.round %><span class="text-secondary"><%= "☆" * (5-avg.round) %></span>
+                </span>
                 <%= avg %> (<%= count %> <%= "review".pluralize(count) %>)
               </div>
             </div>
@@ -73,24 +75,25 @@
       <!-- Reviews -->
       <div class="reviews">
         <h3 class="bg-success text-white mb-3 p-2 shadow-sm rounded-4">Reviews</h3>
-        <% if @service.reviews.any? %>
-          <% @service.reviews.each do |review| %>
-            <div class="border shadow-sm rounded-4 p-3 mb-3">
-              <div class="d-flex align-items-center justify-content-between">
-                <div class="d-flex flex-column">
-                  <div class="fw-semibold"><%= review.client.first_name || "Anonymous" %></div>
-                  <div class="text-warning small">
-                    <%= ("★" * review.rating.to_i).html_safe %><span class="text-secondary"><%= ("☆" * (5 - review.rating.to_i)).html_safe %></span>
+          <% if @service_supplier_reviews.any? %>
+            <% @service_supplier_reviews.each do |review| %>
+              <div class="border shadow-sm rounded-4 p-3 mb-3">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div class="d-flex flex-column">
+                    <div class="fw-semibold"><%= review.client&.first_name || "Anónimo" %></div>
+                    <div class="text-warning small">
+                      <%= ("★" * review.rating.to_i).html_safe %>
+                      <span class="text-secondary"><%= ("☆" * (5 - review.rating.to_i)).html_safe %></span>
+                    </div>
                   </div>
+                  <p class="mb-0 ms-3 flex-grow-1"><%= review.content %></p>
+                  <div class="small text-muted text-nowrap"><%= time_ago_in_words(review.created_at) %> ago</div>
                 </div>
-                <p><%= review.content %></p>
-                <div class="small text-muted"><%= time_ago_in_words(review.created_at) %> ago</div>
               </div>
-            </div>
+            <% end %>
+          <% else %>
+            <p class="text-muted">No hay reviews para este servicio.</p>
           <% end %>
-        <% else %>
-          <p class="text-muted">No hay reviews todavía.</p>
-        <% end %>
       </div>
     </div>
 
@@ -192,7 +195,7 @@
             <%= f.hidden_field :total_price,       data: { booking_target: "totalCents" } %>
             <%= f.hidden_field :service_id, value: (@service.id) %>
 
-            <%= f.submit "Reserva", class: "btn btn-primary fw-bold rounded-4 w-100 mt-2" unless @service.user_id == current_user.id %>
+            <%= f.submit "Reserva", class: "btn btn-primary fw-bold rounded-4 w-100 mt-2" unless (user_signed_in? && @service.user_id == current_user.id) %>
           <% end %>
         </div>
       </div>

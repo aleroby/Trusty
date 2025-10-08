@@ -77,8 +77,9 @@
                       <% end %>
                     </td>
                     <td class="text-end">
-                      <%= link_to "Reseña", new_order_review_path(order), class: "link-success fw-semibold mx-2" %>
+                      <%= link_to "Ver", order_path(order), class: "link-danger fw-semibold" %>
                       <%= link_to "Editar", edit_order_path(order), class: "link-primary fw-semibold" %>
+                      <%= link_to "Reseña", new_order_review_path(order), class: "link-success fw-semibold mx-2" %>
                     </td>
                   </tr>
                 <% end %>
