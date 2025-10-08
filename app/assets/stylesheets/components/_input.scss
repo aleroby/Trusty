@@ -1,0 +1,14 @@
+.input-chat {
+  align-items: stretch;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  width: 100vh;
+  margin: 10px;
+}
+
+@media (max-width: 600px) {
+  .input-chat{
+    width: 45vh;
+    margin: 10px;
+  }
+}
