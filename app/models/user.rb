@@ -9,8 +9,8 @@ class User < ApplicationRecord
   has_many :pepes, class_name: "Service", foreign_key: "user_id"
   has_many :services #Usuario vendedor @current_user.services
   has_many :orders #Usuario comprador
-  has_many :supplier_reviews, class_name: "Review", foreign_key: "supplier_id"
-  has_many :client_reviews, class_name: "Review", foreign_key: "client_id"
+  has_many :reviews_as_supplier, class_name: "Review", foreign_key: :supplier_id
+  has_many :reviews_as_client,   class_name: "Review", foreign_key: :client_id
   has_one_attached :user_photo
 
   # AGREGADOS PARA AGENDA PROVEEDOR
@@ -27,6 +27,14 @@ class User < ApplicationRecord
 
   geocoded_by :address
   after_validation :geocode, if: :will_save_change_to_address?
+
+  def supplier_rating_avg
+    reviews_as_supplier.for_supplier.average(:rating)&.to_f
+  end
+
+  def supplier_reviews_count
+    reviews_as_supplier.for_supplier.count
+  end
 
   has_neighbors :embedding
   after_create :set_embedding

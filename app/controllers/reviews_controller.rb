@@ -24,6 +24,8 @@ class ReviewsController < ApplicationController
     @review.service = @order.service
     @review.client = current_user
     @review.supplier = @order.service.user
+    @review.target = 0
+    @order.status = "completed"
 
     if @review.save
       redirect_to dashboard_index_path
@@ -35,8 +37,10 @@ class ReviewsController < ApplicationController
   def review_for_client
     @review = Review.new(review_params)
     @review.service = @order.service
-    @review.supplier = @order.service.user
     @review.client = @order.user
+    @review.supplier = @order.service.user
+    @review.target = 1
+    @order.status = "completed"
 
     if @review.save
       redirect_to suppliers_dashboard_index_path

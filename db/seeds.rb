@@ -1,6 +1,9 @@
 # db/seeds.rb
 require "date"
 require "open-uri"
+require "set"
+ENV["SEEDING"] = "1"
+
 puts "🧹 Limpiando base de datos..."
 
 # Orden correcto para no violar FKs
@@ -641,88 +644,140 @@ Order.create!(
   date: test_date,
   start_time: "15:00",
   end_time:   "16:30"
-)
+  )
 
-# 2) Otras 12 órdenes aleatorias (ANULADAS para no romper el total de 200)
-# 0.times do
-#   client  = clients.sample
-#   service = Service.all.sample
-#   status_pool = %w[pending confirmed completed canceled]
-#   status = status_pool.sample
-#   day  = Date.current + rand(-15..15).days
-#   st_h = rand(8..18)
-#   st_m = [0, 30].sample
-#   dur  = service.duration_minutes
-#   en_time = (Time.zone.local(2000,1,1, st_h, st_m) + dur.minutes)
-#   end_h = en_time.hour
-#   end_m = en_time.min
-#   Order.create!(
-#     user: client,
-#     service: service,
-#     service_address: client.address,
-#     total_price: service.price,
-#     status: status,
-#     date: day,
-#     start_time: format("%02d:%02d", st_h, st_m),
-#     end_time:   format("%02d:%02d", end_h, end_m)
-#   )
-# end
+  orders = Order.all
+  puts "✅ #{orders.count} órdenes creadas (parciales de demo)"
 
-orders = Order.all
-puts "✅ #{orders.count} órdenes creadas (parciales de demo)"
+  # === Helpers de agenda SIN solapamientos ===
 
-# ====== GENERADOR CONTROLADO PARA LLEGAR A 200 ÓRDENES EXACTAS ======
-target_total = 200
-already_confirmed = Order.where(status: "confirmed").count
-already_completed = Order.where(status: "completed").count
-already_canceled  = Order.where(status: "canceled").count
-already_total     = Order.count
+  def time_on(date, hhmm)
+    h, m = hhmm.split(":").map!(&:to_i)
+    Time.zone.local(date.year, date.month, date.day, h, m, 0)
+  end
 
-need_completed = 120 - already_completed
-need_confirmed = 60  - already_confirmed
-need_canceled  = 20  - already_canceled
+  def overlaps?(a_start, a_end, b_start, b_end)
+    a_start < b_end && b_start < a_end
+  end
 
-# No permitir negativos si ya hubiera algo previo
-need_completed = [need_completed, 0].max
-need_confirmed = [need_confirmed, 0].max
-need_canceled  = [need_canceled, 0].max
+  def supplier_existing_orders_on(date, supplier_id)
+    Order.joins(:service)
+       .where(date: date, services: { user_id: supplier_id })
+       .select(:start_time, :end_time)
+end
 
-def random_slot_for(service)
-  # ventana de 30 días pasado/futuro
-  day = Date.current + rand(-15..15).days
-  st_h = [9,10,11,14,15,16,17].sample
-  st_m = [0, 30].sample
-  dur  = service.duration_minutes
-  en_time = (Time.zone.local(2000,1,1, st_h, st_m) + dur.minutes)
-  end_h = en_time.hour
-  end_m = en_time.min
-  [day, format("%02d:%02d", st_h, st_m), format("%02d:%02d", end_h, end_m)]
+def supplier_blackouts_on(date, supplier_id)
+  day_start = Time.zone.local(date.year, date.month, date.day, 0, 0, 0)
+  day_end   = day_start + 1.day
+  Blackout.where(user_id: supplier_id)
+          .where("starts_at < ? AND ends_at > ?", day_end, day_start)
+          .select(:starts_at, :ends_at)
+end
+
+# Devuelve slots de inicio posibles (cada 30’) dentro de las availabilities del proveedor en esa fecha,
+# filtrando por duración del servicio, blackouts y órdenes previas del mismo proveedor.
+def candidate_slots_for(service, date)
+  supplier = service.user
+  wday = date.cwday # 1..7 (nuestro seed usa 1..5 para Lun..Vie)
+
+  avs = supplier.availabilities.where(wday: wday)
+  return [] if avs.empty?
+
+  duration_min = service.duration_minutes
+  existing = supplier_existing_orders_on(date, supplier.id).map do |o|
+    [time_on(date, o.start_time.strftime("%H:%M")), time_on(date, o.end_time.strftime("%H:%M"))]
+  end
+
+  blks = supplier_blackouts_on(date, supplier.id).map { |b| [b.starts_at, b.ends_at] }
+
+  slots = []
+
+  avs.each do |av|
+    av_start = time_on(date, av.start_time.strftime("%H:%M"))
+    av_end   = time_on(date, av.end_time.strftime("%H:%M"))
+
+    # caminamos cada 30 minutos
+    t = av_start
+    step = 30.minutes
+    while (t + duration_min.minutes) <= av_end
+      st = t
+      en = t + duration_min.minutes
+
+      # descartar si pisa blackout
+      next_conf_blk = blks.any? { |(bs, be)| overlaps?(st, en, bs, be) }
+      # descartar si pisa orden del mismo proveedor
+      next_conf_ord = existing.any? { |(os, oe)| overlaps?(st, en, os, oe) }
+
+      slots << [st, en] unless next_conf_blk || next_conf_ord
+
+      t += step
+    end
+  end
+
+  slots
+end
+
+# Busca una fecha hábil (con availabilities cargadas) en ventana de ±15 días y devuelve el primer slot libre.
+def find_free_slot_for(service)
+  # probamos hasta 90 intentos rotando fechas y slots
+  attempts = 90
+  attempts.times do
+    date = Date.current + rand(-15..15).days
+    # sólo días con availabilities (en el seed pusimos Lun..Vie = 1..5)
+    next unless (1..5).include?(date.cwday)
+
+    slots = candidate_slots_for(service, date)
+    return [date, *slots.sample] unless slots.empty?
+  end
+  nil
 end
 
 def create_n_orders(n, status, clients)
-  n.times do
+  created = 0
+  guard = 0
+  while created < n && guard < n * 20
+    guard += 1
     svc = Service.order("RANDOM()").first
-    cl  = clients.sample
-    day, st, en = random_slot_for(svc)
+    slot = find_free_slot_for(svc)
+    next if slot.nil?
+
+    date, st_dt, en_dt = slot
+    cl = clients.sample
+
     Order.create!(
       user: cl,
       service: svc,
       service_address: cl.address,
       total_price: svc.price,
       status: status,
-      date: day,
-      start_time: st,
-      end_time:   en
+      date: date,
+      start_time: st_dt.strftime("%H:%M"),
+      end_time:   en_dt.strftime("%H:%M")
     )
+
+    created += 1
+  end
+
+  if created < n
+    puts "⚠️  Aviso: se pidieron #{n} órdenes #{status} pero sólo se pudieron crear #{created} sin solapamientos."
   end
 end
+
+# ====== GENERADOR CONTROLADO PARA LLEGAR A 200 ÓRDENES EXACTAS ======
+
+target_total = 200
+already_confirmed = Order.where(status: "confirmed").count
+already_completed = Order.where(status: "completed").count
+already_canceled  = Order.where(status: "canceled").count
+
+need_completed = [120 - already_completed, 0].max
+need_confirmed = [ 60 - already_confirmed, 0].max
+need_canceled  = [ 20 - already_canceled , 0].max
 
 create_n_orders(need_completed, "completed", clients)
 create_n_orders(need_confirmed, "confirmed", clients)
 create_n_orders(need_canceled,  "canceled",  clients)
 
-# Si por algún motivo faltaran órdenes para llegar a 200 exactas (p.e. si arriba hubo redondeos),
-# rellenamos con 'completed' hasta completar el total.
 missing = target_total - Order.count
 create_n_orders([missing, 0].max, "completed", clients)
 
@@ -733,6 +788,7 @@ puts "   canceled : #{Order.where(status: 'canceled').count}"
 puts "   TOTAL    : #{Order.count}"
 
 # ==== Reseñas (sólo órdenes COMPLETED, 2 por orden) ====
+
 puts "⭐ Creando reseñas..."
 
 completed_orders = Order.where(status: "completed")
@@ -754,21 +810,24 @@ supplier_texts = [
 ]
 
 completed_orders.find_each do |order|
-  # review del CLIENTE -> PROVEEDOR
+  # Review del CLIENTE → PROVEEDOR
   Review.create!(
     rating: rand(4.0..5.0).round(1),
     content: client_texts.sample,
     service: order.service,
-    client: order.user,
-    supplier: order.service.user
+    client:  order.user,             # quien contrata
+    supplier: order.service.user,    # quien brinda el servicio
+    target: :for_supplier            # indica dirección de la review
   )
-  # review del PROVEEDOR -> CLIENTE
+
+  # Review del PROVEEDOR → CLIENTE
   Review.create!(
     rating: rand(4.0..5.0).round(1),
     content: supplier_texts.sample,
     service: order.service,
-    client: order.user,
-    supplier: order.service.user
+    client:  order.user,             # mismo cliente
+    supplier: order.service.user,    # mismo proveedor
+    target: :for_client              # indica dirección opuesta
   )
 end
 
@@ -794,3 +853,4 @@ Service.where(sub_category:"Electricidad").each_with_index do |service,index|
   service.images.attach(io:image,filename:"img-electricity-#{index+1}",content_type:"image/jpeg")
 
 end
+ENV.delete("SEEDING")

@@ -2,9 +2,9 @@ class Order < ApplicationRecord
   belongs_to :service
   belongs_to :user
 
-  status_list = ["pending", "confirmed", "completed", "canceled"]
+  STATUS_LIST = ["pending", "confirmed", "completed", "canceled"]
 
-  validates :status, presence: true, inclusion: { in: status_list }
+  validates :status, presence: true, inclusion: { in: STATUS_LIST }
 
   # --------------------BLOQUE AGENDA PROVEEDOR---------------------------
 

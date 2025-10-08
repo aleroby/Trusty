@@ -1,19 +1,20 @@
-<div class="container bg-warning-subtle m-5 p-3 shadow overflow-hidden mx-auto my-4 shadow p-3 w-75">
-  <div class="d-flex justify-content-center mb-3">
+
+<div class="container bg-white p-3 shadow overflow-hidden mx-auto my-4 rounded-4" style="max-width: 800px;">
+  <div class="d-flex justify-content-center text-primary mb-3">
     <h3><%= @chat.title if @chat.title != "Nuevo Chat" %></h3>
   </div>
 
-    <div class="container bg-whats m-5 p-3 shadow overflow-hidden mx-auto my-4 w-100">
+  <div class="container bg-body p-3 shadow overflow-auto mx-auto my-3 rounded-5" style="max-width: 800px; max-height: 60vh;">
     <% @chat.messages.each do |message| %>
       <% if message.role == "user" %>
         <div class="d-flex justify-content-end">
-          <div class="bg-chat border px-3 pt-2 m-2 rounded-pill">
-            <p><%= message.content %></p>
+          <div class="bg-chat border px-3 pt-1 m-2 rounded-4">
+            <p class="mb-0"><%= message.content %></p>
           </div>
         </div>
       <% elsif message.role == "assistant" %>
         <div class="d-flex justify-content-start">
-          <div class="bg-white border px-3 pt-2 m-2 rounded-5">
+          <div class="bg-white border px-3 pt-2 m-2 rounded-4">
             <%= raw(render_markdown(message.content)) %>
           </div>
         </div>
@@ -22,12 +23,28 @@
   </div>
 </div>
 
-<div class="container sticky-bottom bg-warning-subtle p-3 shadow overflow-hidden mx-auto my-4 shadow p-3 w-75 rounded-4">
+
+<div class="container sticky-bottom bg-white p-3 shadow mx-auto my-4 rounded-4" style="max-width: 800px;">
   <%= simple_form_for [@chat, @message], html: { class:"sticky-bottom" } do |f| %>
-    <div class="d-flex justify-content-between">
-      <%= f.input :content, label:"Ask a question", placeholder: "Type a question...", input_html: {class: "input-chat"} %>
-      <%= f.submit "", class: "button-arrow" %>
+    <div class="row g-2 align-items-center">
+
+      <div class="col-12 col-md-10">
+        <%= f.input :content,
+          label: false,
+          placeholder: "Escribe tu consulta...",
+          input_html: { class: "form-control rounded-5 w-100", style: "min-height: 40px;" } %>
+      </div>
+
+      <div class="col-12 col-md-2 d-grid">
+        <button type="submit" class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center send-btn">
+          <i class="fas fa-paper-plane text-white"></i>
+        </button>
+      </div>
     </div>
-      <%= link_to "Back to Chats", chats_path, class:"btn btn-secondary rounded-4" %>
+
+
+    <div class="mt-2 text-center text-md-start ">
+      <%= link_to "Back to Chats", chats_path, class:"btn btn-success rounded-5 text-white" %>
+    </div>
   <% end %>
 </div>

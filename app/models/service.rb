@@ -1,10 +1,10 @@
 class Service < ApplicationRecord
   belongs_to :user
   has_many :orders
-  has_many :reviews
+  has_many :supplier_reviews, -> { where(target: :for_supplier) }, class_name: "Review"
 
   has_neighbors :embedding
-  after_create :set_embedding
+  after_create :set_embedding, unless: :skip_embeddings?
 
   # AGREGADO PARA AGENDA PROVEEDOR
   SLOT_STEP_MINUTES = 30
@@ -141,6 +141,14 @@ class Service < ApplicationRecord
     TEXT
     embedding = RubyLLM.embed(text)
     update(embedding: embedding.vectors)
+  end
+
+  def skip_embeddings?
+    Rails.env.test? || ENV["SEEDING"] == "1"
+    rescue StandardError => e
+    Rails.logger.warn("[Review#set_embedding] Embedding omitido: #{e.class} - #{e.message}")
+    # Opcional: dejá nil o poné un vector neutro si lo exige tu código
+    self.embedding = nil
   end
 
   def sub_category_must_belong_to_category
