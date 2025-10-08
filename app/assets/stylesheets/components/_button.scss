@@ -1,0 +1,12 @@
+.button-arrow {
+    background-image: asset-url("button.png");
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-position: center;
+    border: none;
+    width: 70px;
+    height: 70px;
+    box-shadow: 4px, 4px, 8px, rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    align-self: center;
+}
