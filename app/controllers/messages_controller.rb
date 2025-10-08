@@ -1,22 +1,26 @@
 class MessagesController < ApplicationController
 
-  if Rails.env.development?
-    host = "http://localhost:3000"
-  else
-    host = "https://trustyservices.me"
-  end
+  # if Rails.env.development?
+  #   host = "http://localhost:3000"
+  # else
+  #   host = "https://trustyservices.me"
+  # end
 
   def create
     @chat = Chat.find(params[:chat_id])
     embedding = RubyLLM.embed(params[:message][:content])
     # Repetir esta linea para los distintos modelos
     services = Service.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
-    reviews = Review.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
+    Rails.logger.info services
+    # reviews = Review.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
     users = User.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
-    vectors = services + reviews + users
+    vectors = services + users # + reviews + users
+    Rails.logger.info vectors
     instructions = system_prompt
+    Rails.logger.info instructions
 
     instructions += vectors.map { |vector| models_prompt(vector) }.join("\n\n")
+    Rails.logger.info instructions
 
     @message = Message.new(message_params)
     @message.role = "user"
@@ -61,7 +65,8 @@ class MessagesController < ApplicationController
       Tu tarea es responder a las consultas que te hagan los potenciales clientes de la aplicación,
       buscando los servicios que te pidan, recomendando las opciones que tengan mejores
       calificaciones (rating), en promedio y cantidad, y devolviendo como resultado sólo aquellos
-      proveedores (suppliers) que ofrezcan sus servicios en la dirección del cliente o de la consulta. \
+      proveedores (suppliers) que ofrezcan sus servicios en la dirección del cliente o de la consulta.
+      Por favor considera siempre la dirección del user que hace la consulta a la hora de mostrar tu respuesta. \
       Si no hay proveedores/servicios disponibles para la consulta, puedes responder
       \"No hay servicios disponibles para esta consulta\". \
       Tu respuesta debe ser en formato markdown. Cuando respondas, no solo te pedimos las url

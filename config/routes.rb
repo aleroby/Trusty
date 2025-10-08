@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
-  resources :services, only: %i[index show] do
+  resources :services, only: %i[index show destroy] do
     resources :reviews, only: %i[new create]
   end
 
@@ -35,7 +35,7 @@ Rails.application.routes.draw do
     get :available_slots, on: :member
   end
 
-  resources :chats, only: [:index, :create]
+  resources :chats, only: [:index, :create, :destroy]
 
   resources :chats, only: [:show] do
     resources :messages, only: [:create]

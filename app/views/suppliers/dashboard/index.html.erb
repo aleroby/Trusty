@@ -1,4 +1,4 @@
-<div class="container-fluid py-4 supplier-dashboard">
+<div class="container-fluid py-4">
   <div class="row g-3">
     <!-- Sidebar -->
     <aside class="col-12 col-lg-3">
@@ -94,7 +94,11 @@
                     <% end %>
                   </td>
                   <td class="text-center">
-                    <%= link_to "Editar",  edit_suppliers_service_path(service), class: "link-primary fw-semibold" %>
+                    <%= link_to "Editar", edit_suppliers_service_path(service), class: "text-decoration-none link-success fw-semibold" %>
+                    <%= link_to "Eliminar",
+                        suppliers_service_path(service),
+                        class: "text-decoration-none text-warning mx-2 fw-semibold",
+                        data: { turbo_method: :delete, turbo_confirm: "¿Estás seguro de eliminar este servicio?" } %>
                   </td>
                 </tr>
               <% end %>

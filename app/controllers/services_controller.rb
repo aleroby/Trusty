@@ -20,6 +20,17 @@ class ServicesController < ApplicationController
   def show
     @order = Order.new
     @service = Service.find(params[:id])
+
+    @supplier = @service.user
+
+    # Promedio global del proveedor (lo que recibe en cualquier servicio)
+    @supplier_avg   = (@supplier.supplier_rating_avg || 0).round(1)
+    @supplier_count = @supplier.supplier_reviews_count
+
+    # Reviews solo de este servicio dirigidas al proveedor
+    @service_supplier_reviews = @service.supplier_reviews
+                                      .includes(:client)
+                                      .order(created_at: :desc)
   end
 
   #------------------------BLOQUE PARA AGENDA PROVEEDOR------------------------
