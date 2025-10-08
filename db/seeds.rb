@@ -1,5 +1,6 @@
 # db/seeds.rb
 require "date"
+require "open-uri"
 puts "🧹 Limpiando base de datos..."
 
 # Orden correcto para no violar FKs
@@ -780,3 +781,16 @@ puts "    Reserva 1   : Electricidad 10:00–11:00 (confirmed)"
 puts "    Reserva 2   : Plomeria     15:00–16:30 (confirmed)"
 puts "—"
 puts "== Seed OK =="
+
+electricity_images=[
+  "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZWxlY3RyaWNpYW58ZW58MHx8MHx8fDA%3D",
+  "https://images.unsplash.com/photo-1660330589693-99889d60181e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzF8fGVsZWN0cmljaWFufGVufDB8fDB8fHww",
+  "https://plus.unsplash.com/premium_photo-1682086494759-b459f6eff2df?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://plus.unsplash.com/premium_photo-1682086495049-43a423baec15?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+]
+Service.where(sub_category:"Electricidad").each_with_index do |service,index|
+  image=URI.open(electricity_images[index])
+  service.images.attach(io:image,filename:"img-electricity-#{index+1}",content_type:"image/jpeg")
+
+end
