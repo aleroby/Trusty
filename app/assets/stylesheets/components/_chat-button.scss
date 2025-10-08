@@ -1,0 +1,39 @@
+/* app/assets/stylesheets/chat_button.scss */
+
+.chat-button-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1050;
+}
+
+.chat-button {
+  background-color: #25d366; /* Un verde similar al de WhatsApp */
+  color: white;              /* Texto blanco */
+  border-radius: 50%;        /* Lo hace circular */
+  width: 100px;              /* Aumentamos el ancho para que quepa el texto */
+  height: 100px;             /* Aumentamos el alto para que quepa el texto */
+  display: flex;             /* Para centrar el texto */
+  flex-direction: column;    /* Para que el texto se apile si es multilínea o para control */
+  justify-content: center;   /* Centrar verticalmente el contenido */
+  align-items: center;       /* Centrar horizontalmente el contenido */
+  font-size: 0.8rem;         /* Tamaño de fuente más pequeño para el texto */
+  line-height: 1.1;          /* Espaciado entre líneas */
+  text-align: center;        /* Centrar el texto */
+  padding: 5px;              /* Pequeño padding interno */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  text-decoration: none;
+}
+
+.chat-button:hover {
+  background-color: #1da851;
+  transform: scale(1.05);
+}
+
+/* Si quieres que "AI" tenga un estilo diferente a "Assistant" */
+.chat-button strong {
+  font-size: 1.1rem; /* Un poco más grande para "AI" */
+  display: block;    /* Para que "AI" ocupe su propia línea */
+  margin-bottom: 2px; /* Espacio entre "AI" y "Assistant" */
+}

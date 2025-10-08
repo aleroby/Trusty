@@ -146,7 +146,7 @@
                     <div class="ms-auto">
                       <%= link_to "Book",
                             defined?(new_service_booking_path) ? new_service_booking_path(service) : service_path(service),
-                            class: "btn btn-sm btn-primary px-3 rounded-4" %>
+                            class: "btn btn-sm btn-primary px-3" unless service.user_id == current_user.id %>
                     </div>
                   </div>
                 </div>
@@ -157,25 +157,10 @@
       </div>
 
       <!-- Paginación -->
-      <div class="d-flex justify-content-center mt-4">
-        <% if defined?(pagy_bootstrap_nav) && @pagy %>
-          <%= pagy_bootstrap_nav(@pagy).html_safe %>
-        <% elsif defined?(paginate) %>
-          <%= paginate @services %>
-        <% else %>
-          <nav aria-label="Pagination">
-            <ul class="pagination">
-              <% prev_page = (params[:page].to_i > 1 ? params[:page].to_i - 1 : nil) %>
-              <li class="page-item <%= 'disabled' unless prev_page %>">
-                <%= link_to "Previous", url_for(params.permit!.to_h.merge(page: prev_page || 1)), class: "page-link" %>
-              </li>
-              <li class="page-item">
-                <%= link_to "Next", url_for(params.permit!.to_h.merge(page: params[:page].to_i + 1)), class: "page-link" %>
-              </li>
-            </ul>
-          </nav>
-        <% end %>
+      <div class="mt-5">
+        <%== pagy_bootstrap_nav(@pagy) %>
       </div>
+
     </div>
   </div>
 </div>
