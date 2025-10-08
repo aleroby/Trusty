@@ -91,3 +91,5 @@ gem "neighbor"
 gem "kramdown"
 gem "rouge"
 gem "kramdown-parser-gfm"
+
+gem "pagy"

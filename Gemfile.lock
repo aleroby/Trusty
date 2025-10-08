@@ -236,6 +236,7 @@ GEM
       racc (~> 1.4)
     orm_adapter (0.5.0)
     ostruct (0.6.3)
+    pagy (9.4.0)
     pg (1.6.2)
     pg (1.6.2-aarch64-linux)
     pg (1.6.2-aarch64-linux-musl)
@@ -401,6 +402,7 @@ DEPENDENCIES
   kramdown
   kramdown-parser-gfm
   neighbor
+  pagy
   pg (~> 1.1)
   pg_search
   puma (>= 5.0)
