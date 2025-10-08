@@ -1,14 +1,12 @@
-.input-chat {
-  align-items: stretch;
-  border: 1px solid lightgray;
-  border-radius: 5px;
-  width: 100vh;
-  margin: 10px;
+.input-chat, .form-control {
+  border-radius: 1rem;
+  resize: none;
 }
 
-@media (max-width: 600px) {
-  .input-chat{
-    width: 45vh;
-    margin: 10px;
+@media (max-width: 576px) {
+  .send-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
   }
 }
