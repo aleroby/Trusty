@@ -11,12 +11,16 @@ class MessagesController < ApplicationController
     embedding = RubyLLM.embed(params[:message][:content])
     # Repetir esta linea para los distintos modelos
     services = Service.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
-    reviews = Review.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
+    Rails.logger.info services
+    # reviews = Review.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
     users = User.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
-    vectors = services + reviews + users
+    vectors = services + users # + reviews + users
+    Rails.logger.info vectors
     instructions = system_prompt
+    Rails.logger.info instructions
 
     instructions += vectors.map { |vector| models_prompt(vector) }.join("\n\n")
+    Rails.logger.info instructions
 
     @message = Message.new(message_params)
     @message.role = "user"

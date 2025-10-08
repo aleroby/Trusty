@@ -20,4 +20,10 @@ def index
       render :index, status: :unprocessable_entity
     end
   end
+
+  def destroy
+    @chat = Chat.find(params[:id])
+    @chat.destroy
+    redirect_to chats_path, notice: "Chat eliminado."
+  end
 end
