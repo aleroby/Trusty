@@ -8,7 +8,7 @@
 }
 
 .chat-button {
-  background-color: #25d366; /* Un verde similar al de WhatsApp */
+  background-color: $success; /* Un verde similar al de WhatsApp */
   color: white;              /* Texto blanco */
   border-radius: 50%;        /* Lo hace circular */
   width: 100px;              /* Aumentamos el ancho para que quepa el texto */
