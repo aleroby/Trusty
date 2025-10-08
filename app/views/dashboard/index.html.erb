@@ -3,7 +3,7 @@
     <!-- Sidebar -->
     <aside class="col-12 col-lg-3">
       <div class="card shadow-sm sidebar-card sticky-lg-top">
-        <div class="card-body">
+        <div class="card-body bg-white rounded-5">
           <div class="d-flex align-items-center mb-3">
             <% if current_user&.user_photo&.attached? %>
               <%= image_tag current_user.user_photo, class: "rounded-circle avatar-sm flex-shrink-0", alt: "#{current_user.first_name}" %>
@@ -19,32 +19,22 @@
           </div>
 
           <nav class="nav flex-column nav-pills gap-1">
-            <%= link_to "Inicio", dashboard_index_path, class: "nav-link d-flex align-items-center #{'active' if current_page?(dashboard_index_path)}" %>
-            <%= link_to "Mis Ordenes pendientes", services_path, class: "nav-link d-flex align-items-center" %>
-            <%= link_to "Historial de Órdenes", orders_path, class: "nav-link d-flex align-items-center" %>
-            <%= link_to "Mis Calificaciones", "", class: "nav-link d-flex align-items-center #{'active' if controller_name == 'reviews'}" %>
+            <%= link_to "Todas Mis Ordenes", dashboard_index_path, class: "nav-link d-flex align-items-center hover-dashboard" %>
+            <%= link_to "Mis Ordenes Pendientes", dashboard_index_path(pending: true), class: "nav-link d-flex align-items-center hover-dashboard" %>
+            <%= link_to "Historial de Órdenes", dashboard_index_path(history: true), class: "nav-link d-flex align-items-center hover-dashboard" %>
+            <%= link_to "Mis Calificaciones", "", class: "nav-link d-flex align-items-center #{'active' if controller_name == 'reviews'} hover-dashboard" %>
           </nav>
 
 
         </div>
 
-        <div class="card-footer bg-white">
-          <ul class="list-unstyled small mb-0">
-            <li class="mb-2">
-              <%= link_to "Ayuda", "", class: "text-decoration-none d-inline-flex align-items-center gap-2" %>
-            </li>
-            <li>
-              <%= link_to "Cuenta", edit_user_registration_path, class: "text-decoration-none d-inline-flex align-items-center gap-2" %>
-            </li>
-          </ul>
-        </div>
       </div>
     </aside>
 
     <!-- Main -->
     <main class="col-12 col-lg-9">
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3 mb-0">Mis Ordenes</h1>
+        <h1 class="h3 mb-0 text-primary fw-semibold">Mis Ordenes</h1>
       </div>
 
       <div class="card shadow-sm">
@@ -52,29 +42,30 @@
           <table class="table align-middle mb-0">
             <thead class="table-light">
               <tr>
-                <th>Servicio</th>
-                <th>Fecha</th>
-                <th>Hora</th>
-                <th>Proveedor</th>
-                <th>Precio</th>
-                <th>Estado</th>
-                <th class="text-end">Acciones</th>
+                <th class="bg-primary text-white text-center">Servicio</th>
+                <th class="bg-primary text-white text-center">Fecha</th>
+                <th class="bg-primary text-white text-center">Hora</th>
+                <th class="bg-primary text-white text-center">Proveedor</th>
+                <th class="bg-primary text-white text-center">Precio</th>
+                <th class="bg-primary text-white text-center">Estado</th>
+                <th class="text-end bg-primary text-white text-center">Acciones</th>
               </tr>
             </thead>
             <tbody>
-              <% current_user.orders.each do |order| %>
+              <% @orders.each do |order| %>
                 <tr class="service-row">
-                  <td class="text-muted"><%= order.service.sub_category %></td>
-                  <td class="text-muted"><%= order.date %></td>
-                  <td class="text-muted"><%= order.start_time %></td>
-                  <td class="text-muted"><%= order.service.user.first_name %></td>
-                  <td><%= number_to_currency(order.total_price, unit: "$", precision: 0, separator: ",", delimiter: "." ) %></td>
-                  <td>
+                  <td class="text-muted lh-1 text-center bg-white"><%= order.service.sub_category %></td>
+                  <td class="text-muted text-center bg-white"><%= order.date %></td>
+                  <td class="text-muted text-center bg-white"><%= order.start_time.strftime("%H:%M") if order.start_time.present? %></td>
+                  <td class="text-muted text-center bg-white"><%= order.service.user.first_name %></td>
+                  <td class="text-center bg-white"><%= number_to_currency(order.total_price, unit: "$", precision: 0, separator: ",", delimiter: "." ) %></td>
+                  <td class="text-center bg-white">
                     <%= order.status %>
                   </td>
-                  <td class="text-end">
+                  <td class="text-end text-center bg-white">
+                    <%= link_to "Ver", order_path(order), class: "link-danger fw-semibold mx-2" %>
+                    <%= link_to "Editar", edit_order_path(order), class: "link-primary fw-semibold mx-2" %>
                     <%= link_to "Reseña", new_order_review_path(order), class: "link-success fw-semibold mx-2" %>
-                    <%= link_to "Editar", edit_order_path(order), class: "link-primary fw-semibold" %>
                   </td>
                 </tr>
               <% end %>
