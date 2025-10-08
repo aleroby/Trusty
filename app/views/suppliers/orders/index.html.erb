@@ -19,10 +19,11 @@
           </div>
 
           <nav class="nav flex-column nav-pills gap-1">
-            <%= link_to "Mis Servicios", suppliers_dashboard_index_path, class: "nav-link d-flex align-items-center #{'active' if current_page?(suppliers_dashboard_index_path)}" %>
-            <%= link_to "Ordenes Pendientes", suppliers_orders_path(status: "Pendiente"), class: "nav-link d-flex align-items-center #{'active' if controller_name == 'requests'}" %>
-            <%= link_to "Historial de Órdenes", suppliers_orders_path(status: "Aprobado"), class: "nav-link d-flex align-items-center #{'active' if controller_name == 'orders'}" %>
-            <%= link_to "Mis Calificaciones", "reviews_path", class: "nav-link d-flex align-items-center #{'active' if controller_name == 'reviews'}" %>
+            <%= link_to "Mis Servicios", suppliers_dashboard_index_path, class: "nav-link d-flex align-items-center hover-dashboard" %>
+            <%= link_to "Ordenes Pendientes", suppliers_orders_path(pending: true), class: "nav-link d-flex align-items-center hover-dashboard" %>
+            <%= link_to "Historial de Órdenes", suppliers_orders_path(history: true), class: "nav-link d-flex align-items-center hover-dashboard" %>
+            <%= link_to "Mis Calificaciones", "", class: "nav-link d-flex align-items-center #{'active' if controller_name == 'reviews'} hover-dashboard" %>
+
           </nav>
         </div>
 
@@ -70,11 +71,7 @@
                     <td class="text-muted text-center"><%= order.user.first_name %></td>
                     <td class="text-center"><%= number_to_currency(order.total_price, unit: "$", precision: 0) %></td>
                     <td class="text-center">
-                      <% if order.status == "Pendiente" %>
-                        <span class="badge rounded-pill bg-success-subtle text-success-emphasis px-3">Pendiente</span>
-                      <% else %>
-                        <span class="badge rounded-pill bg-danger-subtle text-danger-emphasis px-3">Completada</span>
-                      <% end %>
+                      <%= order.status %>
                     </td>
                     <td class="text-end">
                       <%= link_to "Ver", order_path(order), class: "link-danger fw-semibold" %>
