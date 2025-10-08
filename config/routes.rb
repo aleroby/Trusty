@@ -24,7 +24,7 @@ Rails.application.routes.draw do
     resources :blackouts,      only: [:index, :create, :destroy]
   end
 
-  resources :orders, only: %i[new create edit update, show] do
+  resources :orders, only: %i[new create edit update show] do
     resources :reviews, only: %i[new create]
   end
 

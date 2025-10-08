@@ -1,5 +1,5 @@
 class OrdersController < ApplicationController
-  before_action :set_service, only: [:update]
+  #before_action :set_service, only: [:update]
 
   def show
     @order = Order.find(params[:id])
@@ -32,11 +32,15 @@ class OrdersController < ApplicationController
 
   def update
     @order = Order.find(params[:id])
-    @order.user = @current_user
-    @order.service = @service
-    if @order.update(order_params)
-        redirect_to new_order_path(@order)
+    update_params = order_status_params
+    update_params[:date] = @order.date
+    update_params[:start_time] = @order.start_time
+    update_params[:end_time] = @order.end_time
+
+    if @order.update(update_params)
+      redirect_to dashboard_index_path, notice: "Estatus actualizado correctamente."
     else
+      flash.now[:alert] = @order.errors.full_messages.to_sentence
       render :edit, status: :unprocessable_entity
     end
   end
@@ -44,6 +48,10 @@ class OrdersController < ApplicationController
   private
   def set_service
     @service = Service.find(params[:service_id])
+  end
+
+  def order_status_params
+    params.require(:order).permit(:status)
   end
 
   def order_params
