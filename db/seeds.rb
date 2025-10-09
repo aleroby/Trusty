@@ -659,5 +659,6 @@ cuidado_ninos_images = [
 ]
 
 
+
 # Limpieza de flag de seed
 ENV.delete("SEEDING")
