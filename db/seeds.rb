@@ -658,7 +658,21 @@ cuidado_ninos_images = [
   "https://images.unsplash.com/photo-1650504148053-ae51b12dc1d4?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 ]
 
+services = Service.where(sub_category: "Cuidado de Niños").to_a
+services.each_with_index do |service, i|
+  idx1 = (2 * i) % plomeria_images.length
+  idx2 = (2 * i + 1) % plomeria_images.length
+  urls = [plomeria_images[idx1], plomeria_images[idx2]]
 
+  service.images.purge if service.images.attached?
+
+  attachments = urls.map.with_index(1) do |url, j|
+    io = URI.open(url)
+    { io: io, filename: "plomeria-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
+  end
+
+  service.images.attach(attachments)
+end
 
 # Limpieza de flag de seed
 ENV.delete("SEEDING")
