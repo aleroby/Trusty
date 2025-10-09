@@ -38,7 +38,11 @@ class OrdersController < ApplicationController
     update_params[:end_time] = @order.end_time
 
     if @order.update(update_params)
-      redirect_to dashboard_index_path, notice: "Estatus actualizado correctamente."
+      if @order.service.user == current_user
+        redirect_to suppliers_orders_path(status: "confirmed"), notice: "Status actualizado correctamente."
+      else
+        redirect_to dashboard_index_path, notice: "Status actualizado correctamente."
+      end
     else
       flash.now[:alert] = @order.errors.full_messages.to_sentence
       render :edit, status: :unprocessable_entity

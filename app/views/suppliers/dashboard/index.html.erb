@@ -1,15 +1,15 @@
-<div class="container-fluid py-4">
+<div class="container-fluid py-4 dashboard">
   <div class="row g-3">
     <!-- Sidebar -->
     <aside class="col-12 col-lg-3">
       <div class="card shadow-sm sidebar-card sticky-lg-top">
-        <div class="card-body">
+        <div class="card-body bg-white rounded-5">
           <div class="d-flex align-items-center mb-3">
             <% if current_user&.user_photo&.attached? %>
               <%= image_tag current_user.user_photo, class: "rounded-circle avatar-sm flex-shrink-0", alt: "#{current_user.first_name}" %>
             <% else %>
               <div class="rounded-circle bg-secondary-subtle text-secondary-emphasis d-inline-flex align-items-center justify-content-center avatar-sm flex-shrink-0">
-                <span class="fw-semibold"><%= current_user.first_name %></span>
+                <span class="fw-semibold"><%= current_user.first_name.first %></span>
               </div>
             <% end %>
             <div class="ms-2">
@@ -19,21 +19,11 @@
           </div>
 
             <nav class="nav flex-column nav-pills gap-1">
-              <%= link_to "Mis Servicios",
-                          suppliers_orders_path(pending: true),
-                          class: "nav-link d-flex align-items-center" %>
-
-              <%= link_to "Ordenes Pendientes",
-                          suppliers_orders_path,
-                          class: "nav-link d-flex align-items-center" %>
-
-              <%= link_to "Historial de Órdenes",
-                          orders_path,
-                          class: "nav-link d-flex align-items-center" %>
-
-              <%= link_to "Mis Calificaciones",
-                          suppliers_dashboard_index_path,
-                          class: "nav-link d-flex align-items-center" %>
+              <%= link_to "Mis Servicios", suppliers_dashboard_index_path, class: "nav-link d-flex align-items-center hover-dashboard" %>
+              <%= link_to "Ordenes Pendientes", suppliers_orders_path(status: "confirmed"), class: "nav-link d-flex align-items-center hover-dashboard" %>
+              <%= link_to "Historial de Órdenes", suppliers_orders_path(status: "completed"), class: "nav-link d-flex align-items-center hover-dashboard" %>
+              <%= link_to "Mi Disponibilidad Semanal", suppliers_availabilities_path, class: "nav-link d-flex align-items-center hover-dashboard" %>
+              <%= link_to "Mis Calificaciones", "reviews_path", class: "nav-link d-flex align-items-center hover-dashboard" %>
             </nav>
 
           <div class="card mt-4 border-0 bg-light-subtle">
@@ -45,17 +35,6 @@
             </div>
           </div>
         </div>
-
-        <div class="card-footer bg-white">
-          <ul class="list-unstyled small mb-0">
-            <li class="mb-2">
-              <%= link_to "Ayuda", "", class: "text-decoration-none d-inline-flex align-items-center gap-2" %>
-            </li>
-            <li>
-              <%= link_to "Cuenta", edit_user_registration_path, class: "text-decoration-none d-inline-flex align-items-center gap-2" %>
-            </li>
-          </ul>
-        </div>
       </div>
     </aside>
 
@@ -66,16 +45,16 @@
         <%= link_to "+ Añadir nuevo", new_suppliers_service_path, class: "btn btn-primary rounded-4" %>
       </div>
 
-      <div class="card shadow-sm p-2 rounded-4">
+      <div class="card shadow-sm rounded-4">
         <div class="table-responsive">
           <table class="table align-middle mb-0">
             <thead class="table-light">
               <tr>
-                <th class="text-center bg-primary">Servicio</th>
-                <th class="text-center bg-primary">Categoría</th>
-                <th class="text-center bg-primary">Precio</th>
-                <th class="text-center bg-primary">Estado</th>
-                <th class="text-center bg-primary">Acciones</th>
+                <th class="bg-primary text-white text-center">Servicio</th>
+                <th class="bg-primary text-white text-center">Categoría</th>
+                <th class="bg-primary text-white text-center">Precio</th>
+                <th class="bg-primary text-white text-center">Estado</th>
+                <th class="bg-primary text-white text-center">Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -94,6 +73,7 @@
                     <% end %>
                   </td>
                   <td class="text-center">
+                    <%= link_to "Ver", suppliers_service_path(service), class: "text-decoration-none link-primary mx-2 fw-semibold" %>
                     <%= link_to "Editar", edit_suppliers_service_path(service), class: "text-decoration-none link-success fw-semibold" %>
                     <%= link_to "Eliminar",
                         suppliers_service_path(service),

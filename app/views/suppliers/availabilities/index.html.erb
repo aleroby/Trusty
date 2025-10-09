@@ -1,46 +1,143 @@
-<div class="container my-4">
-  <h4>Mi disponibilidad semanal</h4>
-  <p class="text-muted">Agrega una o más franjas por día. Si un día no tiene franjas, quedará cerrado.</p>
+<div class="container-fluid py-4 dashboard">
+  <div class="row g-3">
+    <!-- Sidebar -->
+    <aside class="col-12 col-lg-3">
+      <div class="card shadow-sm sidebar-card sticky-lg-top">
+        <div class="card-body bg-white rounded-5">
+          <div class="d-flex align-items-center mb-3">
+            <% if current_user&.user_photo&.attached? %>
+              <%= image_tag current_user.user_photo, class: "rounded-circle avatar-sm flex-shrink-0", alt: "#{current_user.first_name}" %>
+            <% else %>
+              <div class="rounded-circle bg-secondary-subtle text-secondary-emphasis d-inline-flex align-items-center justify-content-center avatar-sm flex-shrink-0">
+                <span class="fw-semibold"><%= current_user.first_name.first %></span>
+              </div>
+            <% end %>
+            <div class="ms-2">
+              <h6 class="mb-0"><%= current_user.first_name %></h6>
+              <small class="text-muted">Proveedor</small>
+            </div>
+          </div>
 
-  <%= form_with model: @availability, url: suppliers_availabilities_path, class: "row g-2 mb-4" do |f| %>
-    <div class="col-12 col-md-3">
-      <%= f.label :wday, "Día", class: "form-label" %>
-      <%= f.select :wday,
-          options_for_select([["Domingo",0],["Lunes",1],["Martes",2],["Miércoles",3],["Jueves",4],["Viernes",5],["Sábado",6]]),
-          {}, class: "form-select" %>
-    </div>
-    <div class="col-6 col-md-3">
-      <%= f.label :start_time, "Desde", class: "form-label" %>
-      <%= f.time_field :start_time, step: 1800, class: "form-control" %>
-    </div>
-    <div class="col-6 col-md-3">
-      <%= f.label :end_time, "Hasta", class: "form-label" %>
-      <%= f.time_field :end_time, step: 1800, class: "form-control" %>
-    </div>
-    <div class="col-12 col-md-3 align-self-end">
-      <%= f.submit "Agregar franja", class: "btn btn-primary w-100 rounded-4" %>
-    </div>
-  <% end %>
+            <nav class="nav flex-column nav-pills gap-1">
+              <%= link_to "Mis Servicios", suppliers_dashboard_index_path, class: "nav-link d-flex align-items-center hover-dashboard" %>
+              <%= link_to "Ordenes Pendientes", suppliers_orders_path(status: "confirmed"), class: "nav-link d-flex align-items-center hover-dashboard" %>
+              <%= link_to "Historial de Órdenes", suppliers_orders_path(status: "completed"), class: "nav-link d-flex align-items-center hover-dashboard" %>
+              <%= link_to "Mi Disponibilidad Semanal", suppliers_availabilities_path, class: "nav-link d-flex align-items-center hover-dashboard" %>
+              <%= link_to "Mis Calificaciones", "reviews_path", class: "nav-link d-flex align-items-center hover-dashboard" %>
+            </nav>
 
-  <% grouped = @availabilities.group_by(&:wday) %>
-  <% (0..6).each do |w| %>
-    <div class="card mb-2">
-      <div class="card-body d-flex align-items-center justify-content-between">
-        <strong class="me-2">
-          <%= ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"][w] %>
-        </strong>
-        <div class="d-flex flex-wrap gap-2">
-          <% (grouped[w] || []).each do |a| %>
-            <span class="badge text-bg-light border">
-              <%= a.start_time.strftime("%H:%M") %>–<%= a.end_time.strftime("%H:%M") %>
-              <%= link_to "×", suppliers_availabilities_path(id: a.id), data: { turbo_method: :delete, turbo_confirm: "¿Eliminar franja?" }, class: "ms-2 text-danger text-decoration-none" %>
-            </span>
+          <div class="card mt-4 border-0 bg-light-subtle">
+            <div class="card-body p-3">
+              <p class="small mb-2 text-muted">¿Necesitas inspiración?</p>
+              <%= link_to "Usa el Asistente de IA para crear servicios",
+                          new_suppliers_service_path(ai: true),
+                          class: "stretched-link link-primary fw-semibold text-decoration-none" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="col-12 col-lg-9">
+      <!-- Disponibilidad Semanal -->
+      <div class="container">
+        <h2 class="text-primary">Mi disponibilidad semanal</h2>
+        <p class="d-flex text-success">Agrega una o más franjas por día. Si un día no tiene franjas, quedará cerrado.</p>
+
+        <div class="container border shadow rounded-4 p-3 mb-3">
+          <%= form_with model: @availability, url: suppliers_availabilities_path, class: "row g-2 mb-4" do |f| %>
+            <div class="col-12 col-md-3">
+              <%= f.label :wday, "Día", class: "form-label text-secondary" %>
+              <%= f.select :wday,
+                  options_for_select([["Domingo",0],["Lunes",1],["Martes",2],["Miércoles",3],["Jueves",4],["Viernes",5],["Sábado",6]]),
+                  {}, class: "form-select bg-white" %>
+            </div>
+            <div class="col-6 col-md-3">
+              <%= f.label :start_time, "Desde", class: "form-label text-secondary" %>
+              <%= f.time_field :start_time, step: 1800, class: "form-control bg-white" %>
+            </div>
+            <div class="col-6 col-md-3">
+              <%= f.label :end_time, "Hasta", class: "form-label text-secondary" %>
+              <%= f.time_field :end_time, step: 1800, class: "form-control bg-white" %>
+            </div>
+            <div class="col-12 col-md-3 align-self-end">
+              <%= f.submit "Agregar franja", class: "btn btn-primary w-100 rounded-4" %>
+            </div>
           <% end %>
-          <% if (grouped[w] || []).empty? %>
-            <span class="text-muted">Sin franjas</span>
+        </div>
+
+        <div class="container border shadow rounded-4 p-3">
+          <% grouped = @availabilities.group_by(&:wday) %>
+          <% (0..6).each do |w| %>
+            <div class="card mb-2 bg-white rounded-4">
+              <div class="card-body d-flex align-items-center justify-content-between">
+                <strong class=" text-secondary me-2">
+                  <%= ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"][w] %>
+                </strong>
+                <div class="d-flex flex-wrap gap-2">
+                  <% (grouped[w] || []).each do |a| %>
+                    <span class="badge text-bg-light text-secondary border">
+                      <%= a.start_time.strftime("%H:%M") %>–<%= a.end_time.strftime("%H:%M") %>
+                      <%= link_to "×", suppliers_availabilities_path(id: a.id), data: { turbo_method: :delete, turbo_confirm: "¿Eliminar franja?" }, class: "ms-2 text-danger text-decoration-none" %>
+                    </span>
+                  <% end %>
+                  <% if (grouped[w] || []).empty? %>
+                    <span class="text-muted">Sin franjas</span>
+                  <% end %>
+                </div>
+              </div>
+            </div>
           <% end %>
         </div>
       </div>
-    </div>
-  <% end %>
+
+      <!-- Bloqueos puntuales -->
+      <div class="container my-4">
+        <h2 class="text-primary">Bloqueos puntuales</h2>
+        <p class="d-flex text-success">Usa esto para feriados, trámites, eventos, etc.</p>
+
+        <div class="container border shadow rounded-4 p-3 mb-3">
+          <%= form_with model: @blackout, url: suppliers_blackouts_path, class: "row g-2 mb-4" do |f| %>
+            <div class="col-12 col-md-3">
+              <%= f.label :starts_at, "Desde", class: "form-label text-secondary" %>
+              <%= f.datetime_local_field :starts_at, class: "form-control bg-white" %>
+            </div>
+            <div class="col-12 col-md-3">
+              <%= f.label :ends_at, "Hasta", class: "form-label text-secondary" %>
+              <%= f.datetime_local_field :ends_at, class: "form-control bg-white" %>
+            </div>
+            <div class="col-12 col-md-4">
+              <%= f.label :reason, "Motivo (opcional)", class: "form-label text-secondary" %>
+              <%= f.text_field :reason, class: "form-control bg-white" %>
+            </div>
+            <div class="col-12 col-md-2 align-self-end">
+              <%= f.submit "Agregar", class: "btn btn-primary w-100 rounded-4" %>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="list-group">
+          <% @blackouts.each do |b| %>
+            <div class="list-group-item d-flex justify-content-between mb-2 rounded-4 bg-white align-items-center">
+              <div>
+                <strong class="text-secondary"><%= l b.starts_at, format: :short %></strong>
+                &nbsp;–&nbsp;
+                <strong class="text-secondary"><%= l b.ends_at,   format: :short %></strong>
+                <% if b.reason.present? %>
+                  <span class="text-muted">· <%= b.reason %></span>
+                <% end %>
+              </div>
+              <%= link_to "Eliminar", suppliers_blackouts_path(id: b.id),
+                    data: { turbo_method: :delete, turbo_confirm: "¿Eliminar bloqueo?" },
+                    class: "btn btn-warning text-white rounded-4" %>
+            </div>
+          <% end %>
+          <% if @blackouts.empty? %>
+            <div class="list-group-item text-muted">No tienes bloqueos.</div>
+          <% end %>
+        </div>
+      </div>
+    </main>
+  </div>
 </div>

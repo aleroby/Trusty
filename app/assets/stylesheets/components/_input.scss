@@ -1,6 +1,10 @@
-.input-chat, .form-control {
+.input-chat {
   border-radius: 1rem;
   resize: none;
+}
+
+.form-control {
+  border-radius: 7px;
 }
 
 @media (max-width: 576px) {

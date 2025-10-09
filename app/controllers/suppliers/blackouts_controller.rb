@@ -11,7 +11,7 @@ class Suppliers::BlackoutsController < ApplicationController
   def create
     @blackout = current_user.blackouts.new(blackout_params)
     if @blackout.save
-      redirect_to suppliers_blackouts_path, notice: "Bloqueo creado."
+      redirect_to suppliers_availabilities_path, notice: "Bloqueo creado."
     else
       @blackouts = current_user.blackouts.order(starts_at: :desc)
       flash.now[:alert] = @blackout.errors.full_messages.to_sentence
