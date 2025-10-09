@@ -619,5 +619,45 @@ services.each_with_index do |service, i|
   service.images.attach(attachments)
 end
 
+# ===== Imágenes (2 por servicio de Plomeria) =====
+
+plomeria_images = [
+  "https://plus.unsplash.com/premium_photo-1661884973994-d7625e52631a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjF8fHBsdW1iZXJzfGVufDB8fDB8fHww",
+  "https://images.unsplash.com/photo-1676210134188-4c05dd172f89?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGxvbWVyJUMzJUFEYXxlbnwwfHwwfHx8MA%3D%3D",
+  "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1620653713380-7a34b773fef8?q=80&w=945&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1542013936693-884638332954?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1521207418485-99c705420785?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1649959738550-ad6254b9bb7e?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+]
+
+services = Service.where(sub_category: "Plomeria").to_a
+services.each_with_index do |service, i|
+  idx1 = (2 * i) % plomeria_images.length
+  idx2 = (2 * i + 1) % plomeria_images.length
+  urls = [plomeria_images[idx1], plomeria_images[idx2]]
+
+  service.images.purge if service.images.attached?
+
+  attachments = urls.map.with_index(1) do |url, j|
+    io = URI.open(url)
+    { io: io, filename: "plomeria-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
+  end
+
+  service.images.attach(attachments)
+end
+
+# ===== Imágenes (2 por Cuidado de niños) =====
+
+cuidado_ninos_images = [
+  "https://images.unsplash.com/photo-1587323655395-b1c77a12c89a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjJ8fGN1aWRhZG8lMjBuaSVDMyVCMW9zfGVufDB8fDB8fHww",
+  "https://images.unsplash.com/photo-1536825919521-ab78da56193b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=1140&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1548425083-4261538dbca4?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1588075592446-265fd1e6e76f?q=80&w=1172&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1650504148053-ae51b12dc1d4?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+]
+
+
 # Limpieza de flag de seed
 ENV.delete("SEEDING")
