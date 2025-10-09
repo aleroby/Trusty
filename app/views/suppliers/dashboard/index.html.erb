@@ -125,26 +125,33 @@
       <!-- Reviews -->
       <div class="reviews">
         <h3 class="bg-success text-white mb-3 p-2 shadow-sm rounded-4">Reviews</h3>
-          <% if current_user.reviews_as_supplier.where(target: 0).any? %>
-            <% current_user.reviews_as_supplier.where(target: 0).each do |review| %>
-              <div class="border bg-white shadow-sm rounded-4 p-3 mb-3">
-                <div class="d-flex align-items-center justify-content-between">
-                  <div class="d-flex flex-column">
-                    <div class="fw-semibold"><%= review.client&.first_name || "Anónimo" %></div>
-                    <div class="text-warning small">
-                      <%= ("★" * review.rating.to_i).html_safe %>
-                      <span class="text-secondary"><%= ("☆" * (5 - review.rating.to_i)).html_safe %></span>
-                    </div>
+
+        <% scope = current_user.reviews_as_supplier.where(target: 0) %>
+        <% if scope.any? %>
+          <% scope.each do |review| %>
+            <div class="border bg-white shadow-sm rounded-4 p-3 mb-3">
+              <div class="d-flex align-items-start justify-content-between">
+                <div class="d-flex flex-column me-3 flex-shrink-0">
+                  <div class="fw-semibold"><%= review.client&.first_name || "Anónimo" %></div>
+                  <% filled = review.rating.to_i %>
+                  <div class="text-warning small text-nowrap">
+                    <%= ("★" * filled + "☆" * (5 - filled)).html_safe %>
                   </div>
-                  <p class="mb-0 ms-3 flex-grow-1"><%= review.content %></p>
-                  <div class="small text-muted text-nowrap"><%= time_ago_in_words(review.created_at) %> ago</div>
+                </div>
+
+                <p class="mb-0 flex-grow-1 mx-3"><%= review.content %></p>
+
+                <div class="small text-muted text-nowrap ms-3">
+                  <%= time_ago_in_words(review.created_at) %> ago
                 </div>
               </div>
-            <% end %>
-          <% else %>
-            <p class="text-muted">No hay reviews para este servicio.</p>
+            </div>
           <% end %>
-        </div>
+        <% else %>
+          <p class="text-muted">No hay reviews para este servicio.</p>
+        <% end %>
+      </div>
+
       </div>
 
     </main>

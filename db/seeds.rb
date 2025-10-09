@@ -1,7 +1,8 @@
-# db/seeds.rb
 require "date"
 require "open-uri"
 require "set"
+
+# Evitar llamadas externas (embeddings) durante el seed
 ENV["SEEDING"] = "1"
 
 puts "🧹 Limpiando base de datos..."
@@ -12,326 +13,28 @@ Order.destroy_all
 Availability.destroy_all
 Blackout.destroy_all
 Service.destroy_all
-Message.destroy_all   # <- NUEVO
-Chat.destroy_all      # <- NUEVO
+Message.destroy_all rescue nil
+Chat.destroy_all    rescue nil
 PgSearch::Document.destroy_all if defined?(PgSearch::Document)
 ActiveStorage::Attachment.destroy_all
 ActiveStorage::Blob.destroy_all
-
 User.destroy_all
 
-puts "👥 Creando usuarios..."
+# Colecciones de trabajo
+suppliers = []
+clients   = []
 
-# ==== SUPPLIERS ====
-puts "Creando suppliers..."
+# ======== Ayudantes ========
 
-# 5 suppliers originales (respetamos tu estructura)
-supplier1 = User.create!(
-  first_name: "Carlos",
-  last_name: "Mendoza",
-  email: "carlos.mendoza@mail.com",
-  password: "123456",
-  phone: "11-4567-8901",
-  address: "Av. Santa Fe 3300, Buenos Aires",  # Palermo
-  role: "supplier",
-  radius: 5,
-  latitude: -34.5945,
-  longitude: -58.3974
-)
+# Número aleatorio múltiplo de 1000 dentro del rango dado
+def rand_thousand_in(range)
+  min_k = (range.begin.to_i + 999) / 1000          # ceil(min / 1000)
+  max_i = range.exclude_end? ? range.end.to_i - 1 : range.end.to_i
+  max_k = max_i / 1000                              # floor(max / 1000)
+  k = rand(min_k..max_k)
+  k * 1000
+end
 
-supplier2 = User.create!(
-  first_name: "Andrea",
-  last_name: "Gómez",
-  email: "andrea.gomez@mail.com",
-  password: "123456",
-  phone: "11-5678-9012",
-  address: "Av. Córdoba 5500, Buenos Aires",  # Palermo Hollywood
-  role: "supplier",
-  radius: 2,
-  latitude: -34.5889,
-  longitude: -58.4242
-)
-
-supplier3 = User.create!(
-  first_name: "José",
-  last_name: "Rodríguez",
-  email: "jose.rodriguez@mail.com",
-  password: "123456",
-  phone: "11-6789-0123",
-  address: "Av. Cabildo 2000, Buenos Aires",  # Belgrano
-  role: "supplier",
-  radius: 6,
-  latitude: -34.5614,
-  longitude: -58.4569
-)
-
-supplier4 = User.create!(
-  first_name: "María",
-  last_name: "Fernández",
-  email: "maria.fernandez@mail.com",
-  password: "123456",
-  phone: "11-7890-1234",
-  address: "Av. Rivadavia 8000, Buenos Aires",  # Flores
-  role: "supplier",
-  radius: 10,
-  latitude: -34.6286,
-  longitude: -58.4689
-)
-
-supplier5 = User.create!(
-  first_name: "Luis",
-  last_name: "Sánchez",
-  email: "luis.sanchez@mail.com",
-  password: "123456",
-  phone: "11-8901-2345",
-  address: "Av. Libertador 7500, Buenos Aires",  # Núñez
-  role: "supplier",
-  radius: 15,
-  latitude: -34.5442,
-  longitude: -58.4644
-)
-
-suppliers = [supplier1, supplier2, supplier3, supplier4, supplier5]
-puts "✅ Suppliers creados con direcciones y radius configurados"
-
-# ==== CLIENTS ====
-puts "Creando clientes..."
-
-client_reference = User.create!(
-  first_name: "Valentina",
-  last_name: "Pérez",
-  email: "valentina.perez@mail.com",
-  password: "123456",
-  phone: "11-2345-6789",
-  address: "Jorge Luis Borges 1700, Buenos Aires",
-  role: "client",
-  latitude: -34.5895,
-  longitude: -58.4322
-)
-
-clients = [client_reference]
-
-clients << User.create!(
-  first_name: "Tomás",
-  last_name: "González",
-  email: "tomas.gonzalez@mail.com",
-  password: "123456",
-  phone: "11-3456-7890",
-  address: "Av. Corrientes 1500, Buenos Aires",
-  role: "client",
-  latitude: -34.6037,
-  longitude: -58.3816
-)
-
-clients << User.create!(
-  first_name: "Camila",
-  last_name: "López",
-  email: "camila.lopez@mail.com",
-  password: "123456",
-  phone: "11-4567-8902",
-  address: "Florida 800, Buenos Aires",
-  role: "client",
-  latitude: -34.5986,
-  longitude: -58.3745
-)
-
-clients << User.create!(
-  first_name: "Sebastián",
-  last_name: "Martínez",
-  email: "sebastian.martinez@mail.com",
-  password: "123456",
-  phone: "11-5678-9013",
-  address: "Av. Las Heras 2100, Buenos Aires",
-  role: "client",
-  latitude: -34.5878,
-  longitude: -58.3956
-)
-
-clients << User.create!(
-  first_name: "Fernanda",
-  last_name: "Díaz",
-  email: "fernanda.diaz@mail.com",
-  password: "123456",
-  phone: "11-6789-0124",
-  address: "Defensa 900, Buenos Aires",
-  role: "client",
-  latitude: -34.6214,
-  longitude: -58.3731
-)
-
-clients << User.create!(
-  first_name: "Ignacio",
-  last_name: "Silva",
-  email: "ignacio.silva@mail.com",
-  password: "123456",
-  phone: "11-7890-1235",
-  address: "Av. del Libertador 2500, Buenos Aires",
-  role: "client",
-  latitude: -34.5767,
-  longitude: -58.4034
-)
-
-clients << User.create!(
-  first_name: "Rocío",
-  last_name: "Castro",
-  email: "rocio.castro@mail.com",
-  password: "123456",
-  phone: "11-8901-2346",
-  address: "Av. Scalabrini Ortiz 1800, Buenos Aires",
-  role: "client",
-  latitude: -34.5892,
-  longitude: -58.4245
-)
-
-clients << User.create!(
-  first_name: "Martín",
-  last_name: "Rojas",
-  email: "martin.rojas@mail.com",
-  password: "123456",
-  phone: "11-9012-3457",
-  address: "Av. Pueyrredón 1200, Buenos Aires",
-  role: "client",
-  latitude: -34.5934,
-  longitude: -58.4012
-)
-
-clients << User.create!(
-  first_name: "Sofía",
-  last_name: "Herrera",
-  email: "sofia.herrera@mail.com",
-  password: "123456",
-  phone: "11-0123-4568",
-  address: "Av. Callao 800, Buenos Aires",
-  role: "client",
-  latitude: -34.5989,
-  longitude: -58.3923
-)
-
-clients << User.create!(
-  first_name: "Joaquín",
-  last_name: "Vega",
-  email: "joaquin.vega@mail.com",
-  password: "123456",
-  phone: "11-1234-5679",
-  address: "Av. Juan B. Justo 5000, Buenos Aires",
-  role: "client",
-  latitude: -34.5992,
-  longitude: -58.4378
-)
-
-puts "✅ #{clients.count} clientes creados"
-
-puts "🧰 Creando servicios para cada supplier..."
-
-supplier1.services.create!([
-  {
-    category: "Hogar",
-    sub_category: "Plomeria",
-    description: "Servicio profesional de plomería para el hogar. Reparaciones, instalaciones y mantenimiento. Más de 10 años de experiencia en la zona de Palermo y alrededores.",
-    price: 3500,
-    published: true,
-    duration_minutes: 90
-  },
-  {
-    category: "Hogar",
-    sub_category: "Electricidad",
-    description: "Instalaciones eléctricas, reparaciones y mantenimiento. Trabajo garantizado y con materiales de primera calidad. Atención rápida en emergencias.",
-    price: 4000,
-    published: true,
-    duration_minutes: 60
-  }
-])
-
-supplier2.services.create!([
-  {
-    category: "Estética",
-    sub_category: "Peluquería",
-    description: "Cortes de pelo modernos, coloración y tratamientos capilares. Especializada en tendencias actuales. Atención personalizada en Palermo Hollywood.",
-    price: 2500,
-    published: true,
-    duration_minutes: 60
-  },
-  {
-    category: "Estética",
-    sub_category: "Maquillaje",
-    description: "Maquillaje profesional para eventos, bodas y sesiones fotográficas. Productos de alta gama. Experiencia en todo tipo de pieles.",
-    price: 3000,
-    published: true,
-    duration_minutes: 60
-  }
-])
-
-supplier3.services.create!([
-  {
-    category: "Cuidados",
-    sub_category: "Cuidado de niños",
-    description: "Niñera con amplia experiencia en el cuidado de niños de todas las edades. Referencias verificables. Disponibilidad para jornadas completas o por horas.",
-    price: 1500,
-    published: true,
-    duration_minutes: 180
-  },
-  {
-    category: "Hogar",
-    sub_category: "Limpieza",
-    description: "Servicio de limpieza profunda para hogares y oficinas. Productos ecológicos disponibles. Equipo profesional y confiable.",
-    price: 2800,
-    published: true,
-    duration_minutes: 120
-  }
-])
-
-supplier4.services.create!([
-  {
-    category: "Wellness",
-    sub_category: "Masajes",
-    description: "Masajes terapéuticos, descontracturantes y relajantes. Certificada en diferentes técnicas. Atención a domicilio en zona oeste de Buenos Aires.",
-    price: 4500,
-    published: true,
-    duration_minutes: 60
-  },
-  {
-    category: "Wellness",
-    sub_category: "Clases de Yoga",
-    description: "Clases particulares de yoga en tu domicilio. Todos los niveles. Incluye mat y elementos necesarios. Horarios flexibles.",
-    price: 3200,
-    published: true,
-    duration_minutes: 60
-  }
-])
-
-supplier5.services.create!([
-  {
-    category: "Entrenamiento",
-    sub_category: "Personal Trainer",
-    description: "Entrenamiento personalizado a domicilio. Planes adaptados a tus objetivos. Experiencia con clientes de todos los niveles. Zona norte y centro de Buenos Aires.",
-    price: 5000,
-    published: true,
-    duration_minutes: 60
-  },
-  {
-    category: "Entrenamiento",
-    sub_category: "Funcional",
-    description: "Entrenamiento funcional grupal o individual. Rutinas dinámicas y efectivas. Incluye seguimiento nutricional básico.",
-    price: 3800,
-    published: true,
-    duration_minutes: 90
-  },
-  {
-    category: "Clases",
-    sub_category: "Idiomas",
-    description: "Clases particulares de inglés para todos los niveles. Preparación para exámenes internacionales. Metodología conversacional y práctica.",
-    price: 2000,
-    published: true,
-    duration_minutes: 60
-  }
-])
-
-services = Service.all
-puts "✅ #{services.count} servicios creados"
-
-# ======== A PARTIR DE ACÁ: ENRIQUECIMIENTO MASIVO SEGÚN TUS REGLAS ========
-
-# Ayudantes
 def rand_price_for(subcat)
   base = {
     "Plomeria" => 15000..35000,
@@ -356,7 +59,7 @@ def rand_price_for(subcat)
     "Idiomas" => 8000..20000
   }
   range = base[subcat] || (9000..22000)
-  rand(range)
+  rand_thousand_in(range)
 end
 
 BA_SUBCATS = {
@@ -367,11 +70,9 @@ BA_SUBCATS = {
   "Entrenamiento" => ["Personal Trainer", "Funcional"],
   "Clases" => ["Idiomas"]
 }
-
 ALL_SUBCATS = BA_SUBCATS.values.flatten.freeze
 
 # Direcciones reales (calle + altura) y coordenadas aproximadas
-
 BA_ADDRESSES = [
   ["Honduras 5200, Palermo, CABA", -34.5887, -58.4286],
   ["Gorriti 4800, Palermo, CABA", -34.5912, -58.4307],
@@ -438,8 +139,7 @@ MZA_ADDRESSES = [
   ["Ozamis 300, Maipú", -32.9859, -68.7970]
 ].freeze
 
-# Generar 30 suppliers BA (ya tenemos 5 de BA)
-def gen_person(i)
+def gen_person(_i)
   first = %w[Agustín Felipe Facundo Nicolás Julieta Lucía Paula Antonella Florencia Carla
              Pedro Ramiro Gonzalo Ignacio Juan Pablo Diego Micaela Sol Valentina Candela
              Martina Emilia Camilo Bruno Joaquín Mateo Tomás Zoe Lara Jazmín Bianca Milagros].sample
@@ -448,9 +148,7 @@ def gen_person(i)
   [first, last]
 end
 
-# Para emails únicos
 used_emails = User.pluck(:email).to_set
-
 def unique_email(base, used)
   email = base
   n = 1
@@ -461,6 +159,86 @@ def unique_email(base, used)
   used << email
   email
 end
+
+def city_for_address(addr)
+  if addr.include?("Mendoza") || addr.include?("Godoy Cruz") || addr.include?("Chacras") || addr.include?("Luján") || addr.include?("Maipú")
+    :mza
+  else
+    :ba
+  end
+end
+
+def category_for_sub(sub)
+  BA_SUBCATS.find { |k, v| v.include?(sub) }&.first || "Hogar"
+end
+
+# ===== 5 suppliers base (BA) =====
+supplier1 = User.create!(
+  first_name: "Carlos",
+  last_name: "Mendoza",
+  email: unique_email("carlos.mendoza@mail.com", used_emails),
+  password: "123456",
+  phone: "11-4567-8901",
+  address: "Av. Santa Fe 3300, Buenos Aires",  # Palermo
+  role: "supplier",
+  radius: 5,
+  latitude: -34.5945,
+  longitude: -58.3974
+); suppliers << supplier1
+
+supplier2 = User.create!(
+  first_name: "Andrea",
+  last_name: "Gómez",
+  email: unique_email("andrea.gomez@mail.com", used_emails),
+  password: "123456",
+  phone: "11-5678-9012",
+  address: "Av. Córdoba 5500, Buenos Aires",   # Palermo Hollywood
+  role: "supplier",
+  radius: 2,
+  latitude: -34.5889,
+  longitude: -58.4242
+); suppliers << supplier2
+
+supplier3 = User.create!(
+  first_name: "José",
+  last_name: "Rodríguez",
+  email: unique_email("jose.rodriguez@mail.com", used_emails),
+  password: "123456",
+  phone: "11-6789-0123",
+  address: "Av. Cabildo 2000, Buenos Aires",   # Belgrano
+  role: "supplier",
+  radius: 6,
+  latitude: -34.5614,
+  longitude: -58.4569
+); suppliers << supplier3
+
+supplier4 = User.create!(
+  first_name: "María",
+  last_name: "Fernández",
+  email: unique_email("maria.fernandez@mail.com", used_emails),
+  password: "123456",
+  phone: "11-7890-1234",
+  address: "Av. Rivadavia 8000, Buenos Aires", # Flores
+  role: "supplier",
+  radius: 10,
+  latitude: -34.6286,
+  longitude: -58.4689
+); suppliers << supplier4
+
+supplier5 = User.create!(
+  first_name: "Luis",
+  last_name: "Sánchez",
+  email: unique_email("luis.sanchez@mail.com", used_emails),
+  password: "123456",
+  phone: "11-8901-2345",
+  address: "Av. Libertador 7500, Buenos Aires", # Núñez
+  role: "supplier",
+  radius: 15,
+  latitude: -34.5442,
+  longitude: -58.4644
+); suppliers << supplier5
+
+puts "👥 Creando suppliers (completando 30 BA + 30 MZA)..."
 
 # completar suppliers BA hasta 30
 (6..30).each do |idx|
@@ -475,7 +253,7 @@ end
     phone: "11-#{rand(1000..9999)}-#{rand(1000..9999)}",
     address: addr,
     role: "supplier",
-    radius: [2,3,5,8,10,12,15].sample,
+    radius: [5,10,15,20].sample,
     latitude: lat,
     longitude: lon
   )
@@ -494,7 +272,7 @@ end
     phone: "261-#{rand(4000000..7999999)}",
     address: addr,
     role: "supplier",
-    radius: [2,3,5,8,10,12,15].sample,
+    radius: [5,10,15,20].sample,
     latitude: lat,
     longitude: lon
   )
@@ -502,21 +280,7 @@ end
 
 puts "✅ Total suppliers: #{User.where(role: 'supplier').count} (30 BA + 30 MZA)"
 
-# Servicios: aseguramos cobertura de TODAS las subcategorías en cada ciudad,
-# y que cada supplier tenga al menos 1 servicio
-def city_for_address(addr)
-  if addr.include?("Mendoza") || addr.include?("Godoy Cruz") || addr.include?("Chacras") || addr.include?("Luján") || addr.include?("Maipú")
-    :mza
-  else
-    :ba
-  end
-end
-
-def category_for_sub(sub)
-  BA_SUBCATS.find { |k, v| v.include?(sub) }&.first || "Hogar"
-end
-
-# Mapear subcategorías para asignarlas cíclicamente por ciudad
+# ===== Servicios: cobertura de subcategorías y al menos 1 por supplier =====
 ba_cycle = ALL_SUBCATS.cycle
 mza_cycle = ALL_SUBCATS.cycle
 
@@ -529,7 +293,7 @@ User.where(role: "supplier").find_each do |sup|
     description: "#{sub} profesional en la zona. Atención a domicilio, materiales de calidad y cumplimiento horario.",
     price: rand_price_for(sub),
     published: true,
-    duration_minutes: [45,60,75,90,120].sample
+    duration_minutes: [60,90,120,180].sample
   )
   # Bonus: hasta 1 extra aleatorio (30-40% de los casos)
   if [true, false, false].sample
@@ -541,18 +305,18 @@ User.where(role: "supplier").find_each do |sup|
       description: "#{sub2} con experiencia comprobable. Servicio garantizado.",
       price: rand_price_for(sub2),
       published: [true, true, false].sample,
-      duration_minutes: [45,60,90].sample
+      duration_minutes: [60,90,120,180].sample
     )
   end
 end
 
 puts "✅ Servicios asignados y cobertura de subcategorías en ambas ciudades"
 
-# ==== Completar CLIENTES hasta 60 (30 BA y 30 MZA) ====
-# Ya hay 10 BA. Creamos 20 BA + 30 MZA.
+# ===== Clientes (30 BA + 30 MZA) =====
+puts "👥 Creando clientes (30 BA + 30 MZA)..."
 
-# 20 BA extras
-(1..20).each do |i|
+# 30 BA
+30.times do |i|
   name = gen_person(200 + i)
   addr, lat, lon = BA_ADDRESSES[i % BA_ADDRESSES.size]
   email = unique_email("#{name[0].downcase}.#{name[1].downcase}@ba-clients.com", used_emails)
@@ -569,8 +333,8 @@ puts "✅ Servicios asignados y cobertura de subcategorías en ambas ciudades"
   )
 end
 
-# 30 MZA clients
-(1..30).each do |i|
+# 30 MZA
+30.times do |i|
   name = gen_person(300 + i)
   addr, lat, lon = MZA_ADDRESSES[i % MZA_ADDRESSES.size]
   email = unique_email("#{name[0].downcase}.#{name[1].downcase}@mza-clients.com", used_emails)
@@ -589,9 +353,7 @@ end
 
 puts "✅ #{clients.count} clientes totales (30 BA + 30 MZA)"
 
-# ==== Agenda: disponibilidades y bloqueos ====
-
-# Disponibilidad semanal (Lun–Vie 09–13 y 14–18) para TODOS los suppliers
+# ===== Agenda: disponibilidades y blackout =====
 (1..5).each do |wday| # 1=Lun ... 5=Vie
   User.where(role: "supplier").find_each do |sup|
     sup.availabilities.create!(wday: wday, start_time: "09:00", end_time: "13:00")
@@ -600,7 +362,6 @@ puts "✅ #{clients.count} clientes totales (30 BA + 30 MZA)"
 end
 puts "✅ Disponibilidades semanales creadas para todos los suppliers"
 
-# Próximo día hábil (para probar bloqueo a nivel proveedor sobre supplier1)
 def next_weekday(from_date = Date.current)
   d = from_date
   d += 1.day while [0, 6].include?(d.wday) # saltear domingo(0) y sábado(6)
@@ -608,7 +369,6 @@ def next_weekday(from_date = Date.current)
 end
 test_date = next_weekday
 
-# Blackout 12:00–13:00 para supplier1 ese día
 supplier1.blackouts.create!(
   starts_at: Time.zone.local(test_date.year, test_date.month, test_date.day, 12, 0, 0),
   ends_at:   Time.zone.local(test_date.year, test_date.month, test_date.day, 13, 0, 0),
@@ -616,20 +376,18 @@ supplier1.blackouts.create!(
 )
 puts "✅ Blackout 12:00–13:00 creado para supplier1 en #{test_date}"
 
-# ==== Órdenes de ejemplo (respetando tu estructura) ====
-
+# ===== Órdenes demo (2 confirmed en test_date para supplier1) =====
 puts "📅 Creando órdenes de ejemplo..."
 
-# 1) Dos órdenes "confirmed" el mismo día (test_date) para supplier1
 service_elec = supplier1.services.find_by(sub_category: "Electricidad") || supplier1.services.first
-service_plom = supplier1.services.find_by(sub_category: "Plomeria") || supplier1.services.last
+service_plom = supplier1.services.find_by(sub_category: "Plomeria")     || supplier1.services.last
 
 Order.create!(
   user: clients.sample,
   service: service_elec,
   service_address: "Dirección del cliente",
   total_price: service_elec.price,
-  status: "confirmed",                            # <- estado que bloquea
+  status: "confirmed",
   date: test_date,
   start_time: "10:00",
   end_time:   "11:00"
@@ -640,28 +398,27 @@ Order.create!(
   service: service_plom,
   service_address: "Dirección del cliente",
   total_price: service_plom.price,
-  status: "confirmed",                            # <- bloquea a NIVEL PROVEEDOR
+  status: "confirmed",
   date: test_date,
   start_time: "15:00",
   end_time:   "16:30"
-  )
+)
 
-  orders = Order.all
-  puts "✅ #{orders.count} órdenes creadas (parciales de demo)"
+orders = Order.all
+puts "✅ #{orders.count} órdenes creadas (parciales de demo)"
 
-  # === Helpers de agenda SIN solapamientos ===
+# === Helpers de agenda SIN solapamientos ===
+def time_on(date, hhmm)
+  h, m = hhmm.split(":").map!(&:to_i)
+  Time.zone.local(date.year, date.month, date.day, h, m, 0)
+end
 
-  def time_on(date, hhmm)
-    h, m = hhmm.split(":").map!(&:to_i)
-    Time.zone.local(date.year, date.month, date.day, h, m, 0)
-  end
+def overlaps?(a_start, a_end, b_start, b_end)
+  a_start < b_end && b_start < a_end
+end
 
-  def overlaps?(a_start, a_end, b_start, b_end)
-    a_start < b_end && b_start < a_end
-  end
-
-  def supplier_existing_orders_on(date, supplier_id)
-    Order.joins(:service)
+def supplier_existing_orders_on(date, supplier_id)
+  Order.joins(:service)
        .where(date: date, services: { user_id: supplier_id })
        .select(:start_time, :end_time)
 end
@@ -674,11 +431,10 @@ def supplier_blackouts_on(date, supplier_id)
           .select(:starts_at, :ends_at)
 end
 
-# Devuelve slots de inicio posibles (cada 30’) dentro de las availabilities del proveedor en esa fecha,
-# filtrando por duración del servicio, blackouts y órdenes previas del mismo proveedor.
+# slots posibles (cada 30’) dentro de availabilities del proveedor
 def candidate_slots_for(service, date)
   supplier = service.user
-  wday = date.cwday # 1..7 (nuestro seed usa 1..5 para Lun..Vie)
+  wday = date.cwday # 1..7 (seed usa 1..5)
 
   avs = supplier.availabilities.where(wday: wday)
   return [] if avs.empty?
@@ -691,41 +447,29 @@ def candidate_slots_for(service, date)
   blks = supplier_blackouts_on(date, supplier.id).map { |b| [b.starts_at, b.ends_at] }
 
   slots = []
-
   avs.each do |av|
     av_start = time_on(date, av.start_time.strftime("%H:%M"))
     av_end   = time_on(date, av.end_time.strftime("%H:%M"))
-
-    # caminamos cada 30 minutos
     t = av_start
     step = 30.minutes
     while (t + duration_min.minutes) <= av_end
       st = t
       en = t + duration_min.minutes
-
-      # descartar si pisa blackout
       next_conf_blk = blks.any? { |(bs, be)| overlaps?(st, en, bs, be) }
-      # descartar si pisa orden del mismo proveedor
       next_conf_ord = existing.any? { |(os, oe)| overlaps?(st, en, os, oe) }
-
       slots << [st, en] unless next_conf_blk || next_conf_ord
-
       t += step
     end
   end
-
   slots
 end
 
-# Busca una fecha hábil (con availabilities cargadas) en ventana de ±15 días y devuelve el primer slot libre.
+# Busca fecha hábil ±15 días y devuelve un slot libre
 def find_free_slot_for(service)
-  # probamos hasta 90 intentos rotando fechas y slots
   attempts = 90
   attempts.times do
     date = Date.current + rand(-15..15).days
-    # sólo días con availabilities (en el seed pusimos Lun..Vie = 1..5)
     next unless (1..5).include?(date.cwday)
-
     slots = candidate_slots_for(service, date)
     return [date, *slots.sample] unless slots.empty?
   end
@@ -754,17 +498,14 @@ def create_n_orders(n, status, clients)
       start_time: st_dt.strftime("%H:%M"),
       end_time:   en_dt.strftime("%H:%M")
     )
-
     created += 1
   end
-
   if created < n
     puts "⚠️  Aviso: se pidieron #{n} órdenes #{status} pero sólo se pudieron crear #{created} sin solapamientos."
   end
 end
 
 # ====== GENERADOR CONTROLADO PARA LLEGAR A 200 ÓRDENES EXACTAS ======
-
 target_total = 200
 already_confirmed = Order.where(status: "confirmed").count
 already_completed = Order.where(status: "completed").count
@@ -787,26 +528,35 @@ puts "   confirmed: #{Order.where(status: 'confirmed').count}"
 puts "   canceled : #{Order.where(status: 'canceled').count}"
 puts "   TOTAL    : #{Order.count}"
 
-# ==== Reseñas (sólo órdenes COMPLETED, 2 por orden) ====
-
+# ===== Reseñas (2 por cada completed) =====
 puts "⭐ Creando reseñas..."
 
 completed_orders = Order.where(status: "completed")
 
 client_texts = [
-  "Excelente servicio, puntual y muy profesional.",
-  "Muy buena experiencia, volvería a contratar.",
-  "Trabajo prolijo y comunicación clara.",
-  "Precio justo y resultado impecable.",
-  "Todo perfecto, gracias por la atención."
+  "Contraté el servicio para una reparación urgente y quedé muy conforme. Llegó a horario, evaluó rápido el problema y me explicó con claridad las alternativas. Trabajó prolijo, protegió el área y dejó todo limpio. El precio fue acorde y me emitió factura al instante.",
+  "Excelente atención desde el primer contacto: respondió rápido, coordinamos día y franja horaria sin vueltas y cumplió a la perfección. Trajo materiales, sugirió mejoras y revisó el funcionamiento final. Muy profesional y amable. Lo volvería a contratar.",
+  "Me gustó mucho la seriedad y el cuidado por los detalles. Verificó medidas, confirmó el presupuesto antes de empezar y mantuvo comunicación constante. El resultado final superó lo esperado y hasta dejó recomendaciones de mantenimiento preventivo.",
+  "Trabajo impecable y cero complicaciones. Puntualidad, herramientas adecuadas y una actitud súper respetuosa en casa. Cubrió el piso, retiró residuos y probó todo antes de irse. La relación calidad-precio me pareció justa. Recomendado sin dudar.",
+  "La coordinación fue simple y transparente. Llegó dentro del horario pautado, explicó el plan de trabajo y cumplió cada etapa. El acabado quedó prolijo y se notó experiencia. Además, respondió preguntas postservicio con muy buena predisposición.",
+  "Quería destacar la claridad para presupuestar y la prolijidad en la ejecución. No hubo sorpresas: el monto final coincidió con lo acordado y el trabajo quedó sólido. Agradezco también la paciencia para explicar opciones y tiempos de secado.",
+  "Muy buena experiencia: evaluó la instalación existente, detectó riesgos y propuso soluciones seguras. Trajo repuestos de calidad y dejó todo funcionando. Además, limpió el área y se llevó el material descartado. Trato cordial en todo momento.",
+  "Se notó profesionalismo desde el primer minuto. Verificó tensión, midió consumos y documentó con fotos el antes y después. El resultado es prolijo y estético. Valoré mucho la puntualidad y el respeto por los espacios. Lo recomiendo totalmente.",
+  "El servicio fue eficiente y sin vueltas. Respetó el presupuesto, trabajó con guantes y protectores, y revisó posibles filtraciones antes de cerrar. Me dejó consejos útiles para el uso diario y garantizó el trabajo por escrito. Excelente atención.",
+  "Atención de primera: escuchó mi necesidad, propuso un plan realista y cumplió con los plazos. La terminación quedó pareja y sin detalles a corregir. Además, se ocupó de ordenar todo al finalizar. Muy buena comunicación y trato amable."
 ]
 
 supplier_texts = [
-  "Cliente cordial y cumplidor con los horarios.",
-  "Excelente comunicación, todo salió como acordado.",
-  "Un gusto trabajar con el cliente.",
-  "Muy responsable y respetuoso.",
-  "Experiencia fluida y sin inconvenientes."
+  "Cliente muy respetuoso y organizado. Compartió fotos y detalles antes de la visita, facilitó acceso y estacionamiento, y estuvo atento a las recomendaciones. Pagó en tiempo y forma. Excelente comunicación y ambiente de trabajo, todo fluyó perfecto.",
+  "La coordinación fue ágil: el cliente confirmó franja horaria, despejó el área y mantuvo el lugar ventilado. Recibí un brief claro y expectativas realistas. Pagó al finalizar, sin demoras. Muy buen trato, volvería a trabajar en ese domicilio.",
+  "Trato cordial y claridad en los pedidos. El cliente estuvo presente para consultas clave, respetó los tiempos y brindó enchufes y luz de apoyo. La vivienda estaba ordenada, lo que agilizó el trabajo. Pago y comprobante sin complicaciones.",
+  "Excelente predisposición: envió ubicación exacta, avisó al portero y preparó el espacio. Escuchó recomendaciones técnicas y aprobó cada etapa. El pago fue inmediato. Experiencia muy positiva, ojalá todos los servicios fueran así de prolijos.",
+  "Cliente responsable y cuidadoso con los detalles. Acordamos alcance y presupuesto por escrito y lo respetó sin cambios de último momento. El área estaba despejada y limpia. Abonó como se pactó. Comunicación clara en todo momento.",
+  "Muy buena experiencia: el cliente brindó información previa útil, aceptó sugerencias y mantuvo un trato amable. No hubo cancelaciones ni reprogramaciones. Proceso ágil, pago puntual y feedback constructivo al cierre del servicio.",
+  "Profesionalidad del cliente notable. Tenía a mano garantías y manuales, lo que facilitó diagnósticos. Fue puntual, permitió trabajar sin interrupciones y realizó el pago vía transferencia con comprobante. Excelente colaboración.",
+  "Todo resultó sencillo gracias a una comunicación clara. El cliente preparó el entorno, protegió sus muebles y respetó las normas de seguridad. Solicitó factura y la abonó al instante. Experiencia ordenada y muy recomendable.",
+  "Cliente amable y confiable. Definimos prioridades, tiempos y alcance desde el inicio. Proporcionó enchufe y acceso al tablero cuando fue necesario. Pago dentro del horario pactado y recepción del trabajo sin objeciones. Muy buena interacción.",
+  "Muy buena coordinación logística: compartió referencias para llegar, autorizó el ingreso y estuvo disponible para aprobar cambios menores. Mantuvo el área despejada y colaboró con pruebas finales. Pago correcto y trato excelente."
 ]
 
 completed_orders.find_each do |order|
@@ -817,7 +567,7 @@ completed_orders.find_each do |order|
     service: order.service,
     client:  order.user,             # quien contrata
     supplier: order.service.user,    # quien brinda el servicio
-    target: :for_supplier            # indica dirección de la review
+    target: :for_supplier            # enum hacia el proveedor
   )
 
   # Review del PROVEEDOR → CLIENTE
@@ -827,7 +577,7 @@ completed_orders.find_each do |order|
     service: order.service,
     client:  order.user,             # mismo cliente
     supplier: order.service.user,    # mismo proveedor
-    target: :for_client              # indica dirección opuesta
+    target: :for_client              # enum hacia el cliente
   )
 end
 
@@ -841,16 +591,33 @@ puts "    Reserva 2   : Plomeria     15:00–16:30 (confirmed)"
 puts "—"
 puts "== Seed OK =="
 
-electricity_images=[
-  "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZWxlY3RyaWNpYW58ZW58MHx8MHx8fDA%3D",
-  "https://images.unsplash.com/photo-1660330589693-99889d60181e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzF8fGVsZWN0cmljaWFufGVufDB8fDB8fHww",
-  "https://plus.unsplash.com/premium_photo-1682086494759-b459f6eff2df?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  "https://plus.unsplash.com/premium_photo-1682086495049-43a423baec15?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+# ===== Imágenes (2 por servicio de Electricidad) =====
+electricity_images = [
+  "https://images.unsplash.com/photo-1660330589693-99889d60181e?w=1200&q=80&auto=format",
+  "https://plus.unsplash.com/premium_photo-1682086494759-b459f6eff2df?w=1200&q=80&auto=format",
+  "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=1200&q=80&auto=format",
+  "https://images.unsplash.com/photo-1657664066042-c59e5f84b7a8?w=1200&q=80&auto=format",
+  "https://plus.unsplash.com/premium_photo-1682086495049-43a423baec15?w=1200&q=80&auto=format",
+  "https://images.unsplash.com/photo-1660330589693-99889d60181e?w=1200&q=80&auto=format",
+  "https://plus.unsplash.com/premium_photo-1664301437032-c210e558712c?w=1200&q=80&auto=format",
+  "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=1200&q=80&auto=format"
 ]
-Service.where(sub_category:"Electricidad").each_with_index do |service,index|
-  image=URI.open(electricity_images[index])
-  service.images.attach(io:image,filename:"img-electricity-#{index+1}",content_type:"image/jpeg")
 
+services = Service.where(sub_category: "Electricidad").to_a
+services.each_with_index do |service, i|
+  idx1 = (2 * i) % electricity_images.length
+  idx2 = (2 * i + 1) % electricity_images.length
+  urls = [electricity_images[idx1], electricity_images[idx2]]
+
+  service.images.purge if service.images.attached?
+
+  attachments = urls.map.with_index(1) do |url, j|
+    io = URI.open(url)
+    { io: io, filename: "electricidad-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
+  end
+
+  service.images.attach(attachments)
 end
+
+# Limpieza de flag de seed
 ENV.delete("SEEDING")
