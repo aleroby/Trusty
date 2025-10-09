@@ -647,6 +647,7 @@ services.each_with_index do |service, i|
   service.images.attach(attachments)
 end
 
+
 # ===== Imágenes (2 por Cuidado de niños) =====
 
 cuidado_ninos_images = [
@@ -658,17 +659,489 @@ cuidado_ninos_images = [
   "https://images.unsplash.com/photo-1650504148053-ae51b12dc1d4?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 ]
 
-services = Service.where(sub_category: "Cuidado de Niños").to_a
+services = Service.where(sub_category: "Cuidado de niños").to_a
 services.each_with_index do |service, i|
-  idx1 = (2 * i) % plomeria_images.length
-  idx2 = (2 * i + 1) % plomeria_images.length
-  urls = [plomeria_images[idx1], plomeria_images[idx2]]
+  idx1 = (2 * i) % cuidado_ninos_images.length
+  idx2 = (2 * i + 1) % cuidado_ninos_images.length
+  urls = [cuidado_ninos_images[idx1], cuidado_ninos_images[idx2]]
 
   service.images.purge if service.images.attached?
 
   attachments = urls.map.with_index(1) do |url, j|
     io = URI.open(url)
-    { io: io, filename: "plomeria-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
+    { io: io, filename: "cuidado_ninos-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
+  end
+
+  service.images.attach(attachments)
+end
+
+
+control_plagas_images = [
+  "https://plus.unsplash.com/premium_photo-1682126097276-57e5d1d3f812?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cGxhZ2FzfGVufDB8fDB8fHww",
+  "https://plus.unsplash.com/premium_photo-1661541260934-3e4f2a056dfb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGZ1bWlnYXRpb258ZW58MHx8MHx8fDA%3D"
+]
+
+services = Service.where(sub_category: "Control de Plagas").to_a
+services.each_with_index do |service, i|
+  idx1 = (2 * i) % control_plagas_images.length
+  idx2 = (2 * i + 1) % control_plagas_images.length
+  urls = [control_plagas_images[idx1], control_plagas_images[idx2]]
+
+  service.images.purge if service.images.attached?
+
+  attachments = urls.map.with_index(1) do |url, j|
+    io = URI.open(url)
+    { io: io, filename: "control_plagas-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
+  end
+
+  service.images.attach(attachments)
+end
+
+# ===== Imágenes (2 por jardineria) =====
+
+jardineria_images = [
+  "https://images.unsplash.com/photo-1670989292166-8b20b9530438?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjZ8fGdhcmRlbmluZyUyMHNlcnZpY2VzfGVufDB8fDB8fHww",
+  "https://images.unsplash.com/photo-1734079692160-fcbe4be6ab96?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Z2FyZGVuaW5nJTIwc2VydmljZXN8ZW58MHx8MHx8fDA%3D"
+]
+
+services = Service.where(sub_category: "Jardinería").to_a
+services.each_with_index do |service, i|
+  idx1 = (2 * i) % jardineria_images.length
+  idx2 = (2 * i + 1) % jardineria_images.length
+  urls = [jardineria_images[idx1], jardineria_images[idx2]]
+
+  service.images.purge if service.images.attached?
+
+  attachments = urls.map.with_index(1) do |url, j|
+    io = URI.open(url)
+    { io: io, filename: "jardineria-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
+  end
+
+  service.images.attach(attachments)
+end
+
+# ===== Imágenes (2 por limpieza) =====
+
+limpieza_images = [
+  "https://images.unsplash.com/photo-1686178827149-6d55c72d81df?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2xlYW5pbmclMjBzZXJ2aWNlfGVufDB8fDB8fHww",
+  "https://images.unsplash.com/photo-1627905646269-7f034dcc5738?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Y2xlYW5pbmclMjBzZXJ2aWNlfGVufDB8fDB8fHww"
+]
+
+services = Service.where(sub_category: "Limpieza").to_a
+services.each_with_index do |service, i|
+  idx1 = (2 * i) % limpieza_images.length
+  idx2 = (2 * i + 1) % limpieza_images.length
+  urls = [limpieza_images[idx1], limpieza_images[idx2]]
+
+  service.images.purge if service.images.attached?
+
+  attachments = urls.map.with_index(1) do |url, j|
+    io = URI.open(url)
+    { io: io, filename: "limpieza-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
+  end
+
+  service.images.attach(attachments)
+end
+
+# ===== Imágenes (2 por planchado) =====
+
+planchado_images = [
+  "https://images.unsplash.com/photo-1758279744970-b32360a5e907?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cGxhbmNoYSUyMHJvcGF8ZW58MHx8MHx8fDA%3D",
+  "https://plus.unsplash.com/premium_photo-1726876859106-9deef9531e05?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjF8fHBsYW5jaGElMjByb3BhfGVufDB8fDB8fHww"
+]
+
+services = Service.where(sub_category: "Planchado").to_a
+services.each_with_index do |service, i|
+  idx1 = (2 * i) % planchado_images.length
+  idx2 = (2 * i + 1) % planchado_images.length
+  urls = [planchado_images[idx1], planchado_images[idx2]]
+
+  service.images.purge if service.images.attached?
+
+  attachments = urls.map.with_index(1) do |url, j|
+    io = URI.open(url)
+    { io: io, filename: "planchado-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
+  end
+
+  service.images.attach(attachments)
+end
+
+# ===== Imágenes (2 por cuidado de ancianos) =====
+
+cuidado_ancianos_images = [
+  "https://images.unsplash.com/photo-1587556930799-8dca6fad6d41?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8Y3VpZGFkbyUyMGFuY2lhbm9zfGVufDB8fDB8fHww"
+]
+
+services = Service.where(sub_category: "Cuidado de ancianos").to_a
+services.each_with_index do |service, i|
+  idx1 = (2 * i) % cuidado_ancianos_images.length
+  idx2 = (2 * i + 1) % cuidado_ancianos_images.length
+  urls = [cuidado_ancianos_images[idx1], cuidado_ancianos_images[idx2]]
+
+  service.images.purge if service.images.attached?
+
+  attachments = urls.map.with_index(1) do |url, j|
+    io = URI.open(url)
+    { io: io, filename: "cuidado_ancianos-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
+  end
+
+  service.images.attach(attachments)
+end
+
+# ===== Imágenes (2 por peluqueria) =====
+
+peluqueria_images = [
+  "https://images.unsplash.com/photo-1595475884562-073c30d45670?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGVsdXF1ZXJpYXxlbnwwfHwwfHx8MA%3D%3D",
+  "https://images.unsplash.com/photo-1493256338651-d82f7acb2b38?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cGVsdXF1ZXJvfGVufDB8fDB8fHww"
+]
+
+services = Service.where(sub_category: "Peluquería").to_a
+services.each_with_index do |service, i|
+  idx1 = (2 * i) % peluqueria_images.length
+  idx2 = (2 * i + 1) % peluqueria_images.length
+  urls = [peluqueria_images[idx1], peluqueria_images[idx2]]
+
+  service.images.purge if service.images.attached?
+
+  attachments = urls.map.with_index(1) do |url, j|
+    io = URI.open(url)
+    { io: io, filename: "peluqueria-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
+  end
+
+  service.images.attach(attachments)
+end
+
+# ===== Imágenes (2 por maquillaje) =====
+
+maquillaje_images = [
+  "https://images.unsplash.com/photo-1713861331150-0f562882ba93?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bWFxdWlsbGFqZXxlbnwwfHwwfHx8MA%3D%3D",
+  "https://images.unsplash.com/photo-1641264024456-4a408fc8f7c5?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fG1hcXVpbGxhamV8ZW58MHx8MHx8fDA%3D"
+]
+
+services = Service.where(sub_category: "Maquillaje").to_a
+services.each_with_index do |service, i|
+  idx1 = (2 * i) % maquillaje_images.length
+  idx2 = (2 * i + 1) % maquillaje_images.length
+  urls = [maquillaje_images[idx1], maquillaje_images[idx2]]
+
+  service.images.purge if service.images.attached?
+
+  attachments = urls.map.with_index(1) do |url, j|
+    io = URI.open(url)
+    { io: io, filename: "maquillaje-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
+  end
+
+  service.images.attach(attachments)
+end
+
+# ===== Imágenes (2 por depilacion) =====
+
+depilacion_images = [
+  "https://images.unsplash.com/photo-1700760933574-9f0f4ea9aa3b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZGVwaWxhY2lvbnxlbnwwfHwwfHx8MA%3D%3D",
+  "https://images.unsplash.com/photo-1523007404168-10d7bf50b5ad?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGllcm5hc3xlbnwwfHwwfHx8MA%3D%3D"
+]
+
+services = Service.where(sub_category: "Depilación").to_a
+services.each_with_index do |service, i|
+  idx1 = (2 * i) % depilacion_images.length
+  idx2 = (2 * i + 1) % depilacion_images.length
+  urls = [depilacion_images[idx1], depilacion_images[idx2]]
+
+  service.images.purge if service.images.attached?
+
+  attachments = urls.map.with_index(1) do |url, j|
+    io = URI.open(url)
+    { io: io, filename: "depilacion-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
+  end
+
+  service.images.attach(attachments)
+end
+
+# ===== Imágenes (2 por estetica facial) =====
+
+estetica_facial_images = [
+  "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmFjaWFsfGVufDB8fDB8fHww",
+  "https://images.unsplash.com/photo-1728949202477-bad2935775cb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGZhY2lhbHxlbnwwfHwwfHx8MA%3D%3D"
+]
+
+services = Service.where(sub_category: "Estética Facial").to_a
+services.each_with_index do |service, i|
+  idx1 = (2 * i) % estetica_facial_images.length
+  idx2 = (2 * i + 1) % estetica_facial_images.length
+  urls = [estetica_facial_images[idx1], estetica_facial_images[idx2]]
+
+  service.images.purge if service.images.attached?
+
+  attachments = urls.map.with_index(1) do |url, j|
+    io = URI.open(url)
+    { io: io, filename: "estetica_facial-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
+  end
+
+  service.images.attach(attachments)
+end
+
+# ===== Imágenes (2 por Manos y Pies) =====
+
+manos_pies_images = [
+  "https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWFuaWN1cmV8ZW58MHx8MHx8fDA%3D",
+  "https://images.unsplash.com/photo-1668237150532-945907c2450d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cGVkaWN1cmV8ZW58MHx8MHx8fDA%3D",
+  "https://images.unsplash.com/photo-1619451427882-6aaaded0cc61?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1676755029584-5650586944d0?q=80&w=801&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1612239395391-dab5de40aa0f?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1633526543913-d30e3c230d1f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1670400296457-e342e030303b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1758654859934-2a03792260a0?q=80&w=704&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+]
+
+services = Service.where(sub_category: "Manos y Pies").to_a
+services.each_with_index do |service, i|
+  idx1 = (2 * i) % manos_pies_images.length
+  idx2 = (2 * i + 1) % manos_pies_images.length
+  urls = [manos_pies_images[idx1], manos_pies_images[idx2]]
+
+  service.images.purge if service.images.attached?
+
+  attachments = urls.map.with_index(1) do |url, j|
+    io = URI.open(url)
+    { io: io, filename: "manos_pies-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
+  end
+
+  service.images.attach(attachments)
+end
+
+# ===== Imágenes (2 por Clases de Yoga) =====
+
+clases_yoga_images = [
+  "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8eW9nYXxlbnwwfHwwfHx8MA%3D%3D",
+  "https://images.unsplash.com/photo-1510894347713-fc3ed6fdf539?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHlvZ2F8ZW58MHx8MHx8fDA%3D",
+  "https://images.unsplash.com/photo-1599447332412-6bc6830c815a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Njd8fHlvZ2F8ZW58MHx8MHx8fDA%3D"
+]
+
+services = Service.where(sub_category: "Clases de Yoga").to_a
+services.each_with_index do |service, i|
+  idx1 = (2 * i) % clases_yoga_images.length
+  idx2 = (2 * i + 1) % clases_yoga_images.length
+  urls = [clases_yoga_images[idx1], clases_yoga_images[idx2]]
+
+  service.images.purge if service.images.attached?
+
+  attachments = urls.map.with_index(1) do |url, j|
+    io = URI.open(url)
+    { io: io, filename: "clases_yoga-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
+  end
+
+  service.images.attach(attachments)
+end
+
+# ===== Imágenes (2 por Masajes) =====
+
+masajes_images = [
+  "https://images.unsplash.com/photo-1611073615830-9f76902c10fe?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fG1hc2FqZXxlbnwwfHwwfHx8MA%3D%3D",
+  "https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fG1hc2FqZXxlbnwwfHwwfHx8MA%3D%3D"
+]
+
+services = Service.where(sub_category: "Masajes").to_a
+services.each_with_index do |service, i|
+  idx1 = (2 * i) % masajes_images.length
+  idx2 = (2 * i + 1) % masajes_images.length
+  urls = [masajes_images[idx1], masajes_images[idx2]]
+
+  service.images.purge if service.images.attached?
+
+  attachments = urls.map.with_index(1) do |url, j|
+    io = URI.open(url)
+    { io: io, filename: "masajes-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
+  end
+
+  service.images.attach(attachments)
+end
+
+# ===== Imágenes (2 por Pilates) =====
+
+pilates_images = [
+  "https://images.unsplash.com/photo-1683056255281-e52a141924f0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cGlsYXRlc3xlbnwwfHwwfHx8MA%3D%3D",
+  "https://images.unsplash.com/photo-1552196563-55cd4e45efb3?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHBpbGF0ZXN8ZW58MHx8MHx8fDA%3D"
+]
+
+services = Service.where(sub_category: "Clases de Pilates").to_a
+services.each_with_index do |service, i|
+  idx1 = (2 * i) % pilates_images.length
+  idx2 = (2 * i + 1) % pilates_images.length
+  urls = [pilates_images[idx1], pilates_images[idx2]]
+
+  service.images.purge if service.images.attached?
+
+  attachments = urls.map.with_index(1) do |url, j|
+    io = URI.open(url)
+    { io: io, filename: "pilates-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
+  end
+
+  service.images.attach(attachments)
+end
+
+# ===== Imágenes (2 por Meditacion) =====
+
+meditacion_images = [
+  "https://images.unsplash.com/photo-1593811167562-9cef47bfc4d7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8bWVkaXRhY2lvbnxlbnwwfHwwfHx8MA%3D%3D",
+  "https://images.unsplash.com/photo-1554244933-d876deb6b2ff?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fG1lZGl0YWNpb258ZW58MHx8MHx8fDA%3D"
+]
+
+services = Service.where(sub_category: "Clases de Meditacion").to_a
+services.each_with_index do |service, i|
+  idx1 = (2 * i) % meditacion_images.length
+  idx2 = (2 * i + 1) % meditacion_images.length
+  urls = [meditacion_images[idx1], meditacion_images[idx2]]
+
+  service.images.purge if service.images.attached?
+
+  attachments = urls.map.with_index(1) do |url, j|
+    io = URI.open(url)
+    { io: io, filename: "meditacion-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
+  end
+
+  service.images.attach(attachments)
+end
+
+# ===== Imágenes (2 por Funcional) =====
+
+funcional_images = [
+  "https://images.unsplash.com/photo-1758875570080-331859e7418f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8ZnVuY3Rpb25hbCUyMGZpdG5lc3N8ZW58MHx8MHx8fDA%3D",
+  "https://images.unsplash.com/photo-1591311630200-ffa9120a540f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzF8fGZ1bmN0aW9uYWwlMjBmaXRuZXNzfGVufDB8fDB8fHww",
+  "https://images.unsplash.com/photo-1614634053434-1729f6ac6bd6?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8ODR8fGZ1bmN0aW9uYWwlMjBmaXRuZXNzfGVufDB8fDB8fHww"
+]
+
+services = Service.where(sub_category: "Funcional").to_a
+services.each_with_index do |service, i|
+  idx1 = (2 * i) % funcional_images.length
+  idx2 = (2 * i + 1) % funcional_images.length
+  urls = [funcional_images[idx1], funcional_images[idx2]]
+
+  service.images.purge if service.images.attached?
+
+  attachments = urls.map.with_index(1) do |url, j|
+    io = URI.open(url)
+    { io: io, filename: "funcional-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
+  end
+
+  service.images.attach(attachments)
+end
+
+# ===== Imágenes (2 por Calistenia) =====
+
+calistenia_images = [
+  "https://images.unsplash.com/photo-1598266663439-2056e6900339?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2FsaXN0ZW5pYXxlbnwwfHwwfHx8MA%3D%3D",
+  "https://images.unsplash.com/photo-1531326044450-7448d47f0b2c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGNhbGlzdGVuaWF8ZW58MHx8MHx8fDA%3D",
+  "https://images.unsplash.com/photo-1634225253504-43d3103669dc?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGNhbGlzdGVuaWF8ZW58MHx8MHx8fDA%3D"
+]
+
+services = Service.where(sub_category: "Calistenia").to_a
+services.each_with_index do |service, i|
+  idx1 = (2 * i) % calistenia_images.length
+  idx2 = (2 * i + 1) % calistenia_images.length
+  urls = [calistenia_images[idx1], calistenia_images[idx2]]
+
+  service.images.purge if service.images.attached?
+
+  attachments = urls.map.with_index(1) do |url, j|
+    io = URI.open(url)
+    { io: io, filename: "calistenia-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
+  end
+
+  service.images.attach(attachments)
+end
+
+# ===== Imágenes (2 por Boxeo) =====
+
+boxeo_images = [
+  "https://images.unsplash.com/photo-1521800641212-77d98bb90d21?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cGFydG5lcnQlMjBib3hlb3xlbnwwfHwwfHx8MA%3D%3D",
+  "https://images.unsplash.com/photo-1719837296146-bb32b03f442d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NzV8fHBhcnRuZXJ0JTIwYm94ZW98ZW58MHx8MHx8fDA%3D",
+  "https://images.unsplash.com/photo-1535469420027-517674dad7a1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTAzfHxib3hlbyUyMGhvdXNlfGVufDB8fDB8fHww"
+]
+
+services = Service.where(sub_category: "Boxeo").to_a
+services.each_with_index do |service, i|
+  idx1 = (2 * i) % boxeo_images.length
+  idx2 = (2 * i + 1) % boxeo_images.length
+  urls = [boxeo_images[idx1], boxeo_images[idx2]]
+
+  service.images.purge if service.images.attached?
+
+  attachments = urls.map.with_index(1) do |url, j|
+    io = URI.open(url)
+    { io: io, filename: "boxeo-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
+  end
+
+  service.images.attach(attachments)
+end
+
+# ===== Imágenes (2 por Idiomas) =====
+
+idiomas_images = [
+  "https://images.unsplash.com/photo-1628332208889-bbb5af6b91b1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8aWRpb21hcyUyMGNsYXNlc3xlbnwwfHwwfHx8MA%3D%3D",
+  "https://images.unsplash.com/photo-1618285992209-a0d69673e7b7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OTJ8fGlkaW9tYXMlMjBjbGFzZXN8ZW58MHx8MHx8fDA%3D",
+  "https://images.unsplash.com/photo-1724654814368-91173766a59f?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+]
+
+services = Service.where(sub_category: "Idiomas").to_a
+services.each_with_index do |service, i|
+  idx1 = (2 * i) % idiomas_images.length
+  idx2 = (2 * i + 1) % idiomas_images.length
+  urls = [idiomas_images[idx1], idiomas_images[idx2]]
+
+  service.images.purge if service.images.attached?
+
+  attachments = urls.map.with_index(1) do |url, j|
+    io = URI.open(url)
+    { io: io, filename: "idiomas-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
+  end
+
+  service.images.attach(attachments)
+end
+
+# ===== Imágenes (2 por Música) =====
+
+musica_images = [
+  "https://images.unsplash.com/photo-1560651921-94fb7af0e901?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2xhc2VzJTIwZGUlMjBtdXNpY2F8ZW58MHx8MHx8fDA%3D",
+  "https://images.unsplash.com/photo-1545132059-a90e55c5286c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Y2xhc2VzJTIwZGUlMjBtdXNpY2F8ZW58MHx8MHx8fDA%3D",
+  "https://images.unsplash.com/photo-1488376739361-ed24c9beb6d0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OTh8fGNsYXNlcyUyMGRlJTIwbXVzaWNhfGVufDB8fDB8fHww"
+]
+
+services = Service.where(sub_category: "Música").to_a
+services.each_with_index do |service, i|
+  idx1 = (2 * i) % musica_images.length
+  idx2 = (2 * i + 1) % musica_images.length
+  urls = [musica_images[idx1], musica_images[idx2]]
+
+  service.images.purge if service.images.attached?
+
+  attachments = urls.map.with_index(1) do |url, j|
+    io = URI.open(url)
+    { io: io, filename: "musica-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
+  end
+
+  service.images.attach(attachments)
+end
+
+# ===== Imágenes (2 por Programación) =====
+
+programacion_images = [
+  "https://images.unsplash.com/photo-1607799279861-4dd421887fb3?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZ3JhbW1pbmd8ZW58MHx8MHx8fDA%3D",
+  "https://images.unsplash.com/photo-1499673610122-01c7122c5dcb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjZ8fHByb2dyYW1taW5nfGVufDB8fDB8fHww",
+  "https://images.unsplash.com/photo-1623479322729-28b25c16b011?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8ODR8fHByb2dyYW1taW5nfGVufDB8fDB8fHww",
+  "https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTcwfHxwcm9ncmFtbWluZ3xlbnwwfHwwfHx8MA%3D%3D"
+]
+
+services = Service.where(sub_category: "Programación").to_a
+services.each_with_index do |service, i|
+  idx1 = (2 * i) % programacion_images.length
+  idx2 = (2 * i + 1) % programacion_images.length
+  urls = [programacion_images[idx1], programacion_images[idx2]]
+
+  service.images.purge if service.images.attached?
+
+  attachments = urls.map.with_index(1) do |url, j|
+    io = URI.open(url)
+    { io: io, filename: "programacion-#{service.id}-#{i+1}-#{j}.jpg", content_type: "image/jpeg" }
   end
 
   service.images.attach(attachments)
@@ -676,3 +1149,4 @@ end
 
 # Limpieza de flag de seed
 ENV.delete("SEEDING")
+

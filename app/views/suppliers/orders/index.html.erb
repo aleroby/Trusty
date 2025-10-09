@@ -65,17 +65,17 @@
                 <% selected_orders = service.orders.select { |order| order.status == params[:status] } %>
                 <% selected_orders.each do |order| %>
                   <tr class="service-row">
-                    <td class="text-muted text-center"><%= order.date %></td>
-                    <td class="text-muted text-center"><%= l(order.start_time, format: :hour_only) %></td>
-                    <td class="fw-semibold text-center">
+                    <td class="bg-white text-muted text-center"><%= order.date %></td>
+                    <td class="bg-white text-muted text-center"><%= l(order.start_time, format: :hour_only) %></td>
+                    <td class="bg-white fw-semibold text-center">
                       <%= order.service.sub_category %>
                     </td>
-                    <td class="text-muted text-center"><%= order.user.first_name %></td>
-                    <td class="text-center"><%= number_to_currency(order.total_price, unit: "$", precision: 0) %></td>
-                    <td class="text-center">
+                    <td class="bg-white text-muted text-center"><%= order.user.first_name %></td>
+                    <td class="bg-white text-center"><%= number_to_currency(order.total_price, unit: "$", precision: 0) %></td>
+                    <td class="bg-white text-center">
                       <%= order.status %>
                     </td>
-                    <td class="text-end">
+                    <td class="bg-white text-end">
                       <%= link_to "Ver", order_path(order), class: "text-decoration-none link-primary mx-2 fw-semibold" %>
                       <%= link_to "Editar", edit_order_path(order), class: "text-decoration-none link-success fw-semibold" %>
                       <%= link_to "Reseña", new_order_review_path(order), class: "text-decoration-none text-warning mx-2 fw-semibold" %>
