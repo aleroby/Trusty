@@ -7,10 +7,19 @@ class ServicesController < ApplicationController
       @services = multisearch_results
                        .where(searchable_type: "Service")
                        .map(&:searchable)
-      @pagy, @services = pagy(@services)
+
+      # @pagy, @services = pagy(@services)
+      @pagy, @services = pagy_array(@services, items: 9)
+
     elsif params[:mode] == "filtros"
       @services = Service.filter(params)
-      @pagy, @services = pagy(@services)
+      # AGREGADO PARA QUE FUNCIONE EL BUCADOR DEL BANNER
+      if @services.is_a?(ActiveRecord::Relation)
+        @pagy, @services = pagy(@services, items: 9)
+      else
+        @pagy, @services = pagy_array(@services, items: 9)
+      end
+      #
     else
       @services = Service.all
       @pagy, @services = pagy(@services)

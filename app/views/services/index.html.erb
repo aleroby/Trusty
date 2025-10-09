@@ -146,7 +146,7 @@
                     <div class="ms-auto">
                       <%= link_to "Book",
                             defined?(new_service_booking_path) ? new_service_booking_path(service) : service_path(service),
-                            class: "btn btn-sm btn-primary px-3" unless (user_signed_in? && service.user_id == current_user.id) %>
+                            class: "btn btn-sm rounded-4 btn-primary px-3" unless (user_signed_in? && service.user_id == current_user.id) %>
                     </div>
                   </div>
                 </div>

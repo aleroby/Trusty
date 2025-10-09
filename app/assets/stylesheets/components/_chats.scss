@@ -1,0 +1,16 @@
+/* burbuja del asistente */
+.ai-reply { text-align: left; }
+
+/* aseguran padding de listas en markdown */
+.ai-reply ol,
+.ai-reply ul { padding-left: 1.25rem; margin: 0 0 .5rem; }
+
+/* por si algún global centra <p>, <li> o headings */
+.ai-reply p,
+.ai-reply li,
+.ai-reply h1,
+.ai-reply h2,
+.ai-reply h3,
+.ai-reply h4,
+.ai-reply h5,
+.ai-reply h6 { text-align: left; }

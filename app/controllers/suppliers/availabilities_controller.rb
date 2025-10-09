@@ -6,6 +6,9 @@ class Suppliers::AvailabilitiesController < ApplicationController
   def index
     @availabilities = current_user.availabilities.order(:wday, :start_time)
     @availability   = current_user.availabilities.new
+
+    @blackout = Blackout.new
+    @blackouts = current_user.blackouts.order(starts_at: :desc)
   end
 
   def create
