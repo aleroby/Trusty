@@ -19,11 +19,10 @@
           </div>
 
             <nav class="nav flex-column nav-pills gap-1">
-              <%= link_to "Mis Servicios", suppliers_dashboard_index_path, class: "nav-link border shadow-sm d-flex align-items-center hover-dashboard" %>
-              <%= link_to "Ordenes Pendientes", suppliers_orders_path(status: "confirmed"), class: "nav-link border shadow-sm d-flex align-items-center hover-dashboard" %>
-              <%= link_to "Historial de Órdenes", suppliers_orders_path(status: "completed"), class: "nav-link border shadow-sm d-flex align-items-center hover-dashboard" %>
-              <%= link_to "Mi Disponibildad Semanal", suppliers_availabilities_path, class: "nav-link border shadow-sm d-flex align-items-center hover-dashboard" %>
-              <%= link_to "Mis Calificaciones", "reviews_path", class: "nav-link border shadow-sm d-flex align-items-center hover-dashboard" %>
+              <%= link_to "Mis Servicios", suppliers_dashboard_index_path, class: "nav-link border text-secondary shadow-sm d-flex align-items-center hover-dashboard" %>
+              <%= link_to "Ordenes Pendientes", suppliers_orders_path(status: "confirmed"), class: "nav-link border bg-light fw-semibold text-secondary shadow-sm d-flex align-items-center hover-dashboard" %>
+              <%= link_to "Historial de Órdenes", suppliers_orders_path(status: "completed"), class: "nav-link border bg-light fw-semibold text-secondary shadow-sm d-flex align-items-center hover-dashboard" %>
+              <%= link_to "Mi Disponibildad Semanal", suppliers_availabilities_path, class: "nav-link border text-secondary shadow-sm d-flex align-items-center hover-dashboard" %>
             </nav>
 
           <div class="card mt-4 border rounded-4 shadow-sm bg-light-subtle">

@@ -36,6 +36,14 @@ class User < ApplicationRecord
     reviews_as_supplier.for_supplier.count
   end
 
+  def client_rating_avg
+    reviews_as_client.for_client.average(:rating)&.to_f
+  end
+
+  def client_reviews_count
+    reviews_as_client.for_client.count
+  end
+
   has_neighbors :embedding
   after_create :set_embedding
 

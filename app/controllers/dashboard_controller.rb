@@ -7,5 +7,12 @@ class DashboardController < ApplicationController
     else
       @orders = current_user.orders
     end
+
+    @client = current_user
+
+    # Promedio global del proveedor (lo que recibe en cualquier servicio)
+    @client_avg   = (@client.client_rating_avg || 0).round(1)
+    @client_count = @client.client_reviews_count
+
   end
 end
