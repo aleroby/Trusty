@@ -1,7 +1,16 @@
 
 <div class="container bg-white p-3 shadow overflow-hidden mx-auto my-4 rounded-4" style="max-width: 800px;">
-  <div class="d-flex justify-content-center text-primary mb-3">
-    <h3><%= @chat.title if @chat.title != "Nuevo Chat" %></h3>
+  <div class="d-flex justify-content-between text-primary mb-3">
+    <h3>
+      <% if @chat.title != "Nuevo Chat" %>
+        <%= @chat.title %>
+      <% else %>
+        <%= "Nuevo Chat" %>
+      <% end %>
+    </h3>
+    <div class="text-center text-md-start ">
+      <%= link_to "Back to Chats", chats_path, class:"btn btn-success rounded-4 text-white" %>
+    </div>
   </div>
 
   <div class="container bg-body p-3 shadow overflow-auto mx-auto my-3 rounded-5" style="max-width: 800px; max-height: 60vh;">
@@ -14,7 +23,7 @@
         </div>
       <% elsif message.role == "assistant" %>
         <div class="d-flex justify-content-start">
-          <div class="bg-white border px-3 pt-2 m-2 rounded-4">
+          <div class="bg-white border px-3 pt-2 m-2 rounded-4 text-start ai-reply">
             <%= raw(render_markdown(message.content)) %>
           </div>
         </div>
@@ -24,27 +33,22 @@
 </div>
 
 
-<div class="container sticky-bottom bg-white p-3 shadow mx-auto my-4 rounded-4" style="max-width: 800px;">
+<div class="sticky-bottom bg-white p-3 shadow mx-auto my-4 rounded-4" style="max-width: 800px;">
   <%= simple_form_for [@chat, @message], html: { class:"sticky-bottom" } do |f| %>
     <div class="row g-2 align-items-center">
 
-      <div class="col-12 col-md-10">
+      <div class="col-12 col-md-11">
         <%= f.input :content,
           label: false,
           placeholder: "Escribe tu consulta...",
           input_html: { class: "form-control rounded-5 w-100", style: "min-height: 40px;" } %>
       </div>
 
-      <div class="col-12 col-md-2 d-grid">
+      <div class="col-12 col-md-1 d-grid">
         <button type="submit" class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center send-btn">
           <i class="fas fa-paper-plane text-white"></i>
         </button>
       </div>
-    </div>
-
-
-    <div class="mt-2 text-center text-md-start ">
-      <%= link_to "Back to Chats", chats_path, class:"btn btn-success rounded-5 text-white" %>
     </div>
   <% end %>
 </div>

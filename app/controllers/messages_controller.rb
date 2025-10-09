@@ -13,8 +13,8 @@ class MessagesController < ApplicationController
     services = Service.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
     Rails.logger.info services
     # reviews = Review.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
-    users = User.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
-    vectors = services + users # + reviews + users
+    # users = User.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
+    vectors = services # + reviews + users
     Rails.logger.info vectors
     instructions = system_prompt
     Rails.logger.info instructions

@@ -6,3 +6,5 @@ require 'pagy/extras/overflow'
 Pagy::DEFAULT[:overflow] = :last_page
 # Require a CSS framework extra in the pagy initializer (e.g. bootstrap)
 require 'pagy/extras/bootstrap'
+
+require 'pagy/extras/array'
