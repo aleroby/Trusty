@@ -8,7 +8,7 @@
         <%= "Nuevo Chat" %>
       <% end %>
     </h3>
-    <div class="text-center text-md-start ">
+    <div class="text-center text-md-start">
       <%= link_to "Back to Chats", chats_path, class:"btn btn-success rounded-4 text-white" %>
     </div>
   </div>
@@ -17,7 +17,7 @@
     <% @chat.messages.each do |message| %>
       <% if message.role == "user" %>
         <div class="d-flex justify-content-end">
-          <div class="bg-chat border px-3 pt-1 m-2 rounded-4">
+          <div class="bg-chat border p-2 m-2 rounded-4">
             <p class="mb-0"><%= message.content %></p>
           </div>
         </div>
