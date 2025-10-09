@@ -1,3 +1,7 @@
+<% content_for :meta_title, "#{@service.sub_category} con #{@service.user.first_name} en #{DEFAULT_META['meta_product_name']}" %>
+<% content_for :meta_description, @service.description.presence || "Servicio confiable de #{@service.sub_category} ofrecido por #{@service.user.first_name}." %>
+<% content_for :meta_image, @service.images.attached? ? cl_image_path(@service.images.first.key) : cl_image_path(DEFAULT_META['meta_image']) %>
+
 <div class="container my-4 service-show">
   <!-- Breadcrumb -->
   <nav aria-label="breadcrumb" class="mb-3">
