@@ -55,17 +55,33 @@
       </div>-->
 
       <!-- Price -->
-      <% default_price = params[:price_max].presence || 100_000 %>
-      <div class="mb-2" id="price-range-container" data-controller="price-range">
-        <label for="priceRange" class="form-label d-flex justify-content-between text-primary">
+
+      <%# Price %>
+      <% default_price = (params[:price_max].presence || 50_000).to_i %>
+
+      <div class="mb-2"
+          data-controller="price-range"
+          data-price-range-locale-value="es-AR">
+
+        <label class="form-label d-flex justify-content-between text-primary mb-2">
           <span>Rango de Precios</span>
-          <span id="priceRangeOutput"><%= number_to_currency(default_price, unit: "$") %></span>
+          <strong data-price-range-target="output">
+            <%= number_to_currency(default_price, unit: "$", precision: 0) %>
+          </strong>
         </label>
-        <input type="range" class="form-range" min="0" max="100000" step="5"
-               id="priceRange" name="price_max"
-               value="<%= default_price %>">
+
+        <input
+          type="range"
+          class="form-range"
+          min="0" max="100000" step="1000"
+          name="price_max"
+          value="<%= default_price %>"
+          data-price-range-target="input"
+          data-action="input->price-range#update">
+
         <div class="d-flex justify-content-between small text-muted">
-          <span>$0</span><span>$100.000</span>
+          <span>$0</span>
+          <span>$100.000</span>
         </div>
       </div>
 
