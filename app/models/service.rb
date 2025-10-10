@@ -1,6 +1,6 @@
 class Service < ApplicationRecord
   belongs_to :user
-  has_many :orders
+  has_many :orders  
   has_many :supplier_reviews, -> { where(target: :for_supplier) }, class_name: "Review"
 
   has_neighbors :embedding
