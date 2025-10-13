@@ -45,7 +45,11 @@ class User < ApplicationRecord
   end
 
   has_neighbors :embedding
-  after_create :set_embedding
+  after_create :set_embedding, unless: :skip_embeddings?
+
+  def skip_embeddings?
+    Rails.env.test? || ENV["SEEDING"] == "1"
+  end
 
   private
   def set_default_role
@@ -56,5 +60,10 @@ class User < ApplicationRecord
     embedding = RubyLLM.embed("Address: #{address}. Latitude: #{latitude}.
     Longitude: #{longitude}. Radius: #{radius}")
     update(embedding: embedding.vectors)
+
+    rescue StandardError => e
+    Rails.logger.warn("[User#set_embedding] Embedding omitido: #{e.class} - #{e.message}")
+    # Dejá nil si tu columna lo permite:
+    self.embedding = nil
   end
 end

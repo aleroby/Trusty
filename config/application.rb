@@ -29,5 +29,8 @@ module Trusty
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # AGREGAMOS POR SUGERENCIA DEL DIABLO PARA VER SI FUNCIONA EN PRODUCCIÓN
+    config.assets.paths << Rails.root.join("app/javascript")
   end
 end

@@ -55,17 +55,33 @@
       </div>-->
 
       <!-- Price -->
-      <% default_price = params[:price_max].presence || 100_000 %>
-      <div class="mb-2" id="price-range-container" data-controller="price-range">
-        <label for="priceRange" class="form-label d-flex justify-content-between text-primary">
+
+      <%# Price %>
+      <% default_price = (params[:price_max].presence || 50_000).to_i %>
+
+      <div class="mb-2"
+          data-controller="price-range"
+          data-price-range-locale-value="es-AR">
+
+        <label class="form-label d-flex justify-content-between text-primary mb-2">
           <span>Rango de Precios</span>
-          <span id="priceRangeOutput"><%= number_to_currency(default_price, unit: "$") %></span>
+          <strong data-price-range-target="output">
+            <%= number_to_currency(default_price, unit: "$", precision: 0) %>
+          </strong>
         </label>
-        <input type="range" class="form-range" min="0" max="100000" step="5"
-               id="priceRange" name="price_max"
-               value="<%= default_price %>">
+
+        <input
+          type="range"
+          class="form-range"
+          min="0" max="100000" step="1000"
+          name="price_max"
+          value="<%= default_price %>"
+          data-price-range-target="input"
+          data-action="input->price-range#update">
+
         <div class="d-flex justify-content-between small text-muted">
-          <span>$0</span><span>$100.000</span>
+          <span>$0</span>
+          <span>$100.000</span>
         </div>
       </div>
 
@@ -97,37 +113,39 @@
       <!-- Grid responsive -->
       <div class="services-grid">
         <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+
           <% @services.each do |service| %>
+          <% if service.published %>
             <div class="col">
               <div class="card service-card h-100 shadow-sm border-0">
                 <div>
-                  <%= link_to service_path(service), class: "text-decoration-none" do %>
-                    <% if service.images.attached? %>
-                      <%= cl_image_tag service.images.first.key,
-                            width: 800, height: 450, crop: :fill, gravity: :auto,
-                            class: "service-img", alt: service.sub_category %>
-                    <% else %>
-                      <%= image_tag "https://picsum.photos/800/450?random=#{service.id}",
-                            class: "service-img", alt: service.sub_category %>
-                    <% end %>
+                    <%= link_to service_path(service), class: "text-decoration-none" do %>
+                      <% if service.images.attached? %>
+                        <%= cl_image_tag service.images.first.key,
+                              width: 800, height: 450, crop: :fill, gravity: :auto,
+                              class: "service-img", alt: service.sub_category %>
+                      <% else %>
+                        <%= image_tag "https://picsum.photos/800/450?random=#{service.id}",
+                              class: "service-img", alt: service.sub_category %>
+                      <% end %>
 
-                    <% if service.price.present? %>
-                      <span class="price-badge">
-                        <%= service.respond_to?(:price_unit) && service.price_unit == "hour" ?
-                              "#{number_to_currency(service.price, unit: '$')}/hr" :
-                              number_to_currency(service.price, unit: '$') %>
-                      </span>
+                      <% if service.price.present? %>
+                        <span class="price-badge">
+                          <%= service.respond_to?(:price_unit) && service.price_unit == "hour" ?
+                                "#{number_to_currency(service.price, unit: '$')}/hr" :
+                                number_to_currency(service.price, unit: '$') %>
+                        </span>
+                      <% end %>
                     <% end %>
-                  <% end %>
-                </div>
+                  </div>
 
-                <div class="card-body d-flex flex-column">
-                  <%= link_to service_path(service), class: "stretched-link text-decoration-none text-center text-reset" do %>
+                  <div class="card-body d-flex flex-column">
+                    <%= link_to service_path(service), class: "stretched-link text-decoration-none text-center text-reset" do %>
                     <h3 class="h6 mb-1 fw-bold text-primary"><%= service.sub_category %></h3>
-                  <% end %>
-                  <p class="card-text text-muted small mb-3">
-                    <%= truncate(service.description, length: 90) %>
-                  </p>
+                    <% end %>
+                    <p class="card-text text-muted small mb-3">
+                      <%= truncate(service.description, length: 90) %>
+                    </p>
 
                   <!-- Provider + rating del SERVICIO -->
                   <div class="provider-row d-flex align-items-center gap-2 mt-auto">
@@ -156,6 +174,7 @@
                 </div>
               </div>
             </div>
+          <% end %>
           <% end %>
         </div>
       </div>
