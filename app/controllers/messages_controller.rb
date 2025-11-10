@@ -11,10 +11,12 @@ class MessagesController < ApplicationController
     embedding = RubyLLM.embed(params[:message][:content])
     # Repetir esta linea para los distintos modelos
     services = Service.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
-    Rails.logger.info services
+    reviews = Review.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
+    users = User.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
+    #Rails.logger.info services
     # reviews = Review.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
     # users = User.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
-    vectors = services # + reviews + users
+    vectors = services + reviews + users
     Rails.logger.info vectors
     instructions = system_prompt
     Rails.logger.info instructions
@@ -81,7 +83,7 @@ class MessagesController < ApplicationController
       "SERVICE id: #{vector.id}, category: #{vector.category}, sub_category: #{vector.sub_category},
       description: #{vector.description}, price: #{vector.price}, url: #{service_url(vector)}"
     when Review
-      "REVIEW id: #{vector.id}, rating: #{vector.rating}, comment: #{vector.content}"
+      "REVIEW id: #{vector.id}, rating: #{vector.rating}, contentt: #{vector.content}"
     when User
       "USER id: #{vector.id}, address: #{vector.address}, latitude: #{vector.latitude}, longitude: #{vector.longitude},
       radius: #{vector.radius}"
