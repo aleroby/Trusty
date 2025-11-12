@@ -73,7 +73,15 @@
                     <td class="bg-white text-muted text-center"><%= order.user.first_name %></td>
                     <td class="bg-white text-center"><%= number_to_currency(order.total_price, unit: "$", precision: 0) %></td>
                     <td class="bg-white text-center">
-                      <%= order.status %>
+                      <%=
+                      case order.status
+                      when "confirmed" then "Confirmado"
+                      when "pending" then "Pendiente"
+                      when "canceled" then "Cancelado"
+                      when "completed" then "Completado"
+                      else order.status
+                      end
+                    %>
                     </td>
                     <td class="bg-white text-end">
                       <%= link_to "Ver", order_path(order), class: "text-decoration-none link-primary mx-2 fw-semibold" %>
