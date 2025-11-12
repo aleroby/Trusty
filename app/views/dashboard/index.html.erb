@@ -54,7 +54,7 @@
               <% @orders.each do |order| %>
                 <tr class="service-row">
                   <td class="text-muted lh-1 text-center bg-white"><%= order.service.sub_category %></td>
-                  <td class="text-muted text-center bg-white"><%= order.date %></td>
+                  <td class="text-muted text-center bg-white"><%= order.date.strftime("%d/%m/%Y") %></td>
                   <td class="text-muted text-center bg-white"><%= order.start_time.strftime("%H:%M") if order.start_time.present? %></td>
                   <td class="text-muted text-center bg-white"><%= order.service.user.first_name %></td>
                   <td class="text-center bg-white"><%= number_to_currency(order.total_price, unit: "$", precision: 0, separator: ",", delimiter: "." ) %></td>

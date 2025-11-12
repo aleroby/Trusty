@@ -5,13 +5,13 @@
       <div class="card shadow-sm sidebar-card sticky-lg-top">
         <div class="card-body bg-white rounded-5">
           <div class="d-flex align-items-center mb-3">
-            <% if current_user&.user_photo&.attached? %>
-              <%= image_tag current_user.user_photo, class: "rounded-circle avatar-sm flex-shrink-0", alt: "#{current_user.first_name}" %>
-            <% else %>
-              <div class="rounded-circle bg-secondary-subtle text-secondary-emphasis d-inline-flex align-items-center justify-content-center avatar-sm flex-shrink-0">
+            <%# if current_user&.user_photo&.attached? %>
+              <%#= image_tag current_user.user_photo, class: "rounded-circle avatar-sm flex-shrink-0", alt: "#{current_user.first_name}" %>
+            <%# else %>
+              <!--<div class="rounded-circle bg-secondary-subtle text-secondary-emphasis d-inline-flex align-items-center justify-content-center avatar-sm flex-shrink-0">
                 <span class="fw-semibold"><%= current_user.first_name.first %></span>
-              </div>
-            <% end %>
+              </div>-->
+            <%# end %>
             <div class="ms-2">
               <h6 class="mb-0"><%= current_user.first_name %></h6>
               <small class="text-muted">Proveedor</small>
@@ -65,7 +65,7 @@
                 <% selected_orders = service.orders.select { |order| order.status == params[:status] } %>
                 <% selected_orders.each do |order| %>
                   <tr class="service-row">
-                    <td class="bg-white text-muted text-center"><%= order.date %></td>
+                    <td class="bg-white text-muted text-center"><%= order.date.strftime("%d/%m/%Y") %></td>
                     <td class="bg-white text-muted text-center"><%= l(order.start_time, format: :hour_only) %></td>
                     <td class="bg-white fw-semibold text-center">
                       <%= order.service.sub_category %>
