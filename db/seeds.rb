@@ -562,7 +562,7 @@ supplier_texts = [
 completed_orders.find_each do |order|
   # Review del CLIENTE → PROVEEDOR
   Review.create!(
-    rating: rand(4.0..5.0).round(1),
+    rating: rand(4..5),
     content: client_texts.sample,
     service: order.service,
     client:  order.user,             # quien contrata
@@ -572,7 +572,7 @@ completed_orders.find_each do |order|
 
   # Review del PROVEEDOR → CLIENTE
   Review.create!(
-    rating: rand(4.0..5.0).round(1),
+    rating: rand(4..5),
     content: supplier_texts.sample,
     service: order.service,
     client:  order.user,             # mismo cliente
@@ -1149,4 +1149,3 @@ end
 
 # Limpieza de flag de seed
 ENV.delete("SEEDING")
-
