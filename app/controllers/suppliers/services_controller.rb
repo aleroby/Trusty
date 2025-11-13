@@ -44,7 +44,7 @@ class Suppliers::ServicesController < ApplicationController
   end
 
   def service_params
-    params.require(:service).permit(:category, :sub_category, :description, :price, :published, images: [])
+    params.require(:service).permit(:category, :sub_category, :description, :duration_minutes, :price, :published, images: [])
   end
 
 end

@@ -17,7 +17,7 @@
             <%= f.input :role, input_html: { value: "supplier" }, readonly: true %>
           <% end %>
           <% if current_user.role == "supplier" %>
-            <%= f.input :radius, label: "Radio en km en el que ofreces el servicio" %>
+            <%= f.input :radius, label: "Radio en km en el que ofreces tus servicios" %>
           <% end %>
 
           <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>

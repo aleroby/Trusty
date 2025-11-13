@@ -27,6 +27,7 @@
         </div>
 
         <%= f.input :description, label: "Descripción", as: :text, input_html: { rows: 6, class: "form-control" } %>
+        <%= f.input :duration_minutes, label: "Duración (minutos)", as: :integer, input_html: { step: 5, min: 30, class: "form-control" } %>
         <%= f.input :price, label: "Precio unitario", as: :decimal, input_html: { step: 0.01, min: 0, class: "form-control" } %>
         <%= f.input :images, label: "Imágenes", as: :file, input_html: { multiple: true } %>
 
