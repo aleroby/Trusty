@@ -8,11 +8,14 @@ class ServicesController < ApplicationController
                        .where(searchable_type: "Service")
                        .map(&:searchable)
 
+      @services = @services.select { |service| service&.published? }
+
       # @pagy, @services = pagy(@services)
       @pagy, @services = pagy_array(@services, items: 9)
 
     elsif params[:mode] == "filtros"
-      @services = Service.filter(params)
+      @services = Service.filter(params).where(published: true)
+
       # AGREGADO PARA QUE FUNCIONE EL BUCADOR DEL BANNER
       if @services.is_a?(ActiveRecord::Relation)
         @pagy, @services = pagy(@services, items: 9)
@@ -21,8 +24,8 @@ class ServicesController < ApplicationController
       end
       #
     else
-      @services = Service.all
-      @pagy, @services = pagy(@services)
+      @services = Service.where(published: true)
+      @pagy, @services = pagy(@services, items: 9)
     end
   end
 
@@ -33,7 +36,7 @@ class ServicesController < ApplicationController
     @supplier = @service.user
 
     # Promedio global del proveedor (lo que recibe en cualquier servicio)
-    @supplier_avg   = (@supplier.supplier_rating_avg || 0).round(1)
+    @supplier_avg   = (@supplier.supplier_rating_avg || 0).round(2)
     @supplier_count = @supplier.supplier_reviews_count
 
     # Reviews solo de este servicio dirigidas al proveedor

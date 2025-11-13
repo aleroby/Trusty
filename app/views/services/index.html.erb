@@ -104,9 +104,9 @@
     <!-- Grid + header -->
     <div class="col-12 col-lg-9">
       <div class="d-flex align-items-center justify-content-between mb-3">
-        <h1 class="h2 mb-0 text-primary fw-semibold">Services<%== params[:location].present? ? " in #{ERB::Util.html_escape(params[:location])}" : "" %></h1>
+        <h1 class="h2 mb-0 text-primary fw-semibold">Servicios<%== params[:location].present? ? " in #{ERB::Util.html_escape(params[:location])}" : "" %></h1>
         <div class="text-primary small">
-          <%= pluralize(@services.try(:total_count) || @services.size, "result") %>
+          <%= pluralize(@services.try(:total_count) || @services.size, "resultado") %>
         </div>
       </div>
 
@@ -115,7 +115,6 @@
         <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
 
           <% @services.each do |service| %>
-          <% if service.published %>
             <div class="col">
               <div class="card service-card h-100 shadow-sm border-0">
                 <div>
@@ -152,7 +151,7 @@
                     <%= cl_image_tag service.user.user_photo.key, class:"rounded-circle", size:"50x50" if service.user.user_photo.attached? %>
 
                     <% avg = service.supplier_reviews.average(:rating) %>
-                    <% avg_display = avg ? number_with_precision(avg, precision: 1) : "—" %>
+                    <% avg_display = avg ? number_with_precision(avg, precision: 2) : "—" %>
                     <% cnt = service.supplier_reviews.count %>
 
                     <div class="small">
@@ -166,7 +165,7 @@
                     </div>
 
                     <div class="ms-auto">
-                      <%= link_to "Book",
+                      <%= link_to "Reservar",
                             defined?(new_service_booking_path) ? new_service_booking_path(service) : service_path(service),
                             class: "btn btn-sm rounded-4 btn-primary px-3" unless (user_signed_in? && service.user_id == current_user.id) %>
                     </div>
@@ -174,7 +173,6 @@
                 </div>
               </div>
             </div>
-          <% end %>
           <% end %>
         </div>
       </div>

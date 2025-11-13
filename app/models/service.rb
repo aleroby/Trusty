@@ -1,6 +1,6 @@
 class Service < ApplicationRecord
   belongs_to :user
-  has_many :orders  
+  has_many :orders
   has_many :supplier_reviews, -> { where(target: :for_supplier) }, class_name: "Review"
 
   has_neighbors :embedding
@@ -188,7 +188,7 @@ class Service < ApplicationRecord
 
   # === Método principal de filtrado ===
   def self.filter(params)
-  services = Service.all
+  services = Service.where(published: true)
     .by_category(params[:category])
     .by_sub_category(params[:sub_category])
     .by_date(params[:date])
