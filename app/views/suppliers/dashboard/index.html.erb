@@ -74,12 +74,17 @@
                     <% end %>
                   </td>
                   <td class="text-center bg-white">
-                    <%= link_to "Ver", suppliers_service_path(service), class: "text-decoration-none link-primary mx-2 fw-semibold" %>
-                    <%= link_to "Editar", edit_suppliers_service_path(service), class: "text-decoration-none link-success fw-semibold" %>
-                    <%= link_to "Eliminar",
-                        suppliers_service_path(service),
+                    <%= link_to service_path(service), class: "text-decoration-none link-primary mx-2 fw-semibold" do %>
+                      <i class="fa-solid fa-eye"></i>
+                    <% end %>
+                    <%= link_to edit_suppliers_service_path(service), class: "text-decoration-none link-success fw-semibold" do %>
+                      <i class="bi bi-pencil-square"></i>
+                    <% end %>
+                    <%= link_to suppliers_service_path(service),
                         class: "text-decoration-none text-warning mx-2 fw-semibold",
-                        data: { turbo_method: :delete, turbo_confirm: "¿Estás seguro de eliminar este servicio?" } %>
+                        data: { turbo_method: :delete, turbo_confirm: "¿Estás seguro de eliminar este servicio?" } do %>
+                      <i class="bi bi-trash"></i>
+                    <% end %>
                   </td>
                 </tr>
               <% end %>
