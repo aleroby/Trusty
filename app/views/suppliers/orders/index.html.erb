@@ -84,9 +84,15 @@
                     %>
                     </td>
                     <td class="bg-white text-end">
-                      <%= link_to "Ver", order_path(order), class: "text-decoration-none link-primary mx-2 fw-semibold" %>
-                      <%= link_to "Editar", edit_order_path(order), class: "text-decoration-none link-success fw-semibold" %>
-                      <%= link_to "Reseña", new_order_review_path(order), class: "text-decoration-none text-warning mx-2 fw-semibold" %>
+                      <%= link_to order_path(order), class: "text-decoration-none link-primary mx-2 fw-semibold" do %>
+                        <i class="fa-solid fa-eye"></i>
+                      <% end %>
+                      <%= link_to edit_order_path(order), class: "text-decoration-none link-success fw-semibold" do %>
+                        <i class="bi bi-pencil-square"></i>
+                      <% end %>
+                      <%= link_to new_order_review_path(order), class: "text-decoration-none text-warning mx-2 fw-semibold" do %>
+                        <i class="bi bi-chat-dots"></i>
+                      <% end %>
                     </td>
                   </tr>
                 <% end %>
