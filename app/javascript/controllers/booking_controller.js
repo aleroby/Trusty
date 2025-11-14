@@ -58,8 +58,12 @@ export default class extends Controller {
 
   syncEndFromHours() {
     if (!this.hasStartTarget || !this.hasEndTarget || !this.hasHoursTarget) return
+    if (!this.startTarget.value) {
+      this.endTarget.value = ""
+      return
+    }
     const hours = parseFloat(this.hoursTarget.value || "0")
-    this.endTarget.value = this.hhmmFrom(this.startTarget.value || "09:00", hours)
+    this.endTarget.value = this.hhmmFrom(this.startTarget.value, hours)
     this.updateTotals()
   }
 
