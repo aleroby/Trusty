@@ -2,7 +2,12 @@ class ServicesController < ApplicationController
   skip_before_action :authenticate_user!
 
   def index
-    if params[:query].present?
+    # Se añade condición para filtrar por categoria
+    if params[:category].present?
+      @services = Service.where(category: params[:category], published: true)
+      @pagy, @services = pagy(@services, items: 9)
+
+    elsif params[:query].present?
       multisearch_results = PgSearch.multisearch(params[:query])
       @services = multisearch_results
                        .where(searchable_type: "Service")

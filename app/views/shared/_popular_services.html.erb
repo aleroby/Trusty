@@ -7,7 +7,7 @@
       { title: "Wellness", image: "wellness.png" },
       { title: "Entrenamiento", image: "entrenamiento.png" },
       { title: "Clases", image: "clases.png" },
-      { title: "Cuidado", image: "cuidados.png" }
+      { title: "Cuidados", image: "cuidados.png" }
     ] %>
 
     <% services.each do |service| %>
@@ -15,8 +15,8 @@
         <%= link_to "#{services_path}?category=#{service[:title]}", class: "text-decoration-none d-block card-link" do %>
 
           <div class="mb-3">
-            <%= image_tag service[:image], 
-                class: "service-image img-fluid rounded-4 shadow-sm", 
+            <%= image_tag service[:image],
+                class: "service-image img-fluid rounded-4 shadow-sm",
                 alt: service[:title] %>
           </div>
 
