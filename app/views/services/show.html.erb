@@ -112,32 +112,33 @@
       <% fee_value = defined?(@service.service_fee) && @service.service_fee.present? ? @service.service_fee : 10 %>
       <% currency_value = defined?(@service.currency) && @service.currency.present? ? @service.currency : "ARS" %>
 
-      <div class="card booking-card shadow rounded-4"
+      <div class="card filters-card shadow-sm"
           data-controller="booking slots"
           data-booking-rate-value="<%= @service.price.to_f %>"
           data-booking-fee-value="<%= fee_value.to_f %>"
           data-booking-currency-value="<%= currency_value %>"
+          data-booking-duration-minutes-value="<%= @service.duration_minutes %>"
           data-slots-service-id-value="<%= @service.id %>"
           data-slots-duration-minutes-value="<%= @service.duration_minutes %>"
           data-slots-step-minutes-value="30">
-        <div class="card-body bg-warning-subtle">
+        <div class="card-body">
           <h6 class="fw-bold bg-success shadow-sm text-white p-3 rounded-4 text-center">Reserva <%= @service.sub_category %></h6>
           <hr>
 
           <%= form_with model: @order, url: orders_path, html: { id: "booking-form" } do |f| %>
 
             <div class="mb-3">
-              <label class="form-label"><b>Fecha</b></label>
+              <label class="form-label text-primary"><b>Fecha</b></label>
               <%= f.date_field :date,
-                  class: "form-control bg-white",
+                  class: "form-select rounded-4",
                   required: true,
                   data: { action: "change->slots#fetch" } %>
             </div>
 
             <!-- Picker de horarios disponibles (nuevo) -->
             <div class="mb-3">
-              <label class="form-label"><b>Horarios disponibles</b></label>
-              <select class="form-select rounded-4 bg-white"
+              <label class="form-label text-primary"><b>Horarios disponibles</b></label>
+              <select class="form-select rounded-4"
                       data-slots-target="select"
                       data-action="change->slots#selectSlot"
                       disabled>
@@ -148,17 +149,17 @@
 
             <div class="row g-2">
               <div class="col-6">
-                <label class="form-label"><b>Hora de inicio</b></label>
+                <label class="form-label text-primary"><b>Hora de inicio</b></label>
                 <%= f.time_field :start_time,
-                    class: "form-control bg-white",
+                    class: "form-control",
                     step: 1800,
                     data: { booking_target: "start", slots_target: "startInput" },
                     readonly: true %>
               </div>
               <div class="col-6">
-                <label class="form-label"><b>Hora de finalización</b></label>
+                <label class="form-label text-primary"><b>Hora de finalización</b></label>
                 <%= f.time_field :end_time,
-                    class: "form-control bg-white",
+                    class: "form-control",
                     step: 1800,
                     data: { booking_target: "end", slots_target: "endInput" },
                     readonly: true %>
@@ -167,44 +168,45 @@
 
             <div class="row g-2 mt-2">
               <div class="col-6">
-                <label class="form-label"><b>Horas</b></label>
-                <%= f.number_field :hours,
-                    class: "form-control bg-white",
-                    step: 0.5, min: 1,
-                    data: { booking_target: "hours", slots_target: "hours" },
-                    readonly: true %>
+                <label class="form-label text-primary">Cantidad</label>
+                <%= f.number_field :quantity,
+                      class: "form-control",
+                      min: 1, step: 1, value: 1,
+                      data: { booking_target: "quantity" } %>
               </div>
+
               <div class="col-6">
-                <label class="form-label"><b>Precio Unitario</b></label>
-                <input class="form-control bg-white" value="<%= @service.price.to_f %>" readonly data-booking-target="unitPrice">
+                <label class="form-label text-primary"><b>Precio Unitario</b></label>
+                <input class="form-control  " value="<%= @service.price.to_f %>" readonly data-booking-target="unitPrice">
               </div>
             </div>
 
             <hr>
 
             <ul class="list-unstyled small">
-              <li class="d-flex justify-content-between align-items-center mb-1 fw-bold">
+              <li class="d-flex text-primary fs-6 justify-content-between align-items-center mb-1 fw-bold">
                 <span>Subtotal</span>
                 <strong data-booking-target="subtotal">$0.00</strong>
               </li>
-              <li class="d-flex justify-content-between align-items-center mb-1 fw-bold">
+              <li class="d-flex text-primary fs-6 justify-content-between align-items-center mb-1 fw-bold">
                 <span>Tarifa de servicio</span>
                 <strong data-booking-target="fee">$0.00</strong>
               </li>
-              <li class="d-flex justify-content-between align-items-center border-top pt-2 mt-2">
-                <span class="fw-bold">TOTAL</span>
+              <li class="d-flex text-secondary fs-5 justify-content-between align-items-center border-top pt-2 mt-2">
+                <span class="fw-bold">Total</span>
                 <strong class="fs-5" data-booking-target="total">$0.00</strong>
               </li>
             </ul>
 
             <!-- Hidden cents for server validation -->
+            <%= hidden_field_tag :service_fee_percent, fee_value, data: { booking_target: "feePercent" } %>
             <%= f.hidden_field :unit_price_cents, value: (@service.price.to_f * 100).to_i %>
             <%= f.hidden_field :service_fee_cents, data: { booking_target: "feeCents" } %>
             <%= f.hidden_field :subtotal_cents,    data: { booking_target: "subtotalCents" } %>
             <%= f.hidden_field :total_price,       data: { booking_target: "totalCents" } %>
             <%= f.hidden_field :service_id, value: (@service.id) %>
 
-            <%= f.submit "Reserva", class: "btn btn-primary fw-bold rounded-4 w-100 mt-2" unless (user_signed_in? && @service.user_id == current_user.id) %>
+            <%= f.submit "Reserva", class: "btn btn-primary fw-bold fs-5 rounded-4 w-100 mt-2" unless (user_signed_in? && @service.user_id == current_user.id) %>
           <% end %>
         </div>
       </div>

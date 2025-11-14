@@ -5,6 +5,8 @@ class Order < ApplicationRecord
   STATUS_LIST = ["pending", "confirmed", "completed", "canceled"]
 
   validates :status, presence: true, inclusion: { in: STATUS_LIST }
+  validates :quantity, numericality: { only_integer: true, greater_than: 0 }
+
 
   # --------------------BLOQUE AGENDA PROVEEDOR---------------------------
 
@@ -19,7 +21,8 @@ class Order < ApplicationRecord
   private
 
   def set_end_time_from_service
-    self.end_time = (start_time + service.duration_minutes.minutes).change(sec: 0)
+    total_minutes = service.duration_minutes.to_i * (quantity || 1)
+    self.end_time = (start_time + total_minutes.minutes).change(sec: 0)
   end
 
   def end_time_presence

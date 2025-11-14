@@ -17,8 +17,17 @@ class OrdersController < ApplicationController
     @date = params[:order][:date]
     @order.start_time = params[:order][:start_time]
     @order.end_time = params[:order][:end_time]
-    @order.total_price = params[:order][:total_price].to_i / 100
+    @order.quantity = params[:order][:quantity] || 1 # Incorporación de Cantidad en lugar de "horas"
+
+    # Nuevo cálculo del total con incorporación de cantidad
+    unit_price  = @order.service.price.to_f
+    fee_percent = params[:order][:service_fee_percent].to_f # o fija el valor que uses, p.ej. 10
+    subtotal   = unit_price * @order.quantity
+    fee_amount = subtotal * fee_percent / 100.0
+    @order.total_price = subtotal + fee_amount
+
     @order.status = "confirmed"
+    
     if @order.save
       redirect_to dashboard_index_path
     else
@@ -59,6 +68,6 @@ class OrdersController < ApplicationController
   end
 
   def order_params
-    params.require(:order).permit(:date, :start_time, :end_time, :total_price, :service_id)
+    params.require(:order).permit(:date, :start_time, :end_time, :quantity, :total_price, :service_id)
   end
 end

@@ -6,99 +6,98 @@
   <div class="row g-4">
     <!-- Sidebar filtros -->
     <aside class="col-12 col-lg-3">
-<div class="card filters-card shadow-sm" style="top: 3px;">
-  <div class="card-body"
-       data-controller="filters"
-       data-filters-map-value="<%= Service.map_for_js.to_json %>"
-       data-filters-selected-subcategory-value="<%= params[:sub_category].to_s %>">
+      <div class="card filters-card shadow-sm" style="top: 3px;">
+        <div class="card-body"
+            data-controller="filters"
+            data-filters-map-value="<%= Service.map_for_js.to_json %>"
+            data-filters-selected-subcategory-value="<%= params[:sub_category].to_s %>">
 
-    <h5 class="card-title text-primary mb-3">Filtros</h5>
+          <h5 class="card-title text-primary mb-3">Filtros</h5>
 
-    <%= form_with url: services_path, method: :get, local: true do |f| %>
-      <%= hidden_field_tag :mode, "filtros" %>
-      <!-- Category -->
-      <div class="mb-3">
-        <%= f.label :category, "Categoría", class: "form-label text-primary" %>
-        <%= f.select :category,
-              options_for_select([["Todas las Categorías", ""]] + Service.category_list.map { |c| [c, c] }, params[:category]),
-              {},
-              class: "form-select",
-              data: { filters_target: "categorySelect", action: "change->filters#onCategoryChange" } %>
-      </div>
+          <%= form_with url: services_path, method: :get, local: true do |f| %>
+            <%= hidden_field_tag :mode, "filtros" %>
+            <!-- Category -->
+            <div class="mb-3">
+              <%= f.label :category, "Categoría", class: "form-label text-primary" %>
+              <%= f.select :category,
+                    options_for_select([["Todas las Categorías", ""]] + Service.category_list.map { |c| [c, c] }, params[:category]),
+                    {},
+                    class: "form-select rounded-4",
+                    data: { filters_target: "categorySelect", action: "change->filters#onCategoryChange" } %>
+            </div>
 
-      <!-- Subcategory (se rellena dinámicamente) -->
-      <div class="mb-3">
-        <%= f.label :sub_category, "Subcategoría", class: "form-label text-primary" %>
-        <%= f.select :sub_category,
-              options_for_select([["Todas las Subcategorías", ""]] + Service.subcategory_list.map { |sc| [sc, sc] }, params[:sub_category]),
-              {},
-              class: "form-select",
-              data: { filters_target: "subcategorySelect" } %>
-      </div>
+            <!-- Subcategory (se rellena dinámicamente) -->
+            <div class="mb-3">
+              <%= f.label :sub_category, "Subcategoría", class: "form-label text-primary" %>
+              <%= f.select :sub_category,
+                    options_for_select([["Todas las Subcategorías", ""]] + Service.subcategory_list.map { |sc| [sc, sc] }, params[:sub_category]),
+                    {},
+                    class: "form-select rounded-4",
+                    data: { filters_target: "subcategorySelect" } %>
+            </div>
 
-      <!-- Date -->
-      <!-- <div class="mb-3">
-        <%= f.label :date, "Fecha", class: "form-label text-primary" %>
-        <%# <%= f.date_field :date, class: "form-control" %>
-      </div> -->
+            <!-- Date -->
+            <!-- <div class="mb-3">
+              <%= f.label :date, "Fecha", class: "form-label text-primary" %>
+              <%# <%= f.date_field :date, class: "form-control" %>
+            </div> -->
 
-      <!-- Hora de inicio -->
-      <!--<div class="mb-3">
-        <%= f.label :start_time, "Hora de inicio", class: "form-label text-primary" %>
-        <%= f.time_field :start_time, class: "form-control" %>
-      </div>-->
+            <!-- Hora de inicio -->
+            <!--<div class="mb-3">
+              <%= f.label :start_time, "Hora de inicio", class: "form-label text-primary" %>
+              <%= f.time_field :start_time, class: "form-control" %>
+            </div>-->
 
-      <!-- Hora de finalización -->
-      <!-- <div class="mb-3">
-        <%= f.label :end_time, "Hora de finalización", class: "form-label text-primary" %>
-        <%= f.time_field :end_time, class: "form-control" %>
-      </div>-->
+            <!-- Hora de finalización -->
+            <!-- <div class="mb-3">
+              <%= f.label :end_time, "Hora de finalización", class: "form-label text-primary" %>
+              <%= f.time_field :end_time, class: "form-control" %>
+            </div>-->
 
-      <!-- Price -->
+            <!-- Price -->
 
-      <%# Price %>
-      <% default_price = (params[:price_max].presence || 50_000).to_i %>
+            <%# Price %>
+            <% default_price = (params[:price_max].presence || 50_000).to_i %>
 
-      <div class="mb-2"
-          data-controller="price-range"
-          data-price-range-locale-value="es-AR">
+            <div class="mb-2"
+                data-controller="price-range"
+                data-price-range-locale-value="es-AR">
 
-        <label class="form-label d-flex justify-content-between text-primary mb-2">
-          <span>Rango de Precios</span>
-          <strong data-price-range-target="output">
-            <%= number_to_currency(default_price, unit: "$", precision: 0) %>
-          </strong>
-        </label>
+              <label class="form-label d-flex justify-content-between text-primary mb-2">
+                <span>Rango de Precios</span>
+                <strong data-price-range-target="output">
+                  <%= number_to_currency(default_price, unit: "$", precision: 0) %>
+                </strong>
+              </label>
 
-        <input
-          type="range"
-          class="form-range"
-          min="0" max="100000" step="1000"
-          name="price_max"
-          value="<%= default_price %>"
-          data-price-range-target="input"
-          data-action="input->price-range#update">
+              <input
+                type="range"
+                class="form-range"
+                min="0" max="100000" step="1000"
+                name="price_max"
+                value="<%= default_price %>"
+                data-price-range-target="input"
+                data-action="input->price-range#update">
 
-        <div class="d-flex justify-content-between small text-muted">
-          <span>$0</span>
-          <span>$100.000</span>
+              <div class="d-flex justify-content-between small text-muted">
+                <span>$0</span>
+                <span>$100.000</span>
+              </div>
+            </div>
+
+            <!-- Location -->
+            <div class="mb-3">
+              <%= f.label :location, "Dirección", class: "form-label text-primary" %>
+              <%= f.search_field :location, placeholder: "Ingresa tu dirección", class: "form-control" %>
+            </div>
+
+            <div class="d-grid gap-2">
+              <%= f.submit "Aplica filtros", class: "btn btn-primary rounded-4" %>
+              <%= link_to "Resetea filtros", services_path, class: "btn btn-outline-secondary rounded-4" %>
+            </div>
+          <% end %>
         </div>
       </div>
-
-      <!-- Location -->
-      <div class="mb-3">
-        <%= f.label :location, "Dirección", class: "form-label text-primary" %>
-        <%= f.search_field :location, placeholder: "Ingresa tu dirección", class: "form-control" %>
-      </div>
-
-      <div class="d-grid gap-2">
-        <%= f.submit "Aplica filtros", class: "btn btn-primary rounded-4" %>
-        <%= link_to "Resetea filtros", services_path, class: "btn btn-outline-secondary rounded-4" %>
-      </div>
-    <% end %>
-  </div>
-</div>
-
     </aside>
 
     <!-- Grid + header -->

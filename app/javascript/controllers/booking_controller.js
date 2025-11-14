@@ -5,25 +5,50 @@ export default class extends Controller {
   static values = {
     rate: Number,      // precio por hora => services.price
     fee: Number,       // fee fijo (puede ser 0)
-    currency: String   // "USD" por defecto
+    currency: String,   // "USD" por defecto
+    durationMinutes: Number  // agregado para campo cantidad
   }
 
   static targets = [
-    "hours", "start", "end",
+    "quantity", "start", "end",
     "subtotal", "fee", "total",
     "subtotalCents", "feeCents", "totalCents",
     "unitPrice"
   ]
 
   connect() {
-    // listeners
-    this.startTarget?.addEventListener("change", () => this.syncEndFromHours())
-    this.endTarget?.addEventListener("change", () => this.syncHoursFromTimes())
-    this.hoursTarget?.addEventListener("input", () => this.syncEndFromHours())
-
-    // init
-    this.syncHoursFromTimes()
+    this.startTarget?.addEventListener("change", () => this.syncEndTime())
+    this.quantityTarget?.addEventListener("input", () => {
+      this.syncEndTime()
+      this.updateTotals()
+    })
+    this.syncEndTime()
     this.updateTotals()
+  }
+
+  syncEndTime() {
+    if (!this.hasStartTarget || !this.hasEndTarget) return
+    const startValue = this.startTarget.value
+    if (!startValue) {
+      this.endTarget.value = ""
+      return
+    }
+    const qty = this.currentQuantity()
+    const minutes = (this.durationMinutesValue || 0) * qty
+    this.endTarget.value = this.hhmmFrom(startValue, minutes)
+  }
+
+  currentQuantity() {
+    const qty = parseInt(this.quantityTarget?.value, 10)
+    return Number.isFinite(qty) && qty > 0 ? qty : 1
+  }
+
+  hhmmFrom(start, minutes) {
+    const [h, m] = (start || "00:00").split(":").map(Number)
+    const totalMins = h * 60 + m + Number(minutes || 0)
+    const nh = Math.floor(totalMins / 60) % 24
+    const nm = totalMins % 60
+    return `${String(nh).padStart(2, "0")}:${String(nm).padStart(2, "0")}`
   }
 
   // ---- helpers ----
@@ -34,40 +59,11 @@ export default class extends Controller {
     })
   }
 
-  toHours(hhmm) {
-    const [h, m] = (hhmm || "00:00").split(":").map(Number)
-    return h + (m / 60)
-  }
-
-  hhmmFrom(start, hours) {
-    const [h, m] = (start || "09:00").split(":").map(Number)
-    const totalMins = h * 60 + m + Math.round((hours || 0) * 60)
-    const nh = Math.floor(totalMins / 60) % 24
-    const nm = totalMins % 60
-    return `${String(nh).padStart(2,"0")}:${String(nm).padStart(2,"0")}`
-  }
-
-  // ---- syncers ----
-  syncHoursFromTimes() {
-    if (!this.hasStartTarget || !this.hasEndTarget || !this.hasHoursTarget) return
-    const h = this.toHours(this.endTarget.value) - this.toHours(this.startTarget.value)
-    const rounded = Math.max(0, Math.round(h * 2) / 2) // múltiplos de 0.5
-    this.hoursTarget.value = rounded || this.hoursTarget.value || 1
-    this.updateTotals()
-  }
-
-  syncEndFromHours() {
-    if (!this.hasStartTarget || !this.hasEndTarget || !this.hasHoursTarget) return
-    const hours = parseFloat(this.hoursTarget.value || "0")
-    this.endTarget.value = this.hhmmFrom(this.startTarget.value || "09:00", hours)
-    this.updateTotals()
-  }
 
   updateTotals() {
     const rate = Number(this.rateValue || 0)
-    const hours = parseFloat(this.hasHoursTarget ? this.hoursTarget.value : "0") || 0
-
-    const subtotal = Math.max(0, hours * rate)
+    const quantity = this.currentQuantity()
+    const subtotal = quantity * rate
     const fee = (Number(this.feeValue || 0) * subtotal) / 100
     const total = subtotal + fee
 
