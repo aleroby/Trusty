@@ -117,6 +117,7 @@
           data-booking-rate-value="<%= @service.price.to_f %>"
           data-booking-fee-value="<%= fee_value.to_f %>"
           data-booking-currency-value="<%= currency_value %>"
+          data-booking-duration-minutes-value="<%= @service.duration_minutes %>"
           data-slots-service-id-value="<%= @service.id %>"
           data-slots-duration-minutes-value="<%= @service.duration_minutes %>"
           data-slots-step-minutes-value="30">
@@ -167,13 +168,13 @@
 
             <div class="row g-2 mt-2">
               <div class="col-6">
-                <label class="form-label text-primary"><b>Horas</b></label>
-                <%= f.number_field :hours,
-                    class: "form-control",
-                    step: 0.5, min: 1,
-                    data: { booking_target: "hours", slots_target: "hours" },
-                    readonly: true %>
+                <label class="form-label text-primary">Cantidad</label>
+                <%= f.number_field :quantity,
+                      class: "form-control",
+                      min: 1, step: 1, value: 1,
+                      data: { booking_target: "quantity" } %>
               </div>
+
               <div class="col-6">
                 <label class="form-label text-primary"><b>Precio Unitario</b></label>
                 <input class="form-control  " value="<%= @service.price.to_f %>" readonly data-booking-target="unitPrice">
@@ -198,6 +199,7 @@
             </ul>
 
             <!-- Hidden cents for server validation -->
+            <%= hidden_field_tag :service_fee_percent, fee_value, data: { booking_target: "feePercent" } %>
             <%= f.hidden_field :unit_price_cents, value: (@service.price.to_f * 100).to_i %>
             <%= f.hidden_field :service_fee_cents, data: { booking_target: "feeCents" } %>
             <%= f.hidden_field :subtotal_cents,    data: { booking_target: "subtotalCents" } %>
