@@ -149,9 +149,15 @@
                   <div class="provider-row d-flex align-items-center gap-2 mt-auto">
                     <%= cl_image_tag service.user.user_photo.key, class:"rounded-circle", size:"50x50" if service.user.user_photo.attached? %>
 
-                    <% avg = service.supplier_reviews.average(:rating) %>
+                    <%# <% avg = service.supplier_reviews.average(:rating) %>
+                    <%# <% avg_display = avg ? number_with_precision(avg, precision: 2) : "—" %>
+                    <%# <% cnt = service.supplier_reviews.count %>
+
+                    <% scope = Review.for_this_service_supplier(service.id) %>
+                    <% avg = scope.average(:rating) %>
+                    <% cnt = scope.count %>
                     <% avg_display = avg ? number_with_precision(avg, precision: 2) : "—" %>
-                    <% cnt = service.supplier_reviews.count %>
+
 
                     <div class="small">
                       <div class="fw-medium"><%= service.user.try(:name) || service.user.first_name %></div>
