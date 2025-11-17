@@ -567,7 +567,8 @@ completed_orders.find_each do |order|
     service: order.service,
     client:  order.user,             # quien contrata
     supplier: order.service.user,    # quien brinda el servicio
-    target: :for_supplier            # enum hacia el proveedor
+    target: :for_supplier,           # enum hacia el proveedor
+    order: order
   )
 
   # Review del PROVEEDOR → CLIENTE
@@ -577,7 +578,8 @@ completed_orders.find_each do |order|
     service: order.service,
     client:  order.user,             # mismo cliente
     supplier: order.service.user,    # mismo proveedor
-    target: :for_client              # enum hacia el cliente
+    target: :for_client,             # enum hacia el cliente
+    order: order
   )
 end
 

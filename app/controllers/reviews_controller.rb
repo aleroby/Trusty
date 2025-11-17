@@ -1,5 +1,7 @@
 class ReviewsController < ApplicationController
   before_action :set_order, only: [:new, :create]
+  before_action :authorize_review!, only: [:new, :create]
+
   def new
     @review = Review.new
   end
@@ -24,8 +26,10 @@ class ReviewsController < ApplicationController
     @review.service = @order.service
     @review.client = current_user
     @review.supplier = @order.service.user
+    @review.order = @order
     @review.target = 0
     @order.status = "completed"
+    @order.save!
 
     if @review.save
       redirect_to dashboard_index_path
@@ -39,14 +43,20 @@ class ReviewsController < ApplicationController
     @review.service = @order.service
     @review.client = @order.user
     @review.supplier = @order.service.user
+    @review.order = @order
     @review.target = 1
     @order.status = "completed"
+    @order.save!
 
     if @review.save
       redirect_to suppliers_dashboard_index_path
     else
       render :new, status: :unprocessable_entity
     end
+  end
+
+  def authorize_review!
+    redirect_to dashboard_index_path, alert: "No podés calificar todavía" unless @order.reviewable_by?(current_user)
   end
 
   def review_params

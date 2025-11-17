@@ -90,8 +90,12 @@
                       <%= link_to edit_order_path(order), class: "text-decoration-none link-success fw-semibold" do %>
                         <i class="bi bi-pencil-square"></i>
                       <% end %>
-                      <%= link_to new_order_review_path(order), class: "text-decoration-none text-warning mx-2 fw-semibold" do %>
-                        <i class="bi bi-chat-dots"></i>
+                      <% if order.reviewable_by?(current_user) %>
+                        <%= link_to new_order_review_path(order), class: "text-decoration-none text-warning mx-2 fw-semibold" do %>
+                          <i class="bi bi-chat-dots"></i>
+                        <% end %>
+                      <% elsif order.supplier_review.present? && current_user == order.service.user %>
+                        <span class="text-muted small">Reseña enviada</span>
                       <% end %>
                     </td>
                   </tr>

@@ -2,9 +2,11 @@ class Review < ApplicationRecord
   belongs_to :service
   belongs_to :client, class_name: "User"
   belongs_to :supplier, class_name: "User"
+  belongs_to :order
 
   validates :rating, presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 5 }
   validates :content, presence: true, length: { minimum: 10 }
+  validates :order_id, uniqueness: { scope: :target, message: "ya tiene reseña para este rol" }
 
   enum target: { for_supplier: 0, for_client: 1 } # 👈
 
