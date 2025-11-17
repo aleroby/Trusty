@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_14_041241) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_17_125136) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -117,7 +117,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_14_041241) do
     t.datetime "updated_at", null: false
     t.vector "embedding", limit: 1536
     t.integer "target", default: 0, null: false
+    t.bigint "order_id", null: false
     t.index ["client_id"], name: "index_reviews_on_client_id"
+    t.index ["order_id", "target"], name: "index_reviews_on_order_id_and_target", unique: true
+    t.index ["order_id"], name: "index_reviews_on_order_id"
     t.index ["service_id", "target"], name: "index_reviews_on_service_id_and_target"
     t.index ["service_id"], name: "index_reviews_on_service_id"
     t.index ["supplier_id", "target"], name: "index_reviews_on_supplier_id_and_target"
@@ -167,6 +170,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_14_041241) do
   add_foreign_key "messages", "chats"
   add_foreign_key "orders", "services"
   add_foreign_key "orders", "users"
+  add_foreign_key "reviews", "orders"
   add_foreign_key "reviews", "services"
   add_foreign_key "reviews", "users", column: "client_id"
   add_foreign_key "reviews", "users", column: "supplier_id"

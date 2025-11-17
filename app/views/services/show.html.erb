@@ -46,7 +46,7 @@
       <!-- Provider card -->
       <div class="card border shadow mb-4 rounded-4 bg-white">
         <div class="card-body">
-          <h2 class="h5 mb-3">Rating de <%= @service.user.first_name %></h2>
+          <h2 class="h5 mb-3">Rating de <%= @service.sub_category %> con <%= @service.user.first_name %></h2>
           <div class="d-flex align-items-center gap-3">
             <div class="flex-shrink-0">
             <% if @service.user.user_photo.attached? %>
@@ -58,13 +58,17 @@
             <% end %>
             </div>
             <div>
-              <% avg = @supplier_avg %>
-              <% count = @supplier_count %>
+              <% rating = @supplier_avg.to_f %>
+              <% full_stars = rating.floor %>
+              <% half_star  = ((rating - full_stars) >= 0.5 ? 1 : 0) %>
+              <% empty_stars = 5 - full_stars - half_star %>
               <div class="small text-muted">
-                <span class="text-warning me-1">
-                  <%= "★" * avg.round %><span class="text-secondary"><%= "☆" * (5-avg.round) %></span>
+                <span class="text-warning">
+                  <% full_stars.times { %><i class="fa-solid fa-star"></i><% } %>
+                  <% if half_star == 1 %><i class="fa-solid fa-star-half-stroke"></i><% end %>
+                  <% empty_stars.times { %><i class="fa-regular fa-star"></i><% } %>
                 </span>
-                <%= avg %> (<%= count %> <%= "review".pluralize(count) %>)
+                <%= rating.round(2) %> (<%= @supplier_count %> <%= "review".pluralize(@supplier_count) %>)
               </div>
             </div>
           </div>

@@ -46,8 +46,8 @@
         <h1 class="h2 text-primary mb-0">Ordenes</h1>
       </div>
 
-      <div class="card shadow-sm">
-        <div class="table-responsive">
+      <div class="card shadow-sm rounded-4">
+        <div class="table-responsive rounded-4">
           <table class="table align-middle mb-0">
             <thead class="table-light">
               <tr>
@@ -90,8 +90,12 @@
                       <%= link_to edit_order_path(order), class: "text-decoration-none link-success fw-semibold" do %>
                         <i class="bi bi-pencil-square"></i>
                       <% end %>
-                      <%= link_to new_order_review_path(order), class: "text-decoration-none text-warning mx-2 fw-semibold" do %>
-                        <i class="bi bi-chat-dots"></i>
+                      <% if order.reviewable_by?(current_user) %>
+                        <%= link_to new_order_review_path(order), class: "text-decoration-none text-warning mx-2 fw-semibold" do %>
+                          <i class="bi bi-chat-dots"></i>
+                        <% end %>
+                      <% elsif order.supplier_review.present? && current_user == order.service.user %>
+                        <span class="text-muted small">Reseña enviada</span>
                       <% end %>
                     </td>
                   </tr>

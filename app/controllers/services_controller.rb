@@ -40,9 +40,10 @@ class ServicesController < ApplicationController
 
     @supplier = @service.user
 
-    # Promedio global del proveedor (lo que recibe en cualquier servicio)
-    @supplier_avg   = (@supplier.supplier_rating_avg || 0).round(2)
-    @supplier_count = @supplier.supplier_reviews_count
+    # Promedio global de reviews del servicio
+    scope = Review.for_this_service_supplier(@service.id)
+    @supplier_avg = (scope.average(:rating) || 0).round(2)
+    @supplier_count = scope.count
 
     # Reviews solo de este servicio dirigidas al proveedor
     @service_supplier_reviews = @service.supplier_reviews

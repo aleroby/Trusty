@@ -2,11 +2,36 @@ class Order < ApplicationRecord
   belongs_to :service
   belongs_to :user
 
+  has_many :reviews, dependent: :destroy
+  has_one :supplier_review, -> { for_supplier }, class_name: "Review"
+  has_one :client_review,   -> { for_client },   class_name: "Review"
+
   STATUS_LIST = ["pending", "confirmed", "completed", "canceled"]
 
   validates :status, presence: true, inclusion: { in: STATUS_LIST }
   validates :quantity, numericality: { only_integer: true, greater_than: 0 }
 
+  # --------------------HELPERS PARA REVIEWS---------------------------
+
+  def ends_at
+    return unless date && end_time
+    Time.zone.local(date.year, date.month, date.day, end_time.hour, end_time.min)
+  end
+
+  def finished?
+    ends_at.present? && Time.zone.now >= ends_at
+  end
+
+  def reviewable_by?(user)
+    return false unless finished?
+    if user == self.user
+      supplier_review.blank?
+    elsif user == service.user
+      client_review.blank?
+    else
+      false
+    end
+  end
 
   # --------------------BLOQUE AGENDA PROVEEDOR---------------------------
 
