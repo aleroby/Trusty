@@ -54,9 +54,10 @@
                 <th class="bg-primary text-white text-center">Fecha</th>
                 <th class="bg-primary text-white text-center">Hora</th>
                 <th class="bg-primary text-white text-center">Servicio</th>
-                <th class="bg-primary text-white text-center">Cliente</th>
                 <th class="bg-primary text-white text-center">Precio Total</th>
                 <th class="bg-primary text-white text-center">Estado</th>
+                <th class="bg-primary text-white text-center">Cliente</th>
+                <th class="bg-primary text-white text-center">Reseña</th>
                 <th class="bg-primary text-white text-center">Acciones</th>
               </tr>
             </thead>
@@ -70,11 +71,10 @@
                     <td class="bg-white fw-semibold text-center">
                       <%= order.service.sub_category %>
                     </td>
-                    <td class="bg-white text-muted text-center"><%= order.user.first_name %></td>
                     <td class="bg-white text-center"><%= number_to_currency(order.total_price, unit: "$", precision: 0) %></td>
                     <td class="bg-white text-center">
                       <%=
-                      case order.status
+                        case order.status
                       when "confirmed" then "Confirmado"
                       when "pending" then "Pendiente"
                       when "canceled" then "Cancelado"
@@ -83,19 +83,41 @@
                       end
                     %>
                     </td>
-                    <td class="bg-white text-end">
+                    <td class="bg-white text-muted text-center"><%= order.user.first_name %></td>
+                    <td class="text-center bg-white">
+                      <% client_review = order.client_review %>
+                      <% if !order.finished? %>
+                        <span class="text-muted">
+                          <% 5.times do %>
+                            <i class="fa-regular fa-star"></i>
+                          <% end %>
+                        </span>
+                      <% elsif order.reviewable_by?(current_user) %>
+                        <%= link_to new_order_review_path(order), class: "fw-semibold text-decoration-none", style: "color: #FD1015" do %>
+                          Calificar
+                          <i class="fa-solid fa-star me-1"></i>
+                        <% end %>
+                      <% elsif client_review.present? %>
+                        <% rating = client_review.rating.to_f %>
+                        <% full = rating.floor %>
+                        <% half = ((rating - full) >= 0.5 ? 1 : 0) %>
+                        <% empty = 5 - full - half %>
+                        <span class="text-warning me-2">
+                          <% full.times { %><i class="fa-solid fa-star"></i><% } %>
+                          <% if half == 1 %><i class="fa-solid fa-star-half-stroke"></i><% end %>
+                          <% empty.times { %><i class="fa-regular fa-star"></i><% } %>
+                          (<%= rating.round(0) %>)
+                        </span>
+                      <% else %>
+                        <span class="text-muted small">Sin reseña</span>
+                      <% end %>
+                    </td>
+                    <td class="bg-white text-center">
                       <%= link_to order_path(order), class: "text-decoration-none link-primary mx-2 fw-semibold" do %>
                         <i class="fa-solid fa-eye"></i>
                       <% end %>
                       <%= link_to edit_order_path(order), class: "text-decoration-none link-success fw-semibold" do %>
                         <i class="bi bi-pencil-square"></i>
-                      <% end %>
-                      <% if order.reviewable_by?(current_user) %>
-                        <%= link_to new_order_review_path(order), class: "text-decoration-none text-warning mx-2 fw-semibold" do %>
-                          <i class="bi bi-chat-dots"></i>
-                        <% end %>
-                      <% elsif order.supplier_review.present? && current_user == order.service.user %>
-                        <span class="text-muted small">Reseña enviada</span>
                       <% end %>
                     </td>
                   </tr>
