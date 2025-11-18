@@ -4,3 +4,15 @@
   font-size: 18px;
   padding: 1;
 }
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: invert(1) grayscale(100);
+  height: 20x;
+  width: 20px;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  top: 40%;   /* Baja las flechas. Antes: 50% */
+}
