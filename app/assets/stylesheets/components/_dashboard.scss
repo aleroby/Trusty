@@ -42,3 +42,23 @@
   color: $primary !important;
   font-weight: 600;
 }
+
+.service-show .reviews .carousel {
+  position: relative;
+}
+
+.service-show .reviews .carousel-control-prev,
+.service-show .reviews .carousel-control-next {
+  width: 40px;               // achica el área activa
+  opacity: 0.7;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.service-show .reviews .carousel-control-prev {
+  left: 83px;               // la corre hacia adentro del card
+}
+
+.service-show .reviews .carousel-control-next {
+  right: 100px;
+}
