@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_17_125136) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_19_200959) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -71,6 +71,33 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_17_125136) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_chats_on_user_id"
+  end
+
+  create_table "human_chats", force: :cascade do |t|
+    t.bigint "service_id", null: false
+    t.bigint "order_id", null: false
+    t.bigint "client_id", null: false
+    t.bigint "supplier_id", null: false
+    t.string "status"
+    t.datetime "last_message_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_human_chats_on_client_id"
+    t.index ["order_id"], name: "index_human_chats_on_order_id"
+    t.index ["service_id"], name: "index_human_chats_on_service_id"
+    t.index ["supplier_id"], name: "index_human_chats_on_supplier_id"
+  end
+
+  create_table "human_messages", force: :cascade do |t|
+    t.bigint "human_chat_id", null: false
+    t.bigint "user_id", null: false
+    t.text "content", null: false
+    t.datetime "read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["human_chat_id", "created_at"], name: "index_human_messages_on_human_chat_id_and_created_at"
+    t.index ["human_chat_id"], name: "index_human_messages_on_human_chat_id"
+    t.index ["user_id"], name: "index_human_messages_on_user_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -167,6 +194,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_17_125136) do
   add_foreign_key "availabilities", "users"
   add_foreign_key "blackouts", "users"
   add_foreign_key "chats", "users"
+  add_foreign_key "human_chats", "orders"
+  add_foreign_key "human_chats", "services"
+  add_foreign_key "human_chats", "users", column: "client_id"
+  add_foreign_key "human_chats", "users", column: "supplier_id"
+  add_foreign_key "human_messages", "human_chats"
+  add_foreign_key "human_messages", "users"
   add_foreign_key "messages", "chats"
   add_foreign_key "orders", "services"
   add_foreign_key "orders", "users"
