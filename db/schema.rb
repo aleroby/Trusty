@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_19_200959) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_19_221833) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "vector"
@@ -75,7 +75,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_19_200959) do
 
   create_table "human_chats", force: :cascade do |t|
     t.bigint "service_id", null: false
-    t.bigint "order_id", null: false
+    t.bigint "order_id"
     t.bigint "client_id", null: false
     t.bigint "supplier_id", null: false
     t.string "status"
