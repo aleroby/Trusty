@@ -79,43 +79,34 @@
         </div>
       </div>
 
-<!--Reviews con carousel-->
-    <div class="reviews">
-      <h3 class="bg-success text-white mb-3 p-2 shadow-sm rounded-4">Reviews</h3>
-      <% if @service_supplier_reviews.any? %>
-        <div id="reviewsCarousel" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner">
-            <% @service_supplier_reviews.each_with_index do |review, index| %>
-              <div class="carousel-item <%= 'active' if index == 0 %>">
-                <div class="bg-white border shadow-sm rounded-4 p-3" >
-                  <div class="d-flex align-items-start justify-content-between">
-                  <!-- Nombre y estrellas -->
-                  <div class="d-flex flex-column me-3 flex-shrink-0">
-                    <div class="fw-semibold"><%= review.client&.first_name || "Anónimo" %></div>
-                    <% filled = review.rating.to_i %>
-                    <div class="text-warning small text-nowrap">
-                      <%= ("★" * filled + "☆" * (5 - filled)).html_safe %>
+      <!--Reviews con carousel-->
+      <div class="reviews">
+        <h3 class="bg-success text-white mb-3 p-2 px-3 shadow-sm rounded-4">Reviews</h3>
+        <% if @service_supplier_reviews.any? %>
+          <div id="reviewsCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+              <% @service_supplier_reviews.each_with_index do |review, index| %>
+                <div class="carousel-item <%= 'active' if index == 0 %>">
+                  <div class="bg-white border shadow-sm rounded-4 p-3">
+                    <div class="d-flex align-items-start justify-content-between">
+                      <div class="d-flex flex-column me-3 flex-shrink-0">
+                        <div class="fw-semibold"><%= review.client&.first_name || "Anónimo" %></div>
+                        <% filled = review.rating.to_i %>
+                        <div class="text-warning small text-nowrap">
+                          <%= ("★" * filled + "☆" * (5 - filled)).html_safe %>
+                        </div>
+                      </div>
+                      <p class="small mb-0 flex-grow-1 mx-3"><%= review.content %></p>
+                      <div class="small text-muted text-nowrap ms-3">
+                        <%= time_ago_in_words(review.created_at) %> ago
+                      </div>
                     </div>
                   </div>
-
-                  <!-- Contenido -->
-                  <p class="small mb-0 flex-grow-1 mx-3">
-                    <%= review.content %>
-                  </p>
-
-                  <!-- Fecha -->
-                  <div class="small text-muted text-nowrap ms-3">
-                    <%= time_ago_in_words(review.created_at) %> ago
-                  </div>
-
                 </div>
-              </div>
+              <% end %>
             </div>
-          <% end %>
 
-
-        <!-- Controles izquierda / derecha -->
-            <button class="carousel-control-prev " type="button" data-bs-target="#reviewsCarousel" data-bs-slide="prev">
+            <button class="carousel-control-prev" type="button" data-bs-target="#reviewsCarousel" data-bs-slide="prev">
               <span class="carousel-control-prev-icon" aria-hidden="true"></span>
               <span class="visually-hidden">Previous</span>
             </button>
@@ -125,17 +116,13 @@
               <span class="visually-hidden">Next</span>
             </button>
           </div>
-
-          <% else %>
-            <p class="text-muted">No hay reviews para este servicio.</p>
-          <% end %>
-        </div>
+        <% else %>
+          <div class="bg-white text-center text-muted py-4 rounded-4">
+            No hay reviews para este servicio.
+          </div>
+        <% end %>
       </div>
     </div>
-
-      <!-- Reviews -->
-
-
 
     <!-- RIGHT (Booking) -->
     <div class="col-lg-4">
@@ -155,7 +142,6 @@
         <div class="card-body">
           <h6 class="fw-bold bg-success shadow-sm text-white p-3 rounded-4 text-center">Reserva <%= @service.sub_category %></h6>
           <hr>
-
           <%= form_with model: @order, url: orders_path, html: { id: "booking-form" } do |f| %>
 
             <div class="mb-3">
@@ -223,9 +209,9 @@
                 <span>Tarifa de servicio</span>
                 <strong data-booking-target="fee">$0.00</strong>
               </li>
-              <li class="d-flex text-secondary fs-5 justify-content-between align-items-center border-top pt-2 mt-2">
-                <span class="fw-bold">Total</span>
-                <strong class="fs-5" data-booking-target="total">$0.00</strong>
+              <li class="d-flex text-secondary fs-6 justify-content-between align-items-center border-top pt-2 mt-2">
+                <span class="fw-bold">TOTAL</span>
+                <strong data-booking-target="total">$0.00</strong>
               </li>
             </ul>
 
@@ -237,7 +223,7 @@
             <%= f.hidden_field :total_price,       data: { booking_target: "totalCents" } %>
             <%= f.hidden_field :service_id, value: (@service.id) %>
 
-            <%= f.submit "Reserva", class: "btn btn-primary fw-bold fs-5 rounded-4 w-100 mt-2" unless (user_signed_in? && @service.user_id == current_user.id) %>
+            <%= f.submit "Reserva", class: "btn btn-primary fw-bold fs-6 rounded-4 w-100 mt-2" unless (user_signed_in? && @service.user_id == current_user.id) %>
           <% end %>
         </div>
       </div>

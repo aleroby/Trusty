@@ -1,17 +1,21 @@
 <div class="container">
-  <div class="d-flex justify-content-end"><%= link_to "Regresar a lista de ordenes", dashboard_index_path(@order), class: "m-2 btn btn-success rounded-5 shadow" %></div>
+  <div class="d-flex justify-content-end"><%= link_to "Regresar a lista de ordenes", dashboard_index_path(@order), class: "mt-4 btn btn-success text-white rounded-4 shadow" %></div>
   <div class="row justify-content-center">
     <div class="col-12 col-sm-8">
-      <div class="card border rounded-4 m-3 p-4 shadow-sm">
+      <div class="card bg-white border rounded-4 m-3 p-4 shadow-sm">
         <div class="text-center mb-3">
-          <h4>¿Cómo calificás el servicio de <%= @order.service.sub_category %> de <%= @order.service.user.first_name %>?</h4>
+          <% if @order.user == current_user %>
+            <h4>¿Cómo calificas el Servicio de <%= @order.service.sub_category %> de <%= @order.service.user.first_name %>?</h4>
+          <% else %>
+            <h4>¿Cómo calificas a <%= @order.user.first_name %> como cliente?</h4>
+          <% end %>
         </div>
 
         <%= simple_form_for [@order, @review] do |f| %>
-          <%= f.input :rating, collection: (1..5).to_a, label: "Rate your experience",
+          <%= f.input :rating, collection: (1..5).to_a, label: "Califica tu experiencia",
           input_html: {data: {controller: "star-rating"}} %>
           <div class="mb-3">
-            <%= f.input :content, as: :text,
+            <%= f.input :content, as: :text, label: "Comentarios",
                   placeholder: "Contanos tu experiencia...",
                   class: "form-control bg-white rounded-4",
                   rows: 3 %>
