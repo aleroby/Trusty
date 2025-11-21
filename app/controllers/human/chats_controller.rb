@@ -1,17 +1,29 @@
 class Human::ChatsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_chat, only: %i[show archive reopen]
-  before_action :authorize_chat!, only: %i[show archive reopen]
+  before_action :set_chat, only: %i[show archive reopen details]
+  before_action :authorize_chat!, only: %i[show archive reopen details]
 
   def index
-    @chats = Human::Chat
-              .where(client: current_user)
-              .or(Human::Chat.where(supplier: current_user))
-              .order(last_message_at: :desc, updated_at: :desc)
+    base = Human::Chat
+             .where(client: current_user)
+             .or(Human::Chat.where(supplier: current_user))
+             .includes(:service, :order, messages: :user)
+             .order(last_message_at: :desc, updated_at: :desc)
+
+    chats = base.to_a
+    @unread_count = chats.count { |chat| chat.unread_for?(current_user) }
+
+    @filter = params[:filter].presence || "all"
+    @chats = if @filter == "unread"
+               chats.select { |chat| chat.unread_for?(current_user) }
+             else
+               chats
+             end
   end
 
   def show
     @messages = @chat.messages.includes(:user).order(created_at: :asc)
+    @chat.mark_as_read_for(current_user)
   end
 
   def create
@@ -71,6 +83,9 @@ class Human::ChatsController < ApplicationController
     else
       redirect_back fallback_location: human_chat_path(@chat), alert: @chat.errors.full_messages.to_sentence
     end
+  end
+
+  def details
   end
 
   private

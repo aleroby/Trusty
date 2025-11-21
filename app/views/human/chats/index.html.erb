@@ -3,10 +3,19 @@
     <div class="col-lg-3 mb-4">
       <div class="card shadow-sm rounded-4 h-100">
         <div class="card-body d-flex flex-column">
-          <h2 class="h5 mb-3">Mensajes</h2>
+          <h2 class="h5 mb-3 d-flex justify-content-between align-items-center">
+            <span>Mensajes</span>
+            <% if @unread_count.positive? %>
+              <span class="badge rounded-pill bg-danger text-white">+<%= @unread_count %></span>
+            <% end %>
+          </h2>
           <div class="buttons mb-3">
-            <button class="btn btn-sm btn-dark me-2">Todos</button>
-            <button class="btn btn-sm btn-outline-dark">No leídos</button>
+            <%= link_to "Todos",
+                        human_chats_path,
+                        class: "btn btn-sm #{@filter == 'all' ? 'btn-dark' : 'btn-outline-dark'} me-2" %>
+            <%= link_to "No leídos",
+                        human_chats_path(filter: :unread),
+                        class: "btn btn-sm #{@filter == 'unread' ? 'btn-dark' : 'btn-outline-dark'}" %>
           </div>
 
           <turbo-frame id="human_chats_sidebar">
@@ -16,7 +25,11 @@
                   <% counterpart = chat.client == current_user ? chat.supplier : chat.client %>
                   <% last_message = chat.messages.order(created_at: :desc).first %>
                   <%= link_to human_chat_path(chat),
-                              data: { turbo_frame: "human_chats_conversation" },
+                              data: {
+                                action: "click->chats#open",
+                                conversation_url: human_chat_path(chat),
+                                details_url: details_human_chat_path(chat)
+                              },
                               class: "list-group-item list-group-item-action border-0 mb-2 rounded-3 shadow-sm" do %>
                     <div class="d-flex align-items-center">
                       <div class="flex-shrink-0 me-3">
@@ -32,8 +45,18 @@
                         <% end %>
                       </div>
                       <div class="flex-grow-1 text-start">
-                        <div class="d-flex justify-content-between">
-                          <strong><%= counterpart&.first_name || "Usuario" %></strong>
+                        <div class="d-flex justify-content-between align-items-center">
+                          <div>
+                            <strong><%= counterpart&.first_name || "Usuario" %></strong>
+                            <% if chat.unread_for?(current_user) %>
+                              <span class="badge bg-primary text-white ms-2">Nuevo</span>
+                            <% end %>
+                            <% if chat.order&.status.present? %>
+                              <span class="badge bg-light text-muted border text-uppercase ms-2">
+                                <%= chat.order.status %>
+                              </span>
+                            <% end %>
+                          </div>
                           <% if last_message %>
                             <small class="text-muted"><%= l last_message.created_at, format: :short %></small>
                           <% end %>
@@ -62,7 +85,7 @@
     </div>
 
     <div class="col-lg-6 mb-4">
-      <turbo-frame id="human_chats_conversation" data-turbo-action="advance">
+      <turbo-frame id="human_chats_conversation" data-chats-target="conversationFrame" data-turbo-action="advance">
         <div class="card shadow-sm rounded-4 h-100">
           <div class="card-body d-flex flex-column justify-content-center text-center text-muted">
             <p class="mb-2">Seleccioná una conversación para ver los mensajes.</p>
@@ -73,7 +96,7 @@
     </div>
 
     <div class="col-lg-3 mb-4">
-      <turbo-frame id="human_chats_sidebar_details">
+      <turbo-frame id="human_chats_sidebar_details" data-chats-target="detailsFrame">
         <div class="card shadow-sm rounded-4 h-100">
           <div class="card-body text-center text-muted d-flex flex-column justify-content-center">
             <p>Seleccioná un chat para ver los detalles del servicio o la orden.</p>

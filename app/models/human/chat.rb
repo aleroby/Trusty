@@ -9,4 +9,18 @@ class Human::Chat < ApplicationRecord
   STATUSES = %w[open archived].freeze
 
   validates :status, inclusion: { in: STATUSES }, allow_nil: true
+
+  def unread_for?(user)
+    unread_messages_for(user).exists?
+  end
+
+  def mark_as_read_for(user)
+    unread_messages_for(user).update_all(read_at: Time.current)
+  end
+
+  private
+
+  def unread_messages_for(user)
+    messages.where(read_at: nil).where.not(user: user)
+  end
 end
