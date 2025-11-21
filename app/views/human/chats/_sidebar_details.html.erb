@@ -1,0 +1,41 @@
+<% service = chat.service %>
+<div class="card shadow-sm rounded-4 h-100">
+  <div class="card-body">
+      <h6 class="text-uppercase text-muted small mb-3">Resumen del servicio</h6>
+      <div class="d-flex mb-3">
+        <% if service.images.attached? %>
+          <%= cl_image_tag service.images.first.key,
+                           width: 96,
+                           height: 96,
+                           crop: "fill",
+                           gravity: "auto",
+                           class: "rounded-4 object-fit-cover me-3" %>
+        <% else %>
+          <div class="bg-light rounded-4 d-flex align-items-center justify-content-center text-muted me-3"
+               style="width:96px;height:96px">
+            <i class="fa-solid fa-image"></i>
+          </div>
+        <% end %>
+        <div>
+          <strong><%= service.sub_category %></strong>
+          <p class="text-muted small mb-1"><%= service.user.first_name %></p>
+          <%= link_to "Ver servicio", service_path(service), class: "btn btn-link btn-sm ps-0" %>
+        </div>
+      </div>
+
+    <% if chat.order.present? %>
+        <h6 class="text-uppercase text-muted small mb-2">Reserva</h6>
+        <p class="mb-1">
+          <strong>Estado:</strong>
+          <span class="badge bg-light text-dark"><%= chat.order.status.presence || "Pendiente" %></span>
+        </p>
+        <p class="mb-1"><strong>Fecha:</strong> <%= l chat.order.date, format: :long %></p>
+        <p class="mb-1"><strong>Horario:</strong> <%= chat.order.start_time&.strftime("%H:%M") %> - <%= chat.order.end_time&.strftime("%H:%M") %></p>
+        <%= link_to "Ver orden", order_path(chat.order), class: "btn btn-primary btn-sm w-100 mt-2" %>
+    <% else %>
+        <p class="text-muted small">
+          Todavía no hay una reserva asociada a este servicio.
+        </p>
+    <% end %>
+  </div>
+</div>

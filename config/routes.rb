@@ -12,6 +12,14 @@ Rails.application.routes.draw do
 
   resources :services, only: %i[index show destroy] do
     resources :reviews, only: %i[new create]
+
+    member do
+      get :available_slots
+    end
+
+    namespace :human do
+      resources :chats, only: :create
+    end
   end
 
   namespace :suppliers do
@@ -30,15 +38,22 @@ Rails.application.routes.draw do
 
   resources :dashboard, only: %i[index]
 
-  # BLOQUE AGENDA PROVEEDOR
-  resources :services, only: [:show] do
-    get :available_slots, on: :member
-  end
-
   resources :chats, only: [:index, :create, :destroy]
 
   resources :chats, only: [:show] do
     resources :messages, only: [:create]
+  end
+
+  # RUTAS DE CHATS Y MENSAJES CLIENTE-PROVEEDOR
+  namespace :human do
+    resources :chats, only: %i[index show] do
+      resources :messages, only: %i[create index]
+      member do
+        patch :archive
+        patch :reopen
+        get :details
+      end
+    end
   end
 
 end
