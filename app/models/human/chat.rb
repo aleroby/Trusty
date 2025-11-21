@@ -1,6 +1,6 @@
 class Human::Chat < ApplicationRecord
   belongs_to :service
-  belongs_to :order
+  belongs_to :order, optional: true
   belongs_to :client, class_name: "User"
   belongs_to :supplier, class_name: "User"
 

@@ -122,6 +122,43 @@
           </div>
         <% end %>
       </div>
+
+      <% if !user_signed_in? || current_user != @service.user %>
+        <div class="card my-4 bg-white shadow-sm rounded-4"
+             data-controller="chat-request"
+             data-chat-request-logged-in-value="<%= user_signed_in? %>"
+             data-chat-request-login-path-value="<%= new_user_session_path %>">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div>
+                <h3 class="h5 mb-1">¿Te quedó alguna duda?</h3>
+                <p class="text-muted small mb-0">Escribile a <%= @service.user.first_name %> antes de reservar.</p>
+              </div>
+              <button class="btn btn-outline-primary" data-action="click->chat-request#toggle" data-chat-request-target="trigger">
+                Escribir al proveedor
+              </button>
+            </div>
+
+            <% if user_signed_in? %>
+              <div class="d-none" data-chat-request-target="form">
+                <%= form_with url: service_human_chats_path(@service), method: :post, data: { turbo: true } do |f| %>
+                  <div class="mb-3">
+                    <label class="form-label">Mensaje</label>
+                    <%= f.text_area :content,
+                                    name: "human_message[content]",
+                                    rows: 4,
+                                    class: "form-control rounded-4",
+                                    placeholder: "¡Hola, #{@service.user.first_name}! Tengo una consulta...",
+                                    data: { chat_request_target: "textarea" } %>
+                  </div>
+
+                  <%= f.submit "Enviar mensaje", class: "btn btn-primary" %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
     </div>
 
     <!-- RIGHT (Booking) -->
