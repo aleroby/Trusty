@@ -4,10 +4,12 @@ export default class extends Controller {
   static targets = ["categorySelect", "subcategorySelect"];
   static values = {
     map: Object,                 // { "Hogar": ["Limpieza", ...], ... }
-    selectedSubcategory: String  // para preservar selección al cargar
+    selectedSubcategory: String,  // para preservar selección al cargar
+    selectedCategory: String,
   };
 
   connect() {
+    if(this.selectedCategoryValue) this.categorySelectTarget.value = this.selectedCategoryValue;
     this.populateSubcategories(); // inicial
   }
 
@@ -28,7 +30,8 @@ export default class extends Controller {
 
     subcats.forEach(sc => {
       const opt = this.option(sc, sc);
-      if (sc === selected) opt.selected = true;
+      // if (sc === selected) opt.selected = true;
+      if (subcats.includes(selected) && sc === selected) opt.selected = true;
       this.subcategorySelectTarget.append(opt);
     });
   }

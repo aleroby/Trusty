@@ -10,12 +10,14 @@
         <div class="card-body"
             data-controller="filters"
             data-filters-map-value="<%= Service.map_for_js.to_json %>"
+            data-filters-selected-category-value="<%= params[:category].to_s %>"
             data-filters-selected-subcategory-value="<%= params[:sub_category].to_s %>">
 
           <h5 class="card-title text-primary mb-3">Filtros</h5>
 
           <%= form_with url: services_path, method: :get, local: true do |f| %>
             <%= hidden_field_tag :mode, "filtros" %>
+            <%= hidden_field_tag :query, params[:query] if params[:query].present? %>
             <!-- Category -->
             <div class="mb-3">
               <%= f.label :category, "Categoría", class: "form-label text-primary" %>
@@ -30,7 +32,7 @@
             <div class="mb-3">
               <%= f.label :sub_category, "Subcategoría", class: "form-label text-primary" %>
               <%= f.select :sub_category,
-                    options_for_select([["Todas las Subcategorías", ""]] + Service.subcategory_list.map { |sc| [sc, sc] }, params[:sub_category]),
+                    options_for_select([["Todas las subcategorías", ""]] + Service.subcategory_list(params[:category]).map { |sc| [sc, sc] }, params[:sub_category]),
                     {},
                     class: "form-select rounded-4",
                     data: { filters_target: "subcategorySelect" } %>
