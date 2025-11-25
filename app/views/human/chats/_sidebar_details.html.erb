@@ -19,7 +19,7 @@
         <div>
           <strong><%= service.sub_category %></strong>
           <p class="text-muted small mb-1"><%= service.user.first_name %></p>
-          <%= link_to "Ver servicio", service_path(service), class: "btn btn-link btn-sm ps-0" %>
+          <%= link_to "Ver servicio", main_app.service_path(service), data: {turbo: false}, class: "btn btn-link btn-sm ps-0" %>
         </div>
       </div>
 
