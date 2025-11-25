@@ -1,73 +1,90 @@
 
 <div class="container mt-5">
-  <div class="d-flex justify-content-end"><%= link_to "Regresar a lista de ordenes", dashboard_index_path(@order), class: "m-2 btn btn-success rounded-5 shadow" %></div>
+
   <div class="row justify-content-center">
-    <div class="col-md-8">
+    <div class="col-12 col-lg-10">
 
-      <div class="card shadow-sm border-0">
-        <div class="card-header bg-primary text-white text-center">
-          <h3 class="mb-0">Orden de Compra Nº <%= @order.id %></h3>
+      <div class="card shadow-lg border-0 rounded-4">
+
+        <!-- Encabezado -->
+        <div class="card-header text-white text-center py-4"
+             style="background: linear-gradient(135deg, #0d6efd, #0a58ca);">
+          <h3 class="mb-0 fw-bold">Orden de Compra Nº <%= @order.id %></h3>
         </div>
 
-        <div class="card-body px-5 py-4">
-          <div class="row mb-3">
-            <div class="col-6 text-end fw-bold">Número de orden:</div>
-            <div class="col-6"><%= @order.id %></div>
+        <!-- Cuerpo -->
+        <div class="card-body p-5">
+
+          <ul class="list-group list-group-flush mb-4">
+
+            <li class="list-group-item py-3 d-flex justify-content-between">
+              <strong>Número de orden:</strong>
+              <span><%= @order.id %></span>
+            </li>
+
+            <li class="list-group-item py-3 d-flex justify-content-between">
+              <strong>Nombre del proveedor:</strong>
+              <span><%= @order.service.user.first_name %></span>
+            </li>
+
+            <li class="list-group-item py-3 d-flex justify-content-between">
+              <strong>Nombre del cliente:</strong>
+              <span><%= @order.user.first_name %></span>
+            </li>
+
+            <li class="list-group-item py-3 d-flex justify-content-between">
+              <strong>Domicilio del servicio:</strong>
+              <span><%= @order.service_address %></span>
+            </li>
+
+            <li class="list-group-item py-3 d-flex justify-content-between">
+              <strong>Fecha de servicio:</strong>
+              <span><%= l(@order.date, format: :long) %></span>
+            </li>
+
+            <li class="list-group-item py-3 d-flex justify-content-between">
+              <strong>Hora de inicio:</strong>
+              <span>
+                <% if @order.start_time.present? %>
+                  <%= l(@order.start_time, format: :hour_only) %>
+                <% else %>
+                  <em>No definido</em>
+                <% end %>
+              </span>
+            </li>
+
+            <li class="list-group-item py-3 d-flex justify-content-between">
+              <strong>Hora de cierre:</strong>
+              <span>
+                <% if @order.end_time.present? %>
+                  <%= l(@order.end_time, format: :hour_only) %>
+                <% else %>
+                  <em>No definido</em>
+                <% end %>
+              </span>
+            </li>
+
+            <li class="list-group-item py-3 d-flex justify-content-between">
+              <strong class="text-success">Precio total:</strong>
+              <span class="fw-bold text-success">
+                $<%= number_to_currency(@order.total_price, unit: "", delimiter: ".", separator: ",") %>
+              </span>
+            </li>
+
+          </ul>
+
+          <!-- Botón dentro de la card -->
+          <div class="d-flex justify-content-end">
+            <%= link_to "Editar",
+                edit_order_path(@order),
+                class: "btn btn-success rounded-5 shadow-sm px-4 ms-2" %>
           </div>
 
-          <div class="row mb-3">
-            <div class="col-6 text-end fw-bold">Nombre del proveedor:</div>
-            <div class="col-6"><%= @order.service.user.first_name %></div>
-          </div>
 
-          <div class="row mb-3">
-            <div class="col-6 text-end fw-bold">Nombre del cliente:</div>
-            <div class="col-6"><%= @order.user.first_name %></div>
-          </div>
+        </div> <!-- card-body -->
 
-          <div class="row mb-3">
-            <div class="col-6 text-end fw-bold">Domicilio del servicio:</div>
-            <div class="col-6"><%= @order.service_address %></div>
-          </div>
+      </div> <!-- card -->
 
-          <div class="row mb-3">
-            <div class="col-6 text-end fw-bold">Fecha de servicio:</div>
-            <div class="col-6">
-                <%= l(@order.date, format: :long) %>
-            </div>
-          </div>
-
-          <div class="row mb-3">
-            <div class="col-6 text-end fw-bold">hora de inicio:</div>
-            <div class="col-6">
-              <% if @order.start_time.present? %>
-                <%= l(@order.start_time, format: :hour_only) %>
-              <% else %>
-                <em>No definido</em>
-              <% end %>
-            </div>
-          </div>
-
-          <div class="row mb-3">
-            <div class="col-6 text-end fw-bold">hora de cierre:</div>
-            <div class="col-6">
-              <% if @order.end_time.present? %>
-                <%= l(@order.end_time, format: :hour_only) %>
-              <% else %>
-                <em>No definido</em>
-              <% end %>
-            </div>
-          </div>
-
-          <div class="row mb-3">
-            <div class="col-6 text-end fw-bold">Precio total:</div>
-            <div class="col-6 text-success fw-semibold">
-              $<%= number_to_currency(@order.total_price, unit: "", delimiter: ".", separator: ",") %>
-            </div>
-          </div>
-        </div>
-
-      </div>
     </div>
   </div>
 </div>
