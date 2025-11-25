@@ -19,6 +19,11 @@
               <%= link_to "Ofrecer Servicios", edit_user_registration_path(role: "supplier"), class: "nav-link" %>
             </li>
           <% end %>
+          <% if user_signed_in? %>
+            <li class="nav-item">
+              <%= link_to "Mensajes", human_chats_path, class: "nav-link" %>
+            </li>
+          <% end %>
           <li class="nav-item">
             <%= link_to "Servicios", services_path, class: "fw-bold nav-link text-danger" %>
           </li>
