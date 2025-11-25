@@ -163,7 +163,12 @@ class Service < ApplicationRecord
   }
 
   scope :by_sub_category, -> (sub_cat) {
-    where(sub_category: sub_cat) if sub_cat.present?
+    if sub_cat.present? && sub_cat != "Todas las subcategorias" && sub_cat != ""
+      where(sub_category: sub_cat.strip)
+      # where(sub_category: sub_cat) #if sub_cat.present?
+    else
+      all
+    end
   }
 
   scope :by_date, -> (date) {

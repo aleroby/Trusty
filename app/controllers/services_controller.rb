@@ -1,37 +1,72 @@
 class ServicesController < ApplicationController
   skip_before_action :authenticate_user!
 
+  # def index
+  #   # Se añade condición para filtrar por categoria
+  #   if params[:category].present?
+  #     @services = Service.where(category: params[:category], published: true)
+  #     @pagy, @services = pagy(@services, items: 9)
+
+  #   elsif params[:query].present?
+  #     multisearch_results = PgSearch.multisearch(params[:query])
+  #     @services = multisearch_results
+  #                      .where(searchable_type: "Service")
+  #                      .map(&:searchable)
+
+  #     @services = @services.select { |service| service&.published? }
+
+  #     # @pagy, @services = pagy(@services)
+  #     @pagy, @services = pagy_array(@services, items: 9)
+
+  #   elsif params[:mode] == "filtros"
+  #     @services = Service.filter(params).where(published: true)
+
+  #     @pagy, @services = pagy(@services, items: 9)
+
+  #     # AGREGADO PARA QUE FUNCIONE EL BUCADOR DEL BANNER
+  #     # if @services.is_a?(ActiveRecord::Relation)
+  #     #   @pagy, @services = pagy(@services, items: 9)
+  #     # else
+  #     #   @pagy, @services = pagy_array(@services, items: 9)
+  #     # end
+  #     #
+  #   else
+  #     @services = Service.where(published: true)
+  #     @pagy, @services = pagy(@services, items: 9)
+  #   end
+  # end
+
   def index
-    # Se añade condición para filtrar por categoria
+    # 1️⃣ Filtros avanzados SIEMPRE primero
+    if params[:mode] == "filtros"
+      @services = Service.filter(params)
+
+      @pagy, @services = pagy(@services, items: 9)
+      return
+    end
+
+    # 2️⃣ Búsqueda
+    if params[:query].present?
+      multisearch_results = PgSearch.multisearch(params[:query])
+      @services = multisearch_results
+                    .where(searchable_type: "Service")
+                    .map(&:searchable)
+                    .select { |s| s&.published? }
+
+      @pagy, @services = pagy_array(@services, items: 9)
+      return
+    end
+
+    # 3️⃣ Sólo categoría (si no se usó el sistema de filtros)
     if params[:category].present?
       @services = Service.where(category: params[:category], published: true)
       @pagy, @services = pagy(@services, items: 9)
-
-    elsif params[:query].present?
-      multisearch_results = PgSearch.multisearch(params[:query])
-      @services = multisearch_results
-                       .where(searchable_type: "Service")
-                       .map(&:searchable)
-
-      @services = @services.select { |service| service&.published? }
-
-      # @pagy, @services = pagy(@services)
-      @pagy, @services = pagy_array(@services, items: 9)
-
-    elsif params[:mode] == "filtros"
-      @services = Service.filter(params).where(published: true)
-
-      # AGREGADO PARA QUE FUNCIONE EL BUCADOR DEL BANNER
-      if @services.is_a?(ActiveRecord::Relation)
-        @pagy, @services = pagy(@services, items: 9)
-      else
-        @pagy, @services = pagy_array(@services, items: 9)
-      end
-      #
-    else
-      @services = Service.where(published: true)
-      @pagy, @services = pagy(@services, items: 9)
+      return
     end
+
+    # 4️⃣ Default
+    @services = Service.where(published: true)
+    @pagy, @services = pagy(@services, items: 9)
   end
 
   def show
