@@ -86,6 +86,14 @@ class Human::ChatsController < ApplicationController
   end
 
   def details
+    scope = Review.for_this_service_supplier(@chat.service_id)
+    @service_avg   = (scope.average(:rating) || 0).round(2)
+    @service_count = scope.count
+
+    @order_for_chat = @chat.order ||
+                    Order.where(service: @chat.service, user: @chat.client)
+                         .order(created_at: :desc)
+                         .first
   end
 
   private

@@ -8,18 +8,19 @@
                          crop: "fill", gravity: "auto",
                          class: "rounded-circle object-fit-cover" %>
       <% else %>
-        <div class="avatar-placeholder rounded-circle text-center bg-light text-muted fw-bold p-2">
+        <div class="avatar-placeholder rounded-circle text-center fw-bold p-1"
+             style="background-color: <%= avatar_bg_color_for(counterpart) %>; color: #0f172a;">
           <%= counterpart&.first_name&.first || "?" %>
         </div>
       <% end %>
     </div>
     <div>
-      <strong><%= counterpart&.first_name || "Usuario" %></strong>
-      <div class="text-muted small"><%= chat.service.sub_category %> · <%= chat.service.user.first_name %></div>
+      <div class="fw-bold fs-5 text-primary"><%= counterpart&.first_name || "Usuario" %></div>
+      <div class="text-muted"><%= chat.service.sub_category %></div>
     </div>
   </div>
 
-  <div class="card-body d-flex flex-column gap-2 overflow-auto">
+  <div class="card-body d-flex flex-column gap-3 overflow-auto flex-grow-1">
     <% if messages.any? %>
       <% messages.each do |message| %>
         <div class="chat-bubble <%= 'from-me ms-auto text-white bg-primary' if message.user == current_user %>">
@@ -40,12 +41,16 @@
     <%= form_with model: [chat, Human::Message.new],
                   url: human_chat_messages_path(chat),
                   data: { turbo_frame: "human_chats_conversation" },
-                  class: "d-flex gap-2" do |f| %>
-      <%= f.text_area :content,
-                      class: "form-control flex-grow-1 rounded-4",
-                      rows: 2,
-                      placeholder: "Escribí tu mensaje..." %>
-      <%= f.submit "Enviar", class: "btn btn-primary" %>
+                  class: "chat-composer" do |f| %>
+      <div class="chat-input-wrapper">
+        <%= f.text_area :content,
+                        class: "form-control chat-input",
+                        rows: 2,
+                        placeholder: "Escribí tu mensaje..." %>
+        <button type="submit" class="chat-send-btn" aria-label="Enviar">
+          <i class="bi bi-arrow-up-short"></i>
+        </button>
+      </div>
     <% end %>
   </div>
 </div>

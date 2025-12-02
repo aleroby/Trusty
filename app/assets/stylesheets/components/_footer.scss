@@ -4,6 +4,7 @@
   font-family: Open Sans;
 }
 
+// opcional, parece que no lo usás
 section {
   width: 100%;
   display: inline-block;
@@ -15,15 +16,22 @@ section {
   text-decoration: underline;
 }
 
+// ---- PALETA NUEVA ----
+$trusty-dark: #33383b;   // gris oscuro elegante
+$trusty-accent: #3f6fb3; // tu azul (ajustalo si ya lo tenés definido)
+
+// ---- FOOTER ----
+
 .footer-distributed{
-	background: $trusty-blue;
+	background: #315fa2;         // antes: $trusty-blue
 	box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.12);
 	box-sizing: border-box;
 	width: 100%;
 	text-align: left;
-	font: bold 16px sans-serif;
+	font: 400 16px 'Open Sans', sans-serif;
 	padding: 55px 50px;
-  margin-top: 5vh;
+  margin-top: 0;
+	color: #f4f6f8;                    // color de texto general
 }
 
 .footer-distributed .footer-left,
@@ -39,16 +47,16 @@ section {
 	width: 40%;
 }
 
-/* The company logo */
+/* Logo / nombre */
 
 .footer-distributed h3{
 	color:  #ffffff;
-	font: normal 36px 'Open Sans', cursive;
-	margin: 0;
+	font: 600 32px 'Open Sans', sans-serif;
+	margin: 0 0 10px;
 }
 
 .footer-distributed h3 span{
-	color:  lightseagreen;
+	color:  $trusty-accent;
 }
 
 /* Footer links */
@@ -68,7 +76,7 @@ section {
 }
 
 .footer-distributed .footer-company-name{
-	color:  #222;
+	color:  #c5cbd2;
 	font-size: 14px;
 	font-weight: normal;
 	margin: 0;
@@ -81,16 +89,17 @@ section {
 }
 
 .footer-distributed .footer-center i{
-	background-color:  #33383b;
-	color: #ffffff;
-	font-size: 25px;
+	background-color:  #ffffff;    // ⬅ fondo blanco
+	color: $trusty-dark;           // ⬅ ícono gris oscuro
+	font-size: 20px;
 	width: 38px;
 	height: 38px;
 	border-radius: 50%;
 	text-align: center;
-	line-height: 42px;
+	line-height: 38px;
 	margin: 10px 15px;
 	vertical-align: middle;
+	box-shadow: 0 2px 4px rgba(0,0,0,0.25);
 }
 
 .footer-distributed .footer-center i.fa-envelope{
@@ -100,7 +109,7 @@ section {
 
 .footer-distributed .footer-center p{
 	display: inline-block;
-	color: #ffffff;
+	color: #f4f6f8;
   font-weight:400;
 	vertical-align: middle;
 	margin:0;
@@ -114,9 +123,11 @@ section {
 }
 
 .footer-distributed .footer-center p a{
-	color:  lightseagreen;
-	text-decoration: none;;
+	color:  $trusty-accent; // link de email en azul Trusty
+	text-decoration: none;
 }
+
+/* Separadores de links */
 
 .footer-distributed .footer-links a:before {
   content: "|";
@@ -140,7 +151,7 @@ section {
 
 .footer-distributed .footer-company-about{
 	line-height: 20px;
-	color:  #92999f;
+	color:  #d1d6dd;
 	font-size: 13px;
 	font-weight: normal;
 	margin: 0;
@@ -150,9 +161,11 @@ section {
 	display: block;
 	color:  #ffffff;
 	font-size: 14px;
-	font-weight: bold;
+	font-weight: 600;
 	margin-bottom: 20px;
 }
+
+/* Redes sociales */
 
 .footer-distributed .footer-icons{
 	margin-top: 25px;
@@ -163,24 +176,32 @@ section {
 	width: 35px;
 	height: 35px;
 	cursor: pointer;
-	background-color:  #33383b;
-	border-radius: 2px;
+	background-color:  #ffffff;     // ⬅ fondo blanco
+	border-radius: 50%;             // ⬅ redonditos
 
-	font-size: 20px;
-	color: #ffffff;
+	font-size: 18px;
+	color: $trusty-dark;            // ⬅ ícono gris oscuro
 	text-align: center;
 	line-height: 35px;
 
-	margin-right: 3px;
+	margin-right: 6px;
 	margin-bottom: 5px;
+	transition: all 0.2s ease-in-out;
 }
 
-/* If you don't want the footer to be responsive, remove these media queries */
+.footer-distributed .footer-icons a:hover {
+  background-color: $trusty-accent;
+  color: #ffffff;
+}
+
+/* RESPONSIVE */
 
 @media (max-width: 880px) {
 
 	.footer-distributed{
-		font: bold 14px sans-serif;
+		font: 400 14px 'Open Sans', sans-serif;
+		padding: 35px 20px;
+		text-align: center;
 	}
 
 	.footer-distributed .footer-left,
@@ -188,7 +209,7 @@ section {
 	.footer-distributed .footer-right{
 		display: block;
 		width: 100%;
-		margin-bottom: 40px;
+		margin-bottom: 30px;
 		text-align: center;
 	}
 

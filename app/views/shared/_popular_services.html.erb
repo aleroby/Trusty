@@ -11,19 +11,13 @@
     ] %>
 
     <% services.each do |service| %>
-      <div class="col-6 col-sm-4 col-md-3 col-lg-2 text-center">
-        <%= link_to "#{services_path}?category=#{service[:title]}", class: "text-decoration-none d-block card-link" do %>
-
-          <div class="mb-3">
-            <%= image_tag service[:image],
-                class: "service-image img-fluid rounded-4 shadow-sm",
-                alt: service[:title] %>
-          </div>
-
-          <div>
-            <span class="category-badge px-3 py-2 fw-semibold d-inline-block">
+      <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+        <%= link_to "#{services_path}?category=#{service[:title]}", class: "text-decoration-none d-block h-100" do %>
+          <div class="category-card"> <%# RENOMBRADO: de service-card a category-card %>
+            <%= image_tag service[:image], alt: service[:title], class: "category-card__image" %> <%# RENOMBRADO %>
+            <div class="category-card__category"> <%# RENOMBRADO %>
               <%= service[:title] %>
-            </span>
+            </div>
           </div>
         <% end %>
       </div>

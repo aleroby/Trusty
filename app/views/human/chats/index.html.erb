@@ -3,7 +3,7 @@
     <div class="col-lg-3 mb-4">
       <div class="card shadow-sm rounded-4 h-100">
         <div class="card-body d-flex flex-column">
-          <h2 class="h5 mb-3 d-flex justify-content-between align-items-center">
+          <h2 class="fs-5 fw-bold mb-3 d-flex justify-content-between align-items-center">
             <span>Mensajes</span>
             <% if @unread_count.positive? %>
               <span class="badge rounded-pill bg-danger text-white">+<%= @unread_count %></span>
@@ -12,10 +12,10 @@
           <div class="buttons mb-3">
             <%= link_to "Todos",
                         human_chats_path,
-                        class: "btn btn-sm #{@filter == 'all' ? 'btn-dark' : 'btn-outline-dark'} me-2" %>
+                        class: "btn btn-sm rounded-4 #{@filter == 'all' ? 'btn-dark' : 'btn-outline-dark'} me-2" %>
             <%= link_to "No leídos",
                         human_chats_path(filter: :unread),
-                        class: "btn btn-sm #{@filter == 'unread' ? 'btn-dark' : 'btn-outline-dark'}" %>
+                        class: "btn btn-sm rounded-4 #{@filter == 'unread' ? 'btn-dark' : 'btn-outline-dark'}" %>
           </div>
 
           <turbo-frame id="human_chats_sidebar">
@@ -39,7 +39,8 @@
                                            crop: "fill", gravity: "auto",
                                            class: "rounded-circle object-fit-cover" %>
                         <% else %>
-                          <div class="avatar-placeholder rounded-circle text-center bg-light text-muted fw-bold">
+                          <div class="avatar-placeholder rounded-circle text-center fw-bold p-1"
+                               style="background-color: <%= avatar_bg_color_for(counterpart) %>; color: #0f172a;">
                             <%= counterpart&.first_name&.first || "?" %>
                           </div>
                         <% end %>

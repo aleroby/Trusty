@@ -1,25 +1,29 @@
-<div class="container  m-5 mx-auto text-center">
+<div class="container my-4 py-5">
+  <div class="row align-items-center justify-content-between">
+    <!-- Texto -->
+    <div class="col-12 col-lg-6 text-center mb-4 mb-lg-0">
+      <h2 class="fw-bold mb-4">
+        ¿Quieres ofrecer servicios en Trusty?
+      </h2>
 
-    <div class="row" style="min-height: 400px;">
-        <div class="col-6 p-5 d-flex flex-column justify-content-center align-items-center h-100">
+      <p class="fs-5 fw-light mb-4">
+        Crea tu perfil y publica tus anuncios gratuitamente.
+        Sólo te retendremos una pequeña comisión cuando ganes dinero.
+        <br>
+        Miles de clientes te esperan. ¡Únete en 5 minutos!
+      </p>
 
-            <h1 class="text-center">¿Quieres ofrecer servicios en Trusty?</h1>
-
-            <p class="fs-4">Crea tu perfil y publica tus anuncios gratuitamente. Sólo te retendremos una
-                pequeña comisión cuando ganes dinero.</p>
-            <p class="fs-4">Miles de clientes te esperan. ¡Únete en 5 minutos!</p>
-
-            <%= link_to "ofrecer servicios", new_user_session_path, class: "justify-content-center btn btn-primary rounded-4 mt-4" %>
-
-
-        </div>
-
-        <div class="col-6">
-            <%= image_tag "servicio_drill.jpg", class: "offerservice-img img-fluid rounded-5 mt-5" %>
-
-        </div>
+      <%= link_to "Ofrecer Servicios",
+                  new_user_session_path,
+                  class: "btn btn-primary btn-lg fw-normal rounded-4 px-4" %>
     </div>
 
-
-
+    <!-- Imagen -->
+    <div class="col-12 col-lg-6 d-flex justify-content-center">
+      <%= image_tag "offer_services.png",
+        class: "img-fluid rounded-5 shadow-sm",
+        style: "max-width: 90%;"
+      %>
+    </div>
+  </div>
 </div>
