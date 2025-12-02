@@ -1,4 +1,23 @@
 // Specific CSS for your home-page
+.banner-hero {
+  min-height: 520px;
+  background: linear-gradient(rgba(0, 0, 0, 0.34), rgba(0, 0, 0, 0.28)), image-url('bannertrusty.png') center 18%/cover no-repeat;
+  display: flex;
+  align-items: flex-end;
+}
+
+.banner-hero h1,
+.banner-hero p {
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+@media (min-width: 992px) {
+  .banner-hero {
+    min-height: 520px;
+    background-position: center 12%;
+  }
+}
+
 h1 {
     font-size: 45px;
     font-weight: 800;
@@ -24,7 +43,7 @@ p {
   height: 500px;
 
   img {
-    filter: brightness(60%);
+    filter: brightness(75%);
   }
 }
 
@@ -35,7 +54,7 @@ p {
 }
 
 .offerservice-img {
-  max-width: 500px;
+  max-width: 700px;
   height: auto;
   display: block;
 }

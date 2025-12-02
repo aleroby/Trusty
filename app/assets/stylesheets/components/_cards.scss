@@ -4,19 +4,49 @@
   max-width: 100%;
   border-radius: 20px;
   display: block;
-  
+
 }
 
-.category-badge {
-  display: inline-block;
-  background-color: #48B3AF;
-  color: white;
-  border-radius: 50px;
-  font-size: 0.9rem;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
+// Estilos para las NUEVAS Cards de Categoría
+.category-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 
-.category-badge:hover {
-  background-color: #A7E399;
-  transform: translateY(-2px);
+  width: 100%;
+  padding-bottom: 100%; // Esto crea un "cuadro" basado en el ancho
+  height: 0; // Se establece en 0 para que padding-bottom defina la altura
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+  }
+
+  &__image { // Estilos específicos para la imagen dentro de .category-card
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__category { // Estilos específicos para la categoría dentro de .category-card
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(71, 110, 174, 0.85);
+    color: white;
+    padding: 10px 15px;
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    z-index: 1;
+  }
 }

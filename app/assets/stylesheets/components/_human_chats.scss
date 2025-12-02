@@ -1,55 +1,165 @@
 .human-chats {
   min-height: 70vh;
+  background: #f4f3ef;
+}
+
+.human-chats .card {
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  background: #fff;
 }
 
 .human-chat-list {
   max-height: calc(100vh - 220px);
+  gap: 0.5rem;
 }
 
 .human-chat-list .list-group-item {
-  transition: background 0.2s ease, box-shadow 0.2s ease;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  border: 1px solid rgba(17, 24, 39, 0.06);
+  background: #fdfdfd;
+  box-shadow: 0 6px 18px rgba(17, 24, 39, 0.05);
 }
 
 .human-chat-list .list-group-item:hover {
-  background: #f7f7f9;
-  box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  box-shadow: 0 12px 28px rgba(17, 24, 39, 0.08);
+  transform: translateY(-1px);
 }
 
 .human-chat-list .badge {
   font-size: 0.65rem;
+  letter-spacing: 0.02em;
+}
+
+.human-chat-list .extra {
+  color: #6b7280;
 }
 
 .human-chat-conversation {
   min-height: 60vh;
+  display: flex; /* Añadir esta propiedad */
+  flex-direction: column; /* Añadir esta propiedad */
+}
+
+.human-chat-conversation .card-header {
+  border-bottom: 1px solid rgba(17, 24, 39, 0.06);
+  background: linear-gradient(180deg, rgba(71, 110, 174, 0.08), rgba(255, 255, 255, 0.95));
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.05); // línea sutil separadora
 }
 
 .human-chat-conversation .card-body {
   background: #f9fafc;
+  overflow-y: auto;
+  max-height: calc(82vh - 160px); // header + footer + paddings
+}
+
+.human-chat-conversation .card-footer {
+  border-top: 1px solid rgba(17, 24, 39, 0.06);
+}
+
+.chat-composer {
+  margin: 0;
+}
+
+.chat-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.chat-input {
+  background: #ffffff;
+  border: 1.5px solid #d6d6d6;
+  border-radius: 18px;
+  padding: 0.9rem 3.1rem 0.9rem 1rem;
+  resize: none;
+  box-shadow: 0 8px 18px rgba(17, 24, 39, 0.05);
+}
+
+.chat-input:focus {
+  border-color: rgba(71, 110, 174, 0.8);
+  box-shadow: 0 0 0 3px rgba(71, 110, 174, 0.15);
+}
+
+.chat-send-btn {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.65rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(71, 110, 174, 0.1);
+  color: #475569;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, transform 0.15s ease, color 0.2s ease;
+}
+
+.chat-send-btn i {
+  font-size: 1.3rem;
+}
+
+.chat-send-btn:hover {
+  background: $trusty-blue;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.chat-send-btn:active {
+  transform: translateY(0);
 }
 
 .chat-bubble {
-  max-width: 80%;
-  padding: 0.75rem 1rem;
-  border-radius: 1rem;
-  background: white;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  max-width: 82%;
+  padding: 0.9rem 1.1rem;
+  border-radius: 1.1rem;
+  background: rgba(71, 110, 174, 0.08);
+  border: 1px solid rgba(71, 110, 174, 0.15);
+  box-shadow: 0 8px 18px rgba(17, 24, 39, 0.06);
+  color: #0f172a;
 }
 
 .chat-bubble.from-me {
-  background: #0d6efd;
+  background: $trusty-blue;
   color: white;
-  border-color: #0d6efd;
+  border-color: $trusty-blue;
+  box-shadow: 0 8px 18px rgba(71, 110, 174, 0.32);
 }
 
 .chat-bubble.from-me .text-muted {
-  color: rgba(255, 255, 255, 0.7) !important;
+  color: rgba(255, 255, 255, 0.75) !important;
 }
 
 .avatar-placeholder {
   width: 48px;
   height: 48px;
   line-height: 2.5rem;
+}
+
+/* Sidebar detalles */
+.details-card .details-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.details-card .details-body .details-order-link {
+  align-self: center;
+  width: auto;
+}
+
+.details-card .details-title { font-size: 1.5rem; line-height: 1.2; font-weight: 900; color: $trusty-blue; display: flex; align-items: center; margin: 0 -1rem 1rem -1rem; padding: 0.5rem 1.25rem 0.75rem 1.25rem; border-bottom: 0.75px solid rgba(0, 0, 0, 0.06); box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.05); }
+
+.details-text strong {
+  font-size: 1.2rem;
+  text-align: left;
+}
+
+.details-rating .bi-star-fill,
+.details-rating .bi-star,
+.details-rating .bi-star-half {
+  color: #f0ad4e;
+  font-size: 1rem;
 }
 
 @media (max-width: 992px) {

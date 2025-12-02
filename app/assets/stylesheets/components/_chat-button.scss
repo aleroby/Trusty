@@ -8,32 +8,68 @@
 }
 
 .chat-button {
-  background-color: $success; /* Un verde similar al de WhatsApp */
-  color: white;              /* Texto blanco */
-  border-radius: 50%;        /* Lo hace circular */
-  width: 100px;              /* Aumentamos el ancho para que quepa el texto */
-  height: 100px;             /* Aumentamos el alto para que quepa el texto */
-  display: flex;             /* Para centrar el texto */
-  flex-direction: column;    /* Para que el texto se apile si es multilínea o para control */
-  justify-content: center;   /* Centrar verticalmente el contenido */
-  align-items: center;       /* Centrar horizontalmente el contenido */
-  font-size: 0.8rem;         /* Tamaño de fuente más pequeño para el texto */
-  line-height: 1.1;          /* Espaciado entre líneas */
-  text-align: center;        /* Centrar el texto */
-  padding: 5px;              /* Pequeño padding interno */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  /* Tamaño y forma base */
+  width: 100px;
+  height: 100px;
+  border-radius: 50%; /* Lo hace circular */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
   text-decoration: none;
+  color: white; /* Texto blanco */
+  font-size: 0.8rem;
+  line-height: 1.1;
+  font-weight: bold; /* Para que el texto "Asistente IA" resalte más */
+  padding: 5px;
+
+  /* Color base y efectos de la imagen adjunta */
+  background: #476EAE; /* Color base */
+  box-shadow:
+    0 0 0 7px rgba(255, 255, 255, 0.4), /* Borde blanco exterior translúcido */
+    inset 0 0 10px rgba(0, 0, 0, 0.3), /* Sombra interna para profundidad */
+    0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra exterior */
+
+  /* Gradiente para el brillo superior */
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.25) 0%,   /* Brillo superior translúcido */
+      rgba(255, 255, 255, 0) 50%,     /* Se desvanece a transparente */
+      rgba(0, 0, 0, 0) 50%,           /* Fondo del botón */
+      rgba(0, 0, 0, 0.1) 100%         /* Sombra inferior translúcida */
+    );
+  background-blend-mode: overlay; /* Combina el gradiente con el color de fondo */
+
+  /* Borde interior (el aro delgado alrededor del centro) */
+  border: 1px solid rgba(255, 255, 255, 0.5); /* Borde blanco semi-transparente */
+
+  /* Transiciones para el hover */
+  transition: all 0.3s ease;
 }
 
 .chat-button:hover {
-  background-color: #1da851;
   transform: scale(1.05);
+  box-shadow:
+    0 0 0 7px rgba(255, 255, 255, 0.5), /* Borde blanco exterior un poco más visible */
+    inset 0 0 12px rgba(0, 0, 0, 0.4), /* Sombra interna un poco más fuerte */
+    0 6px 12px rgba(0, 0, 0, 0.4); /* Sombra exterior un poco más fuerte */
 }
 
-/* Si quieres que "AI" tenga un estilo diferente a "Assistant" */
-.chat-button strong {
-  font-size: 1.1rem; /* Un poco más grande para "AI" */
-  display: block;    /* Para que "AI" ocupe su propia línea */
-  margin-bottom: 2px; /* Espacio entre "AI" y "Assistant" */
+/* Para el icono de chat y el texto "Asistente IA" */
+.chat-button span.icon {
+  margin-bottom: 2px; /* Espacio entre el icono y el texto */
+  /* Puedes usar un SVG aquí o un font-icon */
+  // Si usas un SVG, asegúrate de que su color sea blanco y tamaño adecuado
+}
+
+/* Si quieres que "IA" tenga un estilo diferente a "Asistente" */
+.chat-button .text-line-1 {
+  font-size: 1rem; /* Ajusta si necesitas Asistente más grande */
+}
+.chat-button .text-line-2 {
+  font-size: 1.2rem; /* "IA" un poco más grande */
+  font-weight: bold;
+  line-height: 1; /* Para ajustar el espacio */
 }
