@@ -132,13 +132,18 @@ class Service < ApplicationRecord
 
   # ------------------FIN BLOQUE AGENDA PROVEEDOR--------------------------
 
-  def set_embedding
-    text = <<~TEXT
-      Category: #{category}
-      Sub-category: #{sub_category}
-      Description: #{description}
-      Price: $#{price}
-    TEXT
+def set_embedding
+  text = [
+    "Category: #{category}",
+    "Sub-category: #{sub_category}",
+    "Description: #{description}",
+    "Price: $#{price}",
+    "Address: #{user&.address}",
+    "Latitude: #{user&.latitude}",
+    "Longitude: #{user&.longitude}",
+    "Supplier radius km: #{user&.radius}"
+  ].join("\n")
+
     embedding = RubyLLM.embed(text)
     update(embedding: embedding.vectors)
   end

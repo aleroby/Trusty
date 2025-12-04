@@ -1,41 +1,24 @@
 class MessagesController < ApplicationController
-
-  # if Rails.env.development?
-  #   host = "http://localhost:3000"
-  # else
-  #   host = "https://trustyservices.me"
-  # end
+  MAX_SERVICES = 10
+  DISTANCE_THRESHOLD = 0.55 # ajusta si el ruido sigue
 
   def create
     @chat = Chat.find(params[:chat_id])
-    embedding = RubyLLM.embed(params[:message][:content])
-    # Repetir esta linea para los distintos modelos
-    services = Service.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
-    reviews = Review.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
-    users = User.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
-    #Rails.logger.info services
-    # reviews = Review.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
-    # users = User.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(5)
-    vectors = services + reviews + users
-    Rails.logger.info vectors
-    instructions = system_prompt
-    Rails.logger.info instructions
+    client = @chat.user
+    client_message = RubyLLM.embed(params[:message][:content])
+    return render("/chats/show", status: :unprocessable_entity) if client_message&.vectors.blank?
 
-    instructions += vectors.map { |vector| models_prompt(vector) }.join("\n\n")
-    Rails.logger.info instructions
+    # services = Service.nearest_neighbors(:embedding, embedding.vectors, distance: "euclidean").first(MAX_SERVICES)
+    services = fetch_relevant_services(client_message.vectors, client)
 
-    @message = Message.new(message_params)
-    @message.role = "user"
-    @message.chat_id = @chat.id
+    instructions = build_instructions(services)
+
+    @message = Message.new(message_params.merge(role: "user", chat_id: @chat.id))
 
     if @message.save
-      if @chat.title == "Nuevo Chat"
-        @chat.title = chat_title.content
-        @chat.save
-      end
+      update_chat_title_if_needed
       build_conversation_history
       response = @ruby_llm_chat.with_instructions(instructions).ask(@message.content)
-      # @chat.with_instructions(instructions).ask(@message.content)cha
       Message.create(role: "assistant", chat_id: @chat.id, content: response.content)
       redirect_to chat_path(@chat)
     else
@@ -45,50 +28,110 @@ class MessagesController < ApplicationController
 
   private
 
-  def build_conversation_history
-    @ruby_llm_chat = RubyLLM.chat
-    @chat.messages.each do |message|
-      @ruby_llm_chat.add_message(role: message.role, content: message.content)
+  def fetch_relevant_services(query_vector, client) # query_vector es el client_message vectorizado
+    available_services = Service.includes(:user, :supplier_reviews)
+                   .where.not(embedding: nil)
+                   .where(published: true)
+    # filtro por radio del proveedor respecto del cliente, si hay lat/lon
+    if client&.latitude && client&.longitude
+      available_services = available_services.select do |service|
+        supplier = service.user
+        next if supplier.nil? || supplier.latitude.nil? || supplier.longitude.nil? || supplier.radius.nil?
+        distance_client_supplier = Geocoder::Calculations.distance_between(
+          [supplier.latitude, supplier.longitude],
+          [client.latitude, client.longitude]
+        )
+        distance_client_supplier <= supplier.radius
+      end
+    else
+      available_services = available_services.to_a
     end
+
+    specific_services = Service.nearest_neighbors(:embedding, query_vector, distance: "cosine")
+                       .first(MAX_SERVICES)
+
+    # cruza vecinos con filtro de radio y descarta por umbral de distancia
+    specific_services_ids = specific_services.select { |service| service.neighbor_distance && service.neighbor_distance <= DISTANCE_THRESHOLD }.map { |service| service.id }
+
+    specific_services_ids = specific_services.map { |service| service.id } if specific_services_ids.empty? # fallback
+
+    result = available_services.select { |service| specific_services_ids.include?(service.id) }
+
+    # Rails.logger.info "available_services=#{available_services.size}"
+    # Rails.logger.info "neighbors=#{specific_services.map { |s| [s.id, s.neighbor_distance] }}"
+    # Rails.logger.info "chosen_ids=#{specific_services_ids}"
+
+    result
+
   end
 
-  def chat_title
-    message = @chat.messages.first.content
-    RubyLLM.chat.with_instructions("Genera un nombre descriptivo para un chat que no sea mas de 6 palabras.
-    El nombre tiene que ser una síntesis de lo contenido en #{message}").ask(@chat.messages.first)
+  def build_instructions(services)
+    client_name = @chat.user&.first_name.to_s.strip.presence
+    already_greeted = @chat.messages.where(role: "assistant").exists?
+
+    context = services.map do |service|
+      reviews = service.supplier_reviews.limit(3).map { |review| "#{review.rating}: #{review.content.to_s.truncate(140)}" }.join(" | ")
+      service_info = []
+      service_info << "SERVICE #{service.id}"
+      service_info << "category: #{service.category}"
+      service_info << "sub_category: #{service.sub_category}"
+      service_info << "address: #{service.user&.address}"
+      service_info << "lat: #{service.user&.latitude}, lon: #{service.user&.longitude}, radius_km: #{service.user&.radius}"
+      service_info << "price: #{service.price}"
+      service_info << "description: #{service.description.to_s.truncate(280)}"
+      service_info << "reviews: #{reviews}"
+      service_info << "url: #{service_url(service)}"
+      service_info.join("\n")
+    end.join("\n---\n")
+
+    prompt = ""
+      if already_greeted
+        prompt += "No repitas el saludo con el #{client_name}. ; ve directo a la respuesta.\n\n"
+      else
+        prompt += "Hola #{client_name}! Estoy para ayudarte.\n\n"
+        prompt += "El cliente se llama #{client_name}. Usa su nombre al saludar.\n\n"
+      end
+    prompt += system_prompt
+    prompt += "\n\n"
+    prompt += "Contexto de servicios (usa solo esto; si no alcanza, di que no hay servicios disponibles):\n"
+    prompt += context
+
+  end
+
+  def system_prompt
+    "Eres un asistente cálido y servicial en español para una app de servicios tipo Airbnb.
+    Saluda al cliente por su nombre si lo conoces. Sé breve, amable y claro.
+
+    Usa únicamente el contexto de servicios que te paso; no inventes datos ni URLs.
+    # Si el contexto no alcanza, responde exactamente: \"No hay servicios disponibles para esta consulta\".
+
+    Responde en Markdown, listando los mejores servicios priorizando rating y cercanía.
+    Para cada servicio incluye: el nombre del proveedor, precio, y rating si hay, y la URL dada.
+
+    Si el cliente te pregunta algo fuera de los servicios (small talk), responde cordialmente en pocas frases y avisa que tu especialidad son los servicios de Trusty.
+    No cierres con preguntas genéricas (por ejemplo, '¿Quieres que te ayude a reservar?'); si ya diste opciones, termina con un cierre breve y concreto."
   end
 
   def message_params
     params.require(:message).permit(:content)
   end
 
-  def system_prompt
-    "Actúa como un asistente personalizado de una plataforma de servicios al estilo de Airbnb. \
-      Tu tarea es responder a las consultas que te hagan los potenciales clientes de la aplicación,
-      buscando los servicios que te pidan, recomendando las opciones que tengan mejores
-      calificaciones (rating), en promedio y cantidad, y devolviendo como resultado sólo aquellos
-      proveedores (suppliers) que ofrezcan sus servicios en la dirección del cliente o de la consulta.
-      Por favor considera siempre la dirección del user que hace la consulta a la hora de mostrar tu respuesta. \
-      Si no hay proveedores/servicios disponibles para la consulta, puedes responder
-      \"No hay servicios disponibles para esta consulta\". \
-      Tu respuesta debe ser en formato markdown. Cuando respondas, no solo te pedimos las url
-      de los servicios que cumplan con los solicitado sino tambien una url con query string
-      (http://127.0.0.1:3000/services?mode=filtros&category=Wellness&sub_category=Clases+de+Meditacion&price_max=47125&location=Av.+Santa+Fe+3300+%2C+Buenos+Aires&commit=Aplica+filtros)
-      con la lista de los servicios que cumplen con lo solicitado."
+  def chat_title
+    title_content = @chat.messages.first.content
+    RubyLLM.chat.with_instructions("Genera un nombre descriptivo para un chat que no sea mas de 6 palabras.
+    El nombre tiene que ser una síntesis de lo contenido en #{title_content}").ask(@chat.messages.first)
   end
 
-  def models_prompt(vector)
-    case vector
-    when Service
-      "SERVICE id: #{vector.id}, category: #{vector.category}, sub_category: #{vector.sub_category},
-      description: #{vector.description}, price: #{vector.price}, url: #{service_url(vector)}"
-    when Review
-      "REVIEW id: #{vector.id}, rating: #{vector.rating}, contentt: #{vector.content}"
-    when User
-      "USER id: #{vector.id}, address: #{vector.address}, latitude: #{vector.latitude}, longitude: #{vector.longitude},
-      radius: #{vector.radius}"
-    else
-      ""
+  def update_chat_title_if_needed
+    return unless @chat.title == "Nuevo Chat" && @chat.messages.first
+    @chat.title = chat_title.content
+    @chat.save
+  end
+
+  def build_conversation_history
+    @ruby_llm_chat = RubyLLM.chat
+    @chat.messages.each do |message|
+      @ruby_llm_chat.add_message(role: message.role, content: message.content)
     end
   end
 
