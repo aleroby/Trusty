@@ -80,7 +80,8 @@ class MessagesController < ApplicationController
       service_info << "price: #{service.price}"
       service_info << "description: #{service.description.to_s.truncate(280)}"
       service_info << "reviews: #{reviews}"
-      service_info << "url: #{service_url(service)}"
+      # Link directo al panel de detalles en la columna derecha del inbox IA
+      service_info << "url: #{details_chat_url(@chat, service_id: service.id)}"
       service_info.join("\n")
     end.join("\n---\n")
 
@@ -118,7 +119,7 @@ class MessagesController < ApplicationController
 
   def chat_title
     title_content = @chat.messages.first.content
-    RubyLLM.chat.with_instructions("Genera un nombre descriptivo para un chat que no sea mas de 6 palabras.
+    RubyLLM.chat.with_instructions("Genera un nombre descriptivo para un chat que no sea mas de 4 palabras.
     El nombre tiene que ser una síntesis de lo contenido en #{title_content}").ask(@chat.messages.first)
   end
 

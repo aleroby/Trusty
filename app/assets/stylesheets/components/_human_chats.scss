@@ -171,3 +171,47 @@
     min-height: auto;
   }
 }
+
+/* ===== Estilos para inbox de chats IA ===== */
+.ai-chats {
+  min-height: 70vh;
+  background: #f4f3ef;
+}
+
+.ai-chats .card {
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  background: #fff;
+}
+
+.ai-chat-list { max-height: calc(100vh - 220px); gap: 0.5rem; overflow-y: auto; }
+.ai-chat-list .list-group-item {
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: #fdfdfd;
+  box-shadow: 0 6px 18px rgba(17, 24, 39, 0.05);
+}
+.ai-chat-list .list-group-item:hover {
+  background: #f7f7f9;
+  box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+.ai-chat-list .badge { font-size: 0.65rem; }
+
+.ai-chat-conversation { min-height: 60vh; }
+.ai-chat-conversation .card-header {
+  border-bottom: 1px solid rgba(17, 24, 39, 0.06);
+  background: linear-gradient(180deg, rgba(71, 110, 174, 0.08), rgba(255, 255, 255, 0.95));
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+}
+.ai-chat-conversation .card-body {
+  background: #f9fafc;
+  overflow-y: auto;
+  max-height: calc(82vh - 160px);
+}
+.ai-chat-conversation .card-footer {
+  border-top: 1px solid rgba(17, 24, 39, 0.06);
+}
+
+@media (max-width: 992px) {
+  .ai-chat-list { max-height: none; }
+  .ai-chat-conversation { min-height: auto; }
+}

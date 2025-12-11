@@ -1,0 +1,13 @@
+<turbo-frame id="ai_chats_sidebar_details">
+  <% if @service.present? %>
+    <%= render "human/chats/sidebar_details",
+               chat: OpenStruct.new(order: @order_for_service), # permite reusar el parcial
+               service: @service %>
+  <% else %>
+    <div class="card shadow-sm rounded-4 h-100">
+      <div class="card-body text-center text-muted d-flex flex-column justify-content-center">
+        <p>Servicios sugeridos por el asistente aparecerán aquí.</p>
+      </div>
+    </div>
+  <% end %>
+</turbo-frame>
