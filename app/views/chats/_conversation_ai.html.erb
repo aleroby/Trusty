@@ -1,0 +1,46 @@
+<div class="card h-100 shadow-sm rounded-4 ai-chat-conversation" data-controller="ai-conversation" data-action="click->ai-conversation#open" data-ai-conversation-chat-id-value="<%= @chat.id %>">
+  <div class="card-header d-flex align-items-center justify-content-between">
+    <h5 class="mb-1 fw-bold fs-5 text-primary"><%= @chat.title.presence || "Nuevo Chat" %></h5>
+  </div>
+
+  <div class="card-body">
+    <% @chat.messages.each do |message| %>
+      <% if message.role == "user" %>
+        <div class="d-flex justify-content-end mt-3">
+          <div class="chat-bubble from-me ms-auto text-white">
+            <%= simple_format(message.content, {}, wrapper_tag: "span") %>
+            <div class="text-end text-muted small mt-1">
+              <%= l message.created_at, format: :short %>
+            </div>
+          </div>
+        </div>
+      <% elsif message.role == "assistant" %>
+        <div class="d-flex justify-content-start mt-3">
+          <div class="chat-bubble">
+            <%= raw(render_markdown(message.content)) %>
+            <div class="text-end text-muted small">
+              <%= l message.created_at, format: :short %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="card-footer">
+    <%= simple_form_for [@chat, @message] do |f| %>
+      <div class="chat-composer">
+        <div class="chat-input-wrapper">
+          <%= f.text_area :content,
+              label: false,
+              placeholder: "Escribí tu mensaje...",
+              rows: 2,
+              class: "form-control chat-input" %>
+          <button type="submit" class="chat-send-btn" aria-label="Enviar">
+            <i class="fa-solid fa-arrow-up"></i>
+          </button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

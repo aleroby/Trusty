@@ -1,0 +1,35 @@
+<turbo-frame id="ai_chats_sidebar">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h5 class="fw-bold fs-5 text-primary">Chats con IA</h5>
+    <%= button_to "Nuevo", chats_path,
+                  method: :post,
+                  class: "btn btn-sm btn-primary rounded-3 px-3",
+                  form: { data: { turbo_frame: "ai_chats_conversation" } } %>
+  </div>
+
+  <% if @chats.any? %>
+    <div class="list-group ai-chat-list">
+      <% @chats.each do |chat| %>
+        <% last_message = chat.messages.order(created_at: :desc).first %>
+        <div class="list-group-item list-group-item-action border-0 mb-2 rounded-3 shadow-sm"
+             data-action="click->ai-chats#open"
+             data-conversation-url="<%= chat_path(chat) %>"
+             data-details-url="<%= details_chat_path(chat) %>">
+          <div class="d-flex justify-content-between">
+            <strong><%= chat.title %></strong>
+          </div>
+          <div class="d-flex justify-content-between align-items-center mt-1 text-muted small">
+            <span><%= l(last_message.created_at, format: :short) if last_message %></span>
+            <%= button_to "Eliminar",
+                          chat_path(chat),
+                          method: :delete,
+                          class: "btn btn-link btn-sm text-danger p-0 text-decoration-none",
+                          data: { action: "click->ai-chats#stop", turbo_confirm: "¿Eliminar chat?", turbo_frame: "_top" } %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="text-muted small">No tenés chats con el asistente. Creá uno nuevo.</p>
+  <% end %>
+</turbo-frame>

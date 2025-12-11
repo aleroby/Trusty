@@ -1,4 +1,5 @@
-<% service = chat.service %>
+<% service = local_assigns[:service] || chat.service %>
+
 <div class="card shadow-sm rounded-4 h-100 details-card">
   <div class="card-body details-body">
       <h5 class="fw-bold fs-5 text-primary p-3 details-title">Resumen del servicio</h5>

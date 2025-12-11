@@ -38,9 +38,10 @@ Rails.application.routes.draw do
 
   resources :dashboard, only: %i[index]
 
-  resources :chats, only: [:index, :create, :destroy]
-
-  resources :chats, only: [:show] do
+  resources :chats, only: [:index, :show, :create, :destroy] do
+    member do
+      get :details
+    end
     resources :messages, only: [:create]
   end
 
