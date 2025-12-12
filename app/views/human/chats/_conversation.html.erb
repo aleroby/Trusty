@@ -20,7 +20,9 @@
     </div>
   </div>
 
-  <div class="card-body d-flex flex-column gap-3 overflow-auto flex-grow-1">
+  <div class="card-body d-flex flex-column gap-3 overflow-auto flex-grow-1"
+       data-controller="scroll-bottom"
+       data-scroll-bottom-target="container">
     <% if messages.any? %>
       <% messages.each do |message| %>
         <div class="chat-bubble <%= 'from-me ms-auto text-white bg-primary' if message.user == current_user %>">
@@ -40,13 +42,14 @@
   <div class="card-footer bg-white border-0">
     <%= form_with model: [chat, Human::Message.new],
                   url: human_chat_messages_path(chat),
-                  data: { turbo_frame: "human_chats_conversation" },
+                  data: { turbo_frame: "human_chats_conversation", controller: "chat-submit", chat_submit_target: "form" },
                   class: "chat-composer" do |f| %>
       <div class="chat-input-wrapper">
         <%= f.text_area :content,
                         class: "form-control chat-input",
                         rows: 2,
-                        placeholder: "Escribí tu mensaje..." %>
+                        placeholder: "Escribí tu mensaje...",
+                        data: { chat_submit_target: "input", action: "keydown->chat-submit#submitOnEnter" } %>
         <button type="submit" class="chat-send-btn" aria-label="Enviar">
           <i class="bi bi-arrow-up-short"></i>
         </button>

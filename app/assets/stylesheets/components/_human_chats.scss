@@ -211,6 +211,19 @@
   border-top: 1px solid rgba(17, 24, 39, 0.06);
 }
 
+/* Alinear contenido de la burbuja del asistente a la izquierda */
+.ai-chat-conversation .chat-bubble {
+  text-align: left;
+}
+
+.ai-chat-conversation .chat-bubble p,
+.ai-chat-conversation .chat-bubble ul,
+.ai-chat-conversation .chat-bubble ol,
+.ai-chat-conversation .chat-bubble li {
+  text-align: left;
+}
+
+
 @media (max-width: 992px) {
   .ai-chat-list { max-height: none; }
   .ai-chat-conversation { min-height: auto; }
