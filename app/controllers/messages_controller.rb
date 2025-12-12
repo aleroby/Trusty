@@ -17,9 +17,8 @@ class MessagesController < ApplicationController
 
     if @message.save
       update_chat_title_if_needed
-      build_conversation_history
-      response = @ruby_llm_chat.with_instructions(instructions).ask(@message.content)
-      Message.create(role: "assistant", chat_id: @chat.id, content: response.content)
+      # Encola el streaming de la respuesta del asistente para no bloquear la petición HTTP
+      AiStreamJob.perform_later(@chat.id, @message.id, instructions)
       redirect_to chat_path(@chat)
     else
       render "/chats/show", status: :unprocessable_entity
