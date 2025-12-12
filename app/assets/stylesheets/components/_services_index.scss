@@ -68,6 +68,12 @@
   box-shadow: 0 0 0 3px rgba(13,110,253,.15);
 }
 
+/* Paginación */
+.services-pagination {
+  display: flex;
+  justify-content: center;
+}
+
 /* Ajustes responsivos sutiles */
 @media (min-width: 1200px) {
   .services-page { padding: 1.25rem; }

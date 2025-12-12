@@ -42,11 +42,10 @@
       <%= yield %>
     </div>
 
-    <% if user_signed_in? %>
-      <%= render "/shared/chat-button" %>
-    <% else %>
-      <%= "" %>
-    <% end %>
+<% hide_chat_button = (controller_path == "chats" && action_name == "index") %>
+<% if user_signed_in? && !hide_chat_button %>
+  <%= render "/shared/chat-button" %>
+<% end %>
 
     <%= render "shared/footer" %>
     <%# <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script> %>
