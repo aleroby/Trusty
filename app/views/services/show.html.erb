@@ -18,11 +18,11 @@
 
   <div class="row g-4">
     <!-- LEFT -->
-    <div class="col-lg-8">
-      <h3 class="border rounded-4 bg-primary text-white p-2 px-3 mb-3"><%= @service.sub_category.presence || "Servicio" %> con <%= @service.user.first_name %></h3>
+    <div class="col-lg-8 d-flex flex-column gap-3 h-100 service-left-column">
+      <h3 class="border rounded-4 bg-primary text-white p-2 px-3 mb-0"><%= @service.sub_category.presence || "Servicio" %> con <%= @service.user.first_name %></h3>
 
       <!-- Gallery -->
-      <div class="service-gallery mb-4">
+      <div class="service-gallery">
         <div class="row g-3 row-cols-1 row-cols-sm-2">
           <% if @service.images.attached? %>
             <% @service.images.limit(4).each do |img| %>
@@ -38,13 +38,21 @@
             <% end %>
           <% end %>
         </div>
-          <div class="border d-flex justify-content-start shadow rounded-4 mt-3 p-3 bg-white">
-            <%= @service.description.presence || "El Proveedor no agregó aún una descripción para este servicio" %>
+      </div>
+
+      <div class="card service-description-card shadow-sm border-0 rounded-4" data-description-card>
+        <div class="card-body">
+          <div class="service-description-text" data-description-text>
+            <%= simple_format(@service.description.presence || "El Proveedor no agregó aún una descripción para este servicio") %>
           </div>
+          <button class="btn btn-link p-0 mt-2 small fw-semibold text-primary description-toggle" type="button" data-description-toggle>
+            Ver más
+          </button>
+        </div>
       </div>
 
       <!-- Provider card -->
-      <div class="card border shadow mb-4 rounded-4 bg-white">
+      <div class="card border shadow rounded-4 bg-white">
         <div class="card-body">
           <h2 class="h5 mb-3">Rating de <%= @service.sub_category %> con <%= @service.user.first_name %></h2>
           <div class="d-flex align-items-center gap-3">
@@ -124,7 +132,7 @@
       </div>
 
       <% if !user_signed_in? || current_user != @service.user %>
-        <div class="card my-4 bg-white shadow-sm rounded-4"
+        <div class="card bg-white shadow-sm rounded-4"
              data-controller="chat-request"
              data-chat-request-logged-in-value="<%= user_signed_in? %>"
              data-chat-request-login-path-value="<%= new_user_session_path %>">
@@ -134,7 +142,7 @@
                 <h3 class="h5 mb-1">¿Te quedó alguna duda?</h3>
                 <p class="text-muted small mb-0">Escribile a <%= @service.user.first_name %> antes de reservar.</p>
               </div>
-              <button class="btn btn-outline-primary" data-action="click->chat-request#toggle" data-chat-request-target="trigger">
+              <button class="btn btn-success text-white" data-action="click->chat-request#toggle" data-chat-request-target="trigger">
                 Escribir al proveedor
               </button>
             </div>
@@ -167,6 +175,10 @@
       <% fee_value = defined?(@service.service_fee) && @service.service_fee.present? ? @service.service_fee : 10 %>
       <% currency_value = defined?(@service.currency) && @service.currency.present? ? @service.currency : "ARS" %>
 
+      <div>
+        <h6 class="fw-bold bg-primary shadow-sm text-white p-3 mb-3 rounded-4 text-center">Reserva <%= @service.sub_category %></h6>
+      </div>
+
       <div class="card filters-card shadow-sm"
           data-controller="booking slots"
           data-booking-rate-value="<%= @service.price.to_f %>"
@@ -177,8 +189,6 @@
           data-slots-duration-minutes-value="<%= @service.duration_minutes %>"
           data-slots-step-minutes-value="30">
         <div class="card-body">
-          <h6 class="fw-bold bg-success shadow-sm text-white p-3 rounded-4 text-center">Reserva <%= @service.sub_category %></h6>
-          <hr>
           <%= form_with model: @order, url: orders_path, html: { id: "booking-form" } do |f| %>
 
             <div class="mb-3">
@@ -260,7 +270,7 @@
             <%= f.hidden_field :total_price,       data: { booking_target: "totalCents" } %>
             <%= f.hidden_field :service_id, value: (@service.id) %>
 
-            <%= f.submit "Reserva", class: "btn btn-primary fw-bold fs-6 rounded-4 w-100 mt-2" unless (user_signed_in? && @service.user_id == current_user.id) %>
+            <%= f.submit "Reserva", class: "btn btn-primary fw-bold fs-6 rounded-4 w-100" unless (user_signed_in? && @service.user_id == current_user.id) %>
           <% end %>
         </div>
       </div>
@@ -268,3 +278,33 @@
 
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const card = document.querySelector('[data-description-card]');
+    if (!card) return;
+    const text = card.querySelector('[data-description-text]');
+    const toggle = card.querySelector('[data-description-toggle]');
+    if (!text || !toggle) return;
+
+    const updateState = () => {
+      const overflowing = text.scrollHeight > text.clientHeight + 1;
+      const expanded = card.classList.contains('is-expanded');
+      toggle.classList.toggle('d-none', !overflowing && !expanded);
+      toggle.textContent = expanded ? 'Ver menos' : 'Ver más';
+      card.classList.toggle('has-overflow', overflowing && !expanded);
+    };
+
+    toggle.addEventListener('click', () => {
+      card.classList.toggle('is-expanded');
+      if (card.classList.contains('is-expanded')) {
+        text.style.maxHeight = `${text.scrollHeight}px`;
+      } else {
+        text.style.maxHeight = '';
+      }
+      updateState();
+    });
+
+    updateState();
+  });
+</script>
