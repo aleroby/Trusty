@@ -4,21 +4,25 @@
     <h5 class="mt-3 mb-1 fw-bold fs-5 text-primary"><%= @chat.title.presence || "Nuevo Chat" %></h5>
   </div>
 
-  <div class="card-body">
+  <div class="card-body"
+       data-controller="scroll-bottom"
+       data-scroll-bottom-target="container">
     <div id="<%= dom_id(@chat, :messages) %>">
       <%= render @chat.messages %>
     </div>
   </div>
 
   <div class="card-footer">
-    <%= simple_form_for [@chat, @message] do |f| %>
+    <%= simple_form_for [@chat, @message],
+        html: { data: { controller: "chat-submit", chat_submit_target: "form" } } do |f| %>
       <div class="chat-composer">
         <div class="chat-input-wrapper">
           <%= f.text_area :content,
               label: false,
               placeholder: "Escribí tu mensaje...",
               rows: 2,
-              class: "form-control chat-input" %>
+              class: "form-control chat-input",
+              data: { chat_submit_target: "input", action: "keydown->chat-submit#submitOnEnter" } %>
           <button type="submit" class="chat-send-btn" aria-label="Enviar">
             <i class="fa-solid fa-arrow-up"></i>
           </button>
@@ -26,4 +30,5 @@
       </div>
     <% end %>
   </div>
+
 </div>
